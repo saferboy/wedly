@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 export default function Footer() {
   return (
@@ -46,22 +47,12 @@ export default function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://t.me/wedly_uz"
+                  href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
-                  <span>✈</span> @wedly_uz
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://t.me/wedly_bot"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-gray-400 hover:text-white transition-colors flex items-center gap-2"
-                >
-                  <span>🤖</span> @wedly_bot
+                  <span>🤖</span> @{TELEGRAM_BOT_USERNAME}
                 </a>
               </li>
             </ul>

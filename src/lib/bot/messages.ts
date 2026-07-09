@@ -50,7 +50,7 @@ Boshlaylikmi?`,
   paymentInfo: (amount: string) =>
     `✅ *Buyurtmangiz qabul qilindi!*\n\n💳 *To'lov ma'lumotlari:*\n\nSumma: *${amount}*\nKarta: \`8600 0000 0000 0000\`\nEgasi: ADMIN ADMINOV\n\n⚡ To'lovni amalga oshirgandan so'ng *chekni (screenshot)* yuboring.`,
 
-  done: `🎉 *Rahmat!*\n\nSizning buyurtmangiz adminimizga yuborildi. *24 soat ichida* tayyor taklifnoma linkini bu yerga yuboramiz!\n\nSavollar bo'lsa: @wedly_uz`,
+  done: `🎉 *Rahmat!*\n\nSizning buyurtmangiz adminimizga yuborildi. *24 soat ichida* tayyor taklifnoma linkini bu yerga yuboramiz!`,
 
   adminNotification: (session: Record<string, string | undefined>) =>
     `🔔 *Yangi buyurtma!*\n\n` +

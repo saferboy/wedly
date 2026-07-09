@@ -1,5 +1,6 @@
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 const PLANS = [
   {
@@ -117,7 +118,7 @@ export default function Pricing() {
               </ul>
 
               <Button
-                href="https://t.me/wedly_uz"
+                href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
                 external
                 variant={plan.highlight ? "ghost" : "primary"}
                 size="lg"

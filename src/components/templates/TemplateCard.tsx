@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { TemplateConfig } from "@/lib/templates";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 interface Props {
   template: TemplateConfig;
@@ -85,7 +86,7 @@ export default function TemplateCard({ template }: Props) {
             Preview
           </Link>
           <Link
-            href={`https://t.me/wedly_bot?start=template_${template.slug}`}
+            href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${template.slug}`}
             target="_blank"
             className="flex-1 py-2 text-center text-sm font-medium rounded-lg text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: template.theme.primaryColor }}
