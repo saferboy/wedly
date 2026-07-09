@@ -8,7 +8,7 @@ interface Props {
 
 export default function TemplateCard({ template }: Props) {
   return (
-    <div className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white">
+    <div className="group rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 bg-white dark:bg-gray-900">
       {/* Preview */}
       <div
         className="relative h-64 flex flex-col items-center justify-center gap-3 transition-transform duration-300 group-hover:scale-[1.02]"
@@ -62,25 +62,25 @@ export default function TemplateCard({ template }: Props) {
       {/* Ma'lumot */}
       <div className="p-5">
         <div className="flex items-start justify-between mb-1">
-          <h3 className="font-bold text-gray-900 text-lg">{template.name}</h3>
+          <h3 className="font-bold text-gray-900 dark:text-white text-lg">{template.name}</h3>
           <div className="flex gap-1 mt-1">
             {[template.theme.primaryColor, template.theme.accentColor, template.theme.bgColor].map(
               (color, i) => (
                 <div
                   key={i}
-                  className="w-4 h-4 rounded-full border border-gray-200"
+                  className="w-4 h-4 rounded-full border border-gray-200 dark:border-gray-700"
                   style={{ backgroundColor: color }}
                 />
               )
             )}
           </div>
         </div>
-        <p className="text-sm text-gray-500 mb-4">{template.description}</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{template.description}</p>
 
         <div className="flex gap-2">
           <Link
             href={`/templates/${template.slug}`}
-            className="flex-1 py-2 text-center text-sm font-medium rounded-lg border transition-colors hover:bg-gray-50"
+            className="flex-1 py-2 text-center text-sm font-medium rounded-lg border transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
             style={{ borderColor: template.theme.primaryColor, color: template.theme.primaryColor }}
           >
             Preview

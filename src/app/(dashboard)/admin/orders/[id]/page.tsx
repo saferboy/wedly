@@ -45,10 +45,10 @@ export default async function OrderDetailPage({ params }: Props) {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
-        <Link href="/admin/orders" className="text-gray-400 hover:text-gray-600 text-sm">
+        <Link href="/admin/orders" className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 text-sm">
           ← Orqaga
         </Link>
-        <h1 className="text-xl font-bold text-gray-900">
+        <h1 className="text-xl font-bold text-gray-900 dark:text-white">
           Buyurtma #{id.slice(-6).toUpperCase()}
         </h1>
       </div>
@@ -56,14 +56,14 @@ export default async function OrderDetailPage({ params }: Props) {
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Ma'lumotlar */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Ma'lumotlar</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Ma'lumotlar</h2>
             <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
               {rows.map(([label, value]) =>
                 value ? (
                   <div key={label}>
-                    <dt className="text-xs text-gray-400 mb-0.5">{label}</dt>
-                    <dd className="text-sm text-gray-900 font-medium break-all">{value}</dd>
+                    <dt className="text-xs text-gray-400 dark:text-gray-500 mb-0.5">{label}</dt>
+                    <dd className="text-sm text-gray-900 dark:text-white font-medium break-all">{value}</dd>
                   </div>
                 ) : null
               )}
@@ -72,14 +72,14 @@ export default async function OrderDetailPage({ params }: Props) {
 
           {/* To'lov screenshoti */}
           {order.paymentScreenshotUrl && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-              <h2 className="font-semibold text-gray-900 mb-4">To'lov cheki</h2>
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+              <h2 className="font-semibold text-gray-900 dark:text-white mb-4">To'lov cheki</h2>
               <Image
                 src={order.paymentScreenshotUrl}
                 alt="To'lov cheki"
                 width={400}
                 height={300}
-                className="rounded-lg border border-gray-100 max-w-full"
+                className="rounded-lg border border-gray-100 dark:border-gray-800 max-w-full"
               />
             </div>
           )}
@@ -87,18 +87,18 @@ export default async function OrderDetailPage({ params }: Props) {
 
         {/* Amallar */}
         <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Holat</h2>
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
+            <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Holat</h2>
             <OrderStatusUpdater orderId={order.id} currentStatus={order.status} />
           </div>
 
           {order.invitation ? (
-            <div className="bg-green-50 rounded-xl border border-green-100 p-6">
-              <h2 className="font-semibold text-green-800 mb-2">Taklif tayyor ✓</h2>
+            <div className="bg-green-50 rounded-xl border border-green-100 dark:bg-green-900/20 dark:border-green-900/40 p-6">
+              <h2 className="font-semibold text-green-800 dark:text-green-300 mb-2">Taklif tayyor ✓</h2>
               <Link
                 href={`/i/${order.invitation.slug}`}
                 target="_blank"
-                className="text-sm text-green-700 underline break-all"
+                className="text-sm text-green-700 dark:text-green-400 underline break-all"
               >
                 /i/{order.invitation.slug}
               </Link>

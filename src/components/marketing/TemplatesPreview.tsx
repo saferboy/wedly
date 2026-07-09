@@ -7,16 +7,16 @@ export default function TemplatesPreview() {
   const featured = TEMPLATES.slice(0, 3);
 
   return (
-    <section className="py-24 bg-[#FAF7F2]">
+    <section className="py-24 bg-[#FAF7F2] dark:bg-gray-950">
       <Container>
         <div className="text-center mb-16">
           <span className="text-xs font-semibold tracking-[0.3em] text-[#C9A84C] uppercase">
             ✦ Dizaynlar ✦
           </span>
-          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810]">
+          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810] dark:text-white">
             Chiroyli templatelar
           </h2>
-          <p className="mt-4 text-gray-500 max-w-md mx-auto">
+          <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
             To'y va qiz bazmi uchun 6 ta noyob dizayn. Har biri o'z rang
             sxemasi va uslubi bilan.
           </p>
@@ -59,12 +59,12 @@ export default function TemplatesPreview() {
               </div>
 
               {/* Info */}
-              <div className="bg-white p-4 flex items-center justify-between">
+              <div className="bg-white dark:bg-gray-900 p-4 flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-gray-900 text-sm">
+                  <p className="font-semibold text-gray-900 dark:text-white text-sm">
                     {template.name}
                   </p>
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                     {template.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}
                   </p>
                 </div>

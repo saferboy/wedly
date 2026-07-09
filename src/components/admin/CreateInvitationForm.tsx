@@ -96,8 +96,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Asosiy */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">Asosiy ma'lumotlar</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">Asosiy ma'lumotlar</h2>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
@@ -138,8 +138,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       </div>
 
       {/* To'yxona */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">To'yxona</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">To'yxona</h2>
         <div>
           <label className="label">Nomi *</label>
           <input className="input" value={form.venueName} onChange={(e) => set("venueName", e.target.value)} placeholder="Oq Saroy Restaurant" required />
@@ -161,8 +161,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       </div>
 
       {/* Xat matni */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">Taklif xati</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">Taklif xati</h2>
         <div>
           <label className="label">O'zbek tilida</label>
           <textarea className="input h-28 resize-none" value={form.letterText} onChange={(e) => set("letterText", e.target.value)} placeholder="Aziz va qadrdon yaqinim! ..." />
@@ -174,8 +174,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       </div>
 
       {/* To'yona karta */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">To'yona karta (ixtiyoriy)</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">To'yona karta (ixtiyoriy)</h2>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="label">Karta raqami</label>
@@ -189,8 +189,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       </div>
 
       {/* Template va musiqa */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4">
-        <h2 className="font-semibold text-gray-900">Template va musiqa</h2>
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">Template va musiqa</h2>
         <div>
           <label className="label">Template *</label>
           <div className="grid grid-cols-3 gap-2">
@@ -201,8 +201,8 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
                 onClick={() => set("templateSlug", t.slug)}
                 className={`p-3 rounded-lg border-2 text-sm font-medium transition-all ${
                   form.templateSlug === t.slug
-                    ? "border-[#8B1A1A] bg-red-50"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? "border-[#8B1A1A] bg-red-50 dark:bg-red-950/30"
+                    : "border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600 dark:text-gray-300"
                 }`}
               >
                 <div
@@ -231,7 +231,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       </div>
 
       {error && (
-        <p className="text-sm text-red-500 bg-red-50 px-4 py-3 rounded-lg">{error}</p>
+        <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/40 dark:text-red-400 px-4 py-3 rounded-lg">{error}</p>
       )}
 
       <button
@@ -244,8 +244,11 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
 
       <style jsx>{`
         .label { display: block; font-size: 0.75rem; font-weight: 500; color: #6b7280; margin-bottom: 0.375rem; }
-        .input { width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem; outline: none; }
+        .input { width: 100%; padding: 0.625rem 0.875rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; font-size: 0.875rem; outline: none; background: #fff; color: #111827; }
         .input:focus { border-color: #8B1A1A; box-shadow: 0 0 0 3px rgba(139,26,26,0.1); }
+        :global(.dark) .label { color: #9ca3af; }
+        :global(.dark) .input { background: #111827; border-color: #374151; color: #ffffff; }
+        :global(.dark) .input::placeholder { color: #6b7280; }
       `}</style>
     </form>
   );

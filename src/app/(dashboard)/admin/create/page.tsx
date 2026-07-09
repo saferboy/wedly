@@ -26,7 +26,7 @@ export default async function CreatePage({ searchParams }: Props) {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         {order ? "Buyurtmaga taklif yaratish" : "Yangi taklif yaratish"}
       </h1>
 

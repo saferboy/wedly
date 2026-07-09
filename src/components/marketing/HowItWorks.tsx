@@ -23,17 +23,17 @@ const STEPS = [
 
 export default function HowItWorks() {
   return (
-    <section id="how-it-works" className="py-24 bg-white">
+    <section id="how-it-works" className="py-24 bg-white dark:bg-gray-950">
       <Container>
         {/* Sarlavha */}
         <div className="text-center mb-16">
           <span className="text-xs font-semibold tracking-[0.3em] text-[#C9A84C] uppercase">
             ✦ Jarayon ✦
           </span>
-          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810]">
+          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810] dark:text-white">
             Qanday ishlaydi?
           </h2>
-          <p className="mt-4 text-gray-500 max-w-md mx-auto">
+          <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
             Atigi 3 qadam — va sizning taklifnomangiz tayyor
           </p>
         </div>
@@ -68,10 +68,10 @@ export default function HowItWorks() {
                 </span>
               </div>
 
-              <h3 className="font-bold text-[#2C1810] text-lg mb-3">
+              <h3 className="font-bold text-[#2C1810] dark:text-white text-lg mb-3">
                 {step.title}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{step.desc}</p>
             </div>
           ))}
         </div>

@@ -40,16 +40,16 @@ const PLANS = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-24 bg-white">
+    <section id="pricing" className="py-24 bg-white dark:bg-gray-950">
       <Container>
         <div className="text-center mb-16">
           <span className="text-xs font-semibold tracking-[0.3em] text-[#C9A84C] uppercase">
             ✦ Narxlar ✦
           </span>
-          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810]">
+          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810] dark:text-white">
             Oddiy va tushunarli
           </h2>
-          <p className="mt-4 text-gray-500">
+          <p className="mt-4 text-gray-500 dark:text-gray-400">
             Yashirin to'lovlar yo'q
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function Pricing() {
               className={`relative rounded-2xl p-8 transition-all ${
                 plan.highlight
                   ? "bg-[#8B1A1A] text-white shadow-2xl scale-[1.02]"
-                  : "bg-[#FAF7F2] border border-gray-100 shadow-sm"
+                  : "bg-[#FAF7F2] dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm"
               }`}
             >
               {plan.highlight && (
@@ -72,14 +72,14 @@ export default function Pricing() {
 
               <h3
                 className={`font-bold text-xl mb-1 ${
-                  plan.highlight ? "text-white" : "text-[#2C1810]"
+                  plan.highlight ? "text-white" : "text-[#2C1810] dark:text-white"
                 }`}
               >
                 {plan.name}
               </h3>
               <p
                 className={`text-sm mb-6 ${
-                  plan.highlight ? "text-red-200" : "text-gray-400"
+                  plan.highlight ? "text-red-200" : "text-gray-400 dark:text-gray-400"
                 }`}
               >
                 {plan.description}
@@ -95,7 +95,7 @@ export default function Pricing() {
                 </span>
                 <span
                   className={`text-sm ml-1 ${
-                    plan.highlight ? "text-red-200" : "text-gray-400"
+                    plan.highlight ? "text-red-200" : "text-gray-400 dark:text-gray-400"
                   }`}
                 >
                   {plan.currency}
@@ -110,7 +110,7 @@ export default function Pricing() {
                     >
                       ✓
                     </span>
-                    <span className={plan.highlight ? "text-red-100" : "text-gray-600"}>
+                    <span className={plan.highlight ? "text-red-100" : "text-gray-600 dark:text-gray-400"}>
                       {f}
                     </span>
                   </li>
@@ -124,7 +124,7 @@ export default function Pricing() {
                 size="lg"
                 className={`w-full justify-center ${
                   plan.highlight
-                    ? "bg-white text-[#8B1A1A] hover:bg-gray-100"
+                    ? "bg-white text-[#8B1A1A] hover:bg-gray-100 dark:hover:bg-gray-200"
                     : ""
                 }`}
               >

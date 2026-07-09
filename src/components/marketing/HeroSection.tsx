@@ -5,7 +5,7 @@ import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#FAF7F2] pt-16">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-[#FAF7F2] dark:bg-gray-950 pt-16">
       {/* Fon naqshlari */}
       <div
         className="absolute inset-0 opacity-[0.03]"
@@ -25,14 +25,14 @@ export default function HeroSection() {
               ✦ Onlayn to'y taklifnomalari ✦
             </span>
 
-            <h1 className="font-serif text-5xl lg:text-6xl leading-tight text-[#2C1810] mb-6">
+            <h1 className="font-serif text-5xl lg:text-6xl leading-tight text-[#2C1810] dark:text-white mb-6">
               Sevgi{" "}
               <span className="italic text-[#8B1A1A]">taklifnomasini</span>
               <br />
               onlayn ulashing
             </h1>
 
-            <p className="text-gray-600 text-lg leading-relaxed mb-8 max-w-md">
+            <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-8 max-w-md">
               To'y yoki qiz bazmi uchun chiroyli raqamli taklifnoma yarating.
               Template tanlang, ma'lumot qoldiring — biz 24 soat ichida
               tayyor qilamiz.
@@ -53,7 +53,7 @@ export default function HeroSection() {
             </div>
 
             {/* Stats */}
-            <div className="flex gap-8 mt-12 pt-8 border-t border-gray-200">
+            <div className="flex gap-8 mt-12 pt-8 border-t border-gray-200 dark:border-gray-800">
               {[
                 { value: "200+", label: "Taklifnoma yaratildi" },
                 { value: "24h", label: "Tayyorlanish vaqti" },
@@ -61,7 +61,7 @@ export default function HeroSection() {
               ].map(({ value, label }) => (
                 <div key={label}>
                   <p className="text-2xl font-bold text-[#8B1A1A]">{value}</p>
-                  <p className="text-xs text-gray-500 mt-1">{label}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</p>
                 </div>
               ))}
             </div>
@@ -132,7 +132,7 @@ export default function HeroSection() {
         <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M0 30C360 60 1080 0 1440 30V60H0V30Z"
-            fill="white"
+            className="fill-white dark:fill-gray-950"
           />
         </svg>
       </div>

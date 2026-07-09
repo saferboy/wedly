@@ -48,15 +48,15 @@ export default function MusicManager({ tracks }: Props) {
       {adding ? (
         <form
           onSubmit={handleAdd}
-          className="bg-white rounded-xl border border-gray-100 shadow-sm p-6 space-y-4"
+          className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4"
         >
-          <h2 className="font-semibold text-gray-900">Yangi musiqa qo'shish</h2>
+          <h2 className="font-semibold text-gray-900 dark:text-white">Yangi musiqa qo'shish</h2>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
               Musiqa nomi *
             </label>
             <input
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
               value={form.title}
               onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
               placeholder="Muhabbat"
@@ -64,22 +64,22 @@ export default function MusicManager({ tracks }: Props) {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
               Ijrochi
             </label>
             <input
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
               value={form.artist}
               onChange={(e) => setForm((f) => ({ ...f, artist: e.target.value }))}
               placeholder="Ozodbek Nazarbekov"
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1">
+            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
               Fayl URL (Supabase Storage) *
             </label>
             <input
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
               value={form.fileUrl}
               onChange={(e) => setForm((f) => ({ ...f, fileUrl: e.target.value }))}
               placeholder="https://xxx.supabase.co/storage/v1/..."
@@ -97,7 +97,7 @@ export default function MusicManager({ tracks }: Props) {
             <button
               type="button"
               onClick={() => setAdding(false)}
-              className="px-4 py-2 border border-gray-200 text-sm rounded-lg hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-200 text-sm rounded-lg hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
             >
               Bekor
             </button>
@@ -114,24 +114,24 @@ export default function MusicManager({ tracks }: Props) {
       )}
 
       {/* Ro'yxat */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
         {tracks.length === 0 ? (
-          <div className="py-12 text-center text-gray-400">
+          <div className="py-12 text-center text-gray-400 dark:text-gray-500">
             <Music size={32} className="mx-auto mb-3 opacity-30" />
             <p>Kutubxona bo'sh</p>
           </div>
         ) : (
-          <ul className="divide-y divide-gray-50">
+          <ul className="divide-y divide-gray-50 dark:divide-gray-800">
             {tracks.map((track) => (
-              <li key={track.id} className="flex items-center justify-between px-5 py-4 hover:bg-gray-50">
+              <li key={track.id} className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-[#8B1A1A]/10 rounded-lg flex items-center justify-center">
                     <Music size={16} className="text-[#8B1A1A]" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">{track.title}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{track.title}</p>
                     {track.artist && (
-                      <p className="text-xs text-gray-400">{track.artist}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">{track.artist}</p>
                     )}
                   </div>
                 </div>
@@ -139,7 +139,7 @@ export default function MusicManager({ tracks }: Props) {
                   <audio controls src={track.fileUrl} className="h-8 w-36 opacity-70" />
                   <button
                     onClick={() => handleDelete(track.id)}
-                    className="text-gray-300 hover:text-red-500 transition-colors"
+                    className="text-gray-300 hover:text-red-500 dark:text-gray-600 dark:hover:text-red-400 transition-colors"
                   >
                     <Trash2 size={16} />
                   </button>

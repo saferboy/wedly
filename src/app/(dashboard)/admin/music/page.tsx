@@ -14,7 +14,7 @@ export default async function MusicPage() {
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Musiqa kutubxonasi</h1>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Musiqa kutubxonasi</h1>
       <MusicManager tracks={tracks} />
     </div>
   );
