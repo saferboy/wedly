@@ -14,7 +14,7 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (status === "authenticated") router.replace("/admin/orders");
+    if (status === "authenticated") router.replace("/admin/dashboard");
   }, [status, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
       setError("Login yoki parol noto'g'ri");
       setLoading(false);
     } else {
-      router.replace("/admin/orders");
+      router.replace("/admin/dashboard");
     }
   };
 

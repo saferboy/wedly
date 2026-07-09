@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
+  LayoutDashboard,
   ShoppingBag,
   Globe,
   Music,
@@ -16,6 +17,7 @@ import {
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const NAV = [
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/orders", label: "Buyurtmalar", icon: ShoppingBag },
   { href: "/admin/invitations", label: "Takliflar", icon: Globe },
   { href: "/admin/create", label: "Yangi taklif", icon: Plus },
