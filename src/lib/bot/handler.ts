@@ -146,17 +146,33 @@ export function createBot() {
     }
   });
 
-  // Rasm qabul qilish
+  // Rasm qabul qilish (to'yxona rasmi yoki to'lov screenshoti — bosqichga qarab)
   bot.on("photo", async (ctx) => {
-    if (ctx.session.step !== "photo") return;
-    const photos = ctx.message.photo;
-    const largest = photos[photos.length - 1];
-    ctx.session.photoFileId = largest.file_id;
-    ctx.session.step = "music_choice";
-    await ctx.reply("✅ Rasm qabul qilindi!");
-    await ctx.replyWithMarkdown(MSG.musicChoice, {
-      reply_markup: KEYBOARDS.musicChoice,
-    });
+    const s = ctx.session;
+
+    if (s.step === "photo") {
+      const photos = ctx.message.photo;
+      const largest = photos[photos.length - 1];
+      s.photoFileId = largest.file_id;
+      s.step = "music_choice";
+      await ctx.reply("✅ Rasm qabul qilindi!");
+      await ctx.replyWithMarkdown(MSG.musicChoice, {
+        reply_markup: KEYBOARDS.musicChoice,
+      });
+      return;
+    }
+
+    if (s.step === "payment_screenshot") {
+      const photos = ctx.message.photo;
+      s.paymentScreenshotFileId = photos[photos.length - 1].file_id;
+      s.step = "done";
+
+      // Admin ga xabar
+      await notifyAdmin(ctx, s);
+
+      await ctx.replyWithMarkdown(MSG.done);
+      sessions.delete(ctx.chat.id);
+    }
   });
 
   // Audio/document qabul qilish
@@ -266,22 +282,6 @@ export function createBot() {
     }
   });
 
-  // To'lov screenshoti (rasm)
-  bot.on("photo", async (ctx) => {
-    const s = ctx.session;
-    if (s.step === "payment_screenshot") {
-      const photos = ctx.message.photo;
-      s.paymentScreenshotFileId = photos[photos.length - 1].file_id;
-      s.step = "done";
-
-      // Admin ga xabar
-      await notifyAdmin(ctx, s);
-
-      await ctx.replyWithMarkdown(MSG.done);
-      sessions.delete(ctx.chat.id);
-    }
-  });
-
   return bot;
 }
 
@@ -334,7 +334,7 @@ async function sendSummaryAndPayment(ctx: SessionContext) {
 }
 
 async function notifyAdmin(ctx: SessionContext, s: BotSession) {
-  const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
+  const adminChatId = Number(process.env.TELEGRAM_ADMIN_CHAT_ID);
   if (!adminChatId) return;
 
   const msg = MSG.adminNotification({
