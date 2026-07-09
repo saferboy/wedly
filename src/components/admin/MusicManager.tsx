@@ -123,7 +123,7 @@ export default function MusicManager({ tracks }: Props) {
         ) : (
           <ul className="divide-y divide-gray-50 dark:divide-gray-800">
             {tracks.map((track) => (
-              <li key={track.id} className="flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800">
+              <li key={track.id} className="flex flex-wrap items-center justify-between gap-y-2 px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 bg-[#8B1A1A]/10 rounded-lg flex items-center justify-center">
                     <Music size={16} className="text-[#8B1A1A]" />

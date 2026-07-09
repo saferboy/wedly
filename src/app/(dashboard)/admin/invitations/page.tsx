@@ -33,6 +33,7 @@ export default async function InvitationsPage() {
             <p>Hozircha taklif yo'q</p>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800">
               <tr>
@@ -91,6 +92,7 @@ export default async function InvitationsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

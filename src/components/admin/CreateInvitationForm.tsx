@@ -99,7 +99,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
         <h2 className="font-semibold text-gray-900 dark:text-white">Asosiy ma'lumotlar</h2>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">Tadbir turi</label>
             <select className="input" value={form.eventType} onChange={(e) => set("eventType", e.target.value)}>
@@ -125,7 +125,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
           <input className="input" value={form.brideName} onChange={(e) => set("brideName", e.target.value)} placeholder="Nilufar Karimova" required />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">Sana *</label>
             <input className="input" type="date" value={form.eventDate} onChange={(e) => set("eventDate", e.target.value)} required />
@@ -148,7 +148,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
           <label className="label">Manzil *</label>
           <input className="input" value={form.venueAddress} onChange={(e) => set("venueAddress", e.target.value)} placeholder="S. Ayniy ko'chasi, 60, Toshkent" required />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">Yandex Maps URL</label>
             <input className="input" value={form.yandexMapUrl} onChange={(e) => set("yandexMapUrl", e.target.value)} placeholder="https://yandex.uz/maps/..." />
@@ -176,7 +176,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
       {/* To'yona karta */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
         <h2 className="font-semibold text-gray-900 dark:text-white">To'yona karta (ixtiyoriy)</h2>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label">Karta raqami</label>
             <input className="input" value={form.cardNumber} onChange={(e) => set("cardNumber", e.target.value)} placeholder="8600 0000 0000 0000" />
@@ -193,7 +193,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
         <h2 className="font-semibold text-gray-900 dark:text-white">Template va musiqa</h2>
         <div>
           <label className="label">Template *</label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {filteredTemplates.map((t) => (
               <button
                 key={t.slug}

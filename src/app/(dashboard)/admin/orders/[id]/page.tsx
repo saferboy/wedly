@@ -58,7 +58,7 @@ export default async function OrderDetailPage({ params }: Props) {
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6">
             <h2 className="font-semibold text-gray-900 dark:text-white mb-4">Ma'lumotlar</h2>
-            <dl className="grid grid-cols-2 gap-x-6 gap-y-3">
+            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3">
               {rows.map(([label, value]) =>
                 value ? (
                   <div key={label}>

@@ -59,14 +59,14 @@ export default async function TemplatePreviewPage({ params }: Props) {
   return (
     <div className="relative">
       {/* Preview banner */}
-      <div className="fixed top-0 left-0 right-0 z-[100] bg-black/80 backdrop-blur-sm text-white flex items-center justify-between px-4 py-2">
-        <div className="flex items-center gap-3">
-          <span className="text-xs bg-yellow-500 text-black px-2 py-0.5 rounded font-bold">
+      <div className="fixed top-0 left-0 right-0 z-[100] bg-black/80 backdrop-blur-sm text-white flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 sm:px-4 py-2">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <span className="shrink-0 text-xs bg-yellow-500 text-black px-2 py-0.5 rounded font-bold">
             PREVIEW
           </span>
-          <span className="text-sm font-medium">{template.name}</span>
+          <span className="text-sm font-medium truncate">{template.name}</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/templates"
             className="text-xs text-gray-300 hover:text-white transition-colors"
@@ -77,7 +77,7 @@ export default async function TemplatePreviewPage({ params }: Props) {
             href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="px-4 py-1.5 rounded-full text-xs font-bold transition-opacity hover:opacity-90"
+            className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{
               background: template.theme.accentColor,
               color: template.previewBg,
@@ -89,7 +89,7 @@ export default async function TemplatePreviewPage({ params }: Props) {
       </div>
 
       {/* Actual invitation preview */}
-      <div className="pt-10">
+      <div className="pt-12 sm:pt-10">
         <InvitationWrapper data={demoData} />
       </div>
     </div>

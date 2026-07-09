@@ -42,7 +42,7 @@ export default async function OrdersPage() {
       </div>
 
       {/* Statistika */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
         {[
           { label: "Jami", value: stats.total, color: "text-gray-900 dark:text-white" },
           { label: "Yangi", value: stats.pending, color: "text-yellow-600 dark:text-yellow-400" },
@@ -64,6 +64,7 @@ export default async function OrdersPage() {
             <p>Hozircha buyurtma yo'q</p>
           </div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800">
               <tr>
@@ -126,6 +127,7 @@ export default async function OrdersPage() {
               })}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>

@@ -74,7 +74,7 @@ export default function LocationSection({ data, t }: Props) {
 
         {/* Xarita tugmalari */}
         {(data.yandexMapUrl || data.googleMapUrl) && (
-          <div className="flex gap-3 justify-center mt-8">
+          <div className="flex flex-wrap gap-3 justify-center mt-8">
             {data.yandexMapUrl && (
               <a
                 href={data.yandexMapUrl}
