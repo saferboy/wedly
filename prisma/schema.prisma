@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// To'y yoki qizlar bazmi
+enum EventType {
+  WEDDING    // To'y
+  BACHELORETTE // Qizlar bazmi
+}
+
+// Buyurtma holati
+enum OrderStatus {
+  PENDING    // Kutilmoqda
+  PAID       // To'langan (screenshot keldi)
+  PROCESSING // Admin tayyorlayapti
+  COMPLETED  // Tayyor, sayt chiqdi
+  CANCELLED  // Bekor qilindi
+}
+
+// Musiqa kutubxonasi
+model MusicTrack {
+  id        String   @id @default(cuid())
+  title     String
+  artist    String?
+  fileUrl   String
+  duration  Int?     // soniyalarda
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  invitations Invitation[]
+}
+
+// Templatelar (dizayn shablonlari)
+model Template {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique  // "classic-red", "floral-pink"
+  eventType   EventType
+  previewImage String
+  description  String?
+  isActive    Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  invitations Invitation[]
+  orders      Order[]
+}
+
+// Telegram orqali kelgan buyurtmalar
+model Order {
+  id              String      @id @default(cuid())
+  telegramChatId  String      // Mijoz Telegram chat ID
+  telegramUserId  String?     // Telegram user ID
+  telegramUsername String?    // @username
+
+  // Event ma'lumotlari
+  eventType       EventType
+  groomName       String?     // Kuyov ismi (to'y uchun)
+  brideName       String      // Kelin ismi
+  eventDate       DateTime?
+  eventTime       String?     // "14:00"
+  venueName       String?     // To'yxona nomi
+  venueAddress    String?     // Manzil
+
+  // Qo'shimcha
+  yandexLink      String?     // Yandex xaritasi linki
+  googleLink      String?     // Google Maps linki
+  photoUrl        String?     // To'yxona rasmi (Supabase Storage)
+  musicChoice     String?     // "library:track-id" yoki "custom" yoki "none"
+  customMusicUrl  String?     // Mijoz yuborgan musiqa (Supabase Storage)
+  cardNumber      String?     // To'yona uchun karta raqami
+  cardHolder      String?     // Karta egasi ismi
+  notes           String?     // Qo'shimcha xohishlar
+
+  // To'lov
+  paymentScreenshotUrl String? // To'lov screenshoti
+  status          OrderStatus @default(PENDING)
+
+  // Qaysi template tanlagan
+  templateId      String?
+  template        Template?   @relation(fields: [templateId], references: [id])
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  invitation      Invitation?
+}
+
+// Tayyor taklif sahifalari
+model Invitation {
+  id          String    @id @default(cuid())
+  slug        String    @unique  // URL: wedly.uz/i/ozodbek-mushtariy
+  isActive    Boolean   @default(false)
+
+  // Asosiy ma'lumotlar
+  eventType   EventType
+  groomName   String?
+  brideName   String
+  eventDate   DateTime
+  eventTime   String    // "14:00"
+
+  // To'yxona
+  venueName   String
+  venueAddress String
+  yandexMapUrl String?
+  googleMapUrl  String?
+
+  // Taklif xati
+  letterText  String    @default("")
+  letterTextRu String   @default("") // Rus tilida
+
+  // Media
+  photoUrl    String?   // To'yxona/kelin rasmi
+  musicTrackId String?
+  musicTrack  MusicTrack? @relation(fields: [musicTrackId], references: [id])
+  customMusicUrl String? // Custom musiqa
+
+  // Karta (to'yona)
+  cardNumber  String?
+  cardHolder  String?
+
+  // Template
+  templateId  String
+  template    Template  @relation(fields: [templateId], references: [id])
+
+  // Buyurtma bilan bog'liq
+  orderId     String?   @unique
+  order       Order?    @relation(fields: [orderId], references: [id])
+
+  viewCount   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

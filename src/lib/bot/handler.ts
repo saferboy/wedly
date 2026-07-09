@@ -1,0 +1,407 @@
+import { Telegraf, session } from "telegraf";
+import type { Context } from "telegraf";
+import type { Update } from "telegraf/types";
+import { MSG, KEYBOARDS } from "./messages";
+import type { BotSession } from "./types";
+import { defaultSession } from "./types";
+
+interface SessionContext extends Context<Update> {
+  session: BotSession;
+}
+
+// In-memory session store (keyinchalik Redis ga o'tkaziladi)
+const sessions = new Map<number, BotSession>();
+
+export function createBot() {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) throw new Error("TELEGRAM_BOT_TOKEN env yo'q");
+
+  const bot = new Telegraf<SessionContext>(token);
+
+  // Session middleware
+  bot.use((ctx, next) => {
+    const chatId = ctx.chat?.id;
+    if (chatId) {
+      if (!sessions.has(chatId)) sessions.set(chatId, defaultSession());
+      ctx.session = sessions.get(chatId)!;
+    }
+    return next();
+  });
+
+  // /start komandasi
+  bot.start(async (ctx) => {
+    const chatId = ctx.chat?.id;
+    const startParam = ctx.startPayload; // template_classic-red
+
+    if (chatId) {
+      const s = defaultSession();
+      if (startParam?.startsWith("template_")) {
+        s.templateSlug = startParam.replace("template_", "");
+      }
+      sessions.set(chatId, s);
+      ctx.session = s;
+    }
+
+    await ctx.replyWithMarkdown(MSG.welcome);
+    await ctx.replyWithMarkdown(MSG.chooseEventType, {
+      reply_markup: KEYBOARDS.eventType,
+    });
+    ctx.session.step = "event_type";
+  });
+
+  // /skip komandasi
+  bot.command("skip", async (ctx) => {
+    await handleSkip(ctx);
+  });
+
+  // /restart komandasi
+  bot.command("restart", async (ctx) => {
+    const chatId = ctx.chat?.id;
+    if (chatId) sessions.set(chatId, defaultSession());
+    await ctx.reply("♻️ Qaytadan boshlandi. /start bosing.");
+  });
+
+  // Callback query handler (inline tugmalar)
+  bot.on("callback_query", async (ctx) => {
+    const data = (ctx.callbackQuery as { data?: string }).data;
+    if (!data) return;
+    await ctx.answerCbQuery();
+
+    const s = ctx.session;
+
+    // Event type
+    if (data.startsWith("event_")) {
+      s.eventType = data.replace("event_", "") as "WEDDING" | "BACHELORETTE";
+      s.step = s.eventType === "WEDDING" ? "groom_name" : "bride_name";
+      const msg =
+        s.eventType === "WEDDING" ? MSG.groomName : MSG.brideName(false);
+      await ctx.replyWithMarkdown(msg);
+      return;
+    }
+
+    // Skip photo
+    if (data === "skip_photo") {
+      s.step = "music_choice";
+      await ctx.replyWithMarkdown(MSG.musicChoice, {
+        reply_markup: KEYBOARDS.musicChoice,
+      });
+      return;
+    }
+
+    // Music choice
+    if (data === "music_library") {
+      s.musicChoice = "library";
+      s.step = "music_library";
+      // Demo kutubxona (haqiqiysi DB dan keladi)
+      const demoTracks = [
+        { id: "1", title: "Muhabbat", artist: "Ozodbek Nazarbekov" },
+        { id: "2", title: "Sevgim", artist: "Shaxriyor" },
+        { id: "3", title: "Qalbim", artist: "Ulugbek Rahmatullayev" },
+        { id: "4", title: "Seni sevaman", artist: "Jasur Umirov" },
+      ];
+      await ctx.replyWithMarkdown(MSG.musicLibrary, {
+        reply_markup: KEYBOARDS.musicLibrary(demoTracks),
+      });
+      return;
+    }
+
+    if (data === "music_custom") {
+      s.musicChoice = "custom";
+      s.step = "music_file";
+      await ctx.replyWithMarkdown(MSG.musicFile);
+      return;
+    }
+
+    if (data === "music_none") {
+      s.musicChoice = "none";
+      s.step = "card_number";
+      await ctx.replyWithMarkdown(MSG.cardNumber, {
+        reply_markup: KEYBOARDS.cardChoice,
+      });
+      return;
+    }
+
+    // Music library track tanlash
+    if (data.startsWith("track_")) {
+      s.musicTrackId = data.replace("track_", "");
+      s.step = "card_number";
+      await ctx.reply("✅ Musiqa tanlandi!");
+      await ctx.replyWithMarkdown(MSG.cardNumber, {
+        reply_markup: KEYBOARDS.cardChoice,
+      });
+      return;
+    }
+
+    // Karta
+    if (data === "card_yes") {
+      s.step = "card_number";
+      await ctx.replyWithMarkdown(MSG.cardNumberInput);
+      return;
+    }
+
+    if (data === "card_no") {
+      s.step = "notes";
+      await ctx.replyWithMarkdown(MSG.notes);
+      return;
+    }
+  });
+
+  // Rasm qabul qilish
+  bot.on("photo", async (ctx) => {
+    if (ctx.session.step !== "photo") return;
+    const photos = ctx.message.photo;
+    const largest = photos[photos.length - 1];
+    ctx.session.photoFileId = largest.file_id;
+    ctx.session.step = "music_choice";
+    await ctx.reply("✅ Rasm qabul qilindi!");
+    await ctx.replyWithMarkdown(MSG.musicChoice, {
+      reply_markup: KEYBOARDS.musicChoice,
+    });
+  });
+
+  // Audio/document qabul qilish
+  bot.on("audio", async (ctx) => {
+    if (ctx.session.step !== "music_file") return;
+    ctx.session.musicFileId = ctx.message.audio.file_id;
+    ctx.session.step = "card_number";
+    await ctx.reply("✅ Musiqa qabul qilindi!");
+    await ctx.replyWithMarkdown(MSG.cardNumber, {
+      reply_markup: KEYBOARDS.cardChoice,
+    });
+  });
+
+  // Matn xabarlar
+  bot.on("text", async (ctx) => {
+    const text = ctx.message.text.trim();
+    const s = ctx.session;
+
+    if (text.startsWith("/")) return; // komanda — skip
+
+    switch (s.step) {
+      case "groom_name":
+        s.groomName = text;
+        s.step = "bride_name";
+        await ctx.replyWithMarkdown(MSG.brideName(true));
+        break;
+
+      case "bride_name":
+        s.brideName = text;
+        s.step = "event_date";
+        await ctx.replyWithMarkdown(MSG.eventDate);
+        break;
+
+      case "event_date":
+        if (!isValidDate(text)) {
+          await ctx.reply("❌ Format noto'g'ri. Misol: 15.06.2026");
+          return;
+        }
+        s.eventDate = text;
+        s.step = "event_time";
+        await ctx.replyWithMarkdown(MSG.eventTime);
+        break;
+
+      case "event_time":
+        if (!isValidTime(text)) {
+          await ctx.reply("❌ Format noto'g'ri. Misol: 14:00");
+          return;
+        }
+        s.eventTime = text;
+        s.step = "venue_name";
+        await ctx.replyWithMarkdown(MSG.venueName);
+        break;
+
+      case "venue_name":
+        s.venueName = text;
+        s.step = "venue_address";
+        await ctx.replyWithMarkdown(MSG.venueAddress);
+        break;
+
+      case "venue_address":
+        s.venueAddress = text;
+        s.step = "yandex_link";
+        await ctx.replyWithMarkdown(MSG.yandexLink);
+        break;
+
+      case "yandex_link":
+        s.yandexLink = text;
+        s.step = "google_link";
+        await ctx.replyWithMarkdown(MSG.googleLink);
+        break;
+
+      case "google_link":
+        s.googleLink = text;
+        s.step = "photo";
+        await ctx.replyWithMarkdown(MSG.photo, {
+          reply_markup: KEYBOARDS.skipPhoto,
+        });
+        break;
+
+      case "card_number":
+        s.cardNumber = text;
+        s.step = "card_holder";
+        await ctx.replyWithMarkdown(MSG.cardHolder);
+        break;
+
+      case "card_holder":
+        s.cardHolder = text.toUpperCase();
+        s.step = "notes";
+        await ctx.replyWithMarkdown(MSG.notes);
+        break;
+
+      case "notes":
+        s.notes = text;
+        await sendSummaryAndPayment(ctx);
+        break;
+
+      case "payment_screenshot":
+        // Matn screenshot o'rniga keldi
+        await ctx.reply(
+          "📷 Iltimos, to'lov chekini *rasm sifatida* yuboring.",
+          { parse_mode: "Markdown" }
+        );
+        break;
+
+      default:
+        await ctx.reply("Iltimos /start bosib qaytadan boshlang.");
+    }
+  });
+
+  // To'lov screenshoti (rasm)
+  bot.on("photo", async (ctx) => {
+    const s = ctx.session;
+    if (s.step === "payment_screenshot") {
+      const photos = ctx.message.photo;
+      s.paymentScreenshotFileId = photos[photos.length - 1].file_id;
+      s.step = "done";
+
+      // Admin ga xabar
+      await notifyAdmin(ctx, s);
+
+      await ctx.replyWithMarkdown(MSG.done);
+      sessions.delete(ctx.chat.id);
+    }
+  });
+
+  return bot;
+}
+
+// Yordamchi funksiyalar
+async function handleSkip(ctx: SessionContext) {
+  const s = ctx.session;
+
+  switch (s.step) {
+    case "yandex_link":
+      s.step = "google_link";
+      await ctx.replyWithMarkdown(MSG.googleLink);
+      break;
+
+    case "google_link":
+      s.step = "photo";
+      await ctx.replyWithMarkdown(MSG.photo, {
+        reply_markup: KEYBOARDS.skipPhoto,
+      });
+      break;
+
+    case "notes":
+      await sendSummaryAndPayment(ctx);
+      break;
+
+    default:
+      await ctx.reply("Bu qadamni o'tkazib bo'lmaydi.");
+  }
+}
+
+async function sendSummaryAndPayment(ctx: SessionContext) {
+  const s = ctx.session;
+  const amount = "79 000 so'm";
+
+  // Xulosa
+  const summary =
+    `📋 *Buyurtma xulosasi:*\n\n` +
+    `📌 Tur: ${s.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}\n` +
+    (s.groomName ? `👨 Kuyov: ${s.groomName}\n` : "") +
+    `👰 Kelin: ${s.brideName}\n` +
+    `📅 Sana: ${s.eventDate} soat ${s.eventTime}\n` +
+    `🏛 To'yxona: ${s.venueName}\n` +
+    `📍 Manzil: ${s.venueAddress}\n` +
+    `🎵 Musiqa: ${s.musicChoice === "library" ? "Kutubxonadan" : s.musicChoice === "custom" ? "O'z musiqam" : "Yo'q"}\n` +
+    (s.cardNumber ? `💳 Karta: ${s.cardNumber}\n` : "") +
+    (s.notes ? `📝 Izoh: ${s.notes}\n` : "");
+
+  await ctx.replyWithMarkdown(summary);
+  await ctx.replyWithMarkdown(MSG.paymentInfo(amount));
+  ctx.session.step = "payment_screenshot";
+}
+
+async function notifyAdmin(ctx: SessionContext, s: BotSession) {
+  const adminChatId = process.env.TELEGRAM_ADMIN_CHAT_ID;
+  if (!adminChatId) return;
+
+  const msg = MSG.adminNotification({
+    eventType: s.eventType,
+    groomName: s.groomName,
+    brideName: s.brideName,
+    eventDate: s.eventDate,
+    eventTime: s.eventTime,
+    venueName: s.venueName,
+    venueAddress: s.venueAddress,
+    yandexLink: s.yandexLink,
+    googleLink: s.googleLink,
+    cardNumber: s.cardNumber,
+    cardHolder: s.cardHolder,
+    notes: s.notes,
+    templateSlug: s.templateSlug,
+    musicChoice: s.musicChoice,
+  });
+
+  await ctx.telegram.sendMessage(adminChatId, msg, { parse_mode: "Markdown" });
+
+  // Screenshot ni ham yuborish
+  if (s.paymentScreenshotFileId) {
+    await ctx.telegram.sendPhoto(adminChatId, s.paymentScreenshotFileId, {
+      caption: `💳 To'lov cheki — ${s.brideName}${s.groomName ? " & " + s.groomName : ""}`,
+    });
+  }
+
+  // Buyurtmani DB ga saqlash
+  try {
+    const { db } = await import("@/lib/db");
+    await db.order.create({
+      data: {
+        telegramChatId: String(ctx.chat?.id),
+        telegramUsername: ctx.from?.username,
+        eventType: s.eventType!,
+        groomName: s.groomName,
+        brideName: s.brideName!,
+        eventDate: parseDate(s.eventDate!),
+        eventTime: s.eventTime,
+        venueName: s.venueName,
+        venueAddress: s.venueAddress,
+        yandexLink: s.yandexLink,
+        googleLink: s.googleLink,
+        musicChoice: s.musicChoice === "library"
+          ? `library:${s.musicTrackId}`
+          : s.musicChoice ?? "none",
+        cardNumber: s.cardNumber,
+        cardHolder: s.cardHolder,
+        notes: s.notes,
+        status: "PAID",
+      },
+    });
+  } catch (e) {
+    console.error("DB saqlash xatosi:", e);
+  }
+}
+
+function isValidDate(text: string) {
+  return /^\d{2}\.\d{2}\.\d{4}$/.test(text);
+}
+
+function isValidTime(text: string) {
+  return /^\d{1,2}:\d{2}$/.test(text);
+}
+
+function parseDate(dateStr: string): Date {
+  const [day, month, year] = dateStr.split(".").map(Number);
+  return new Date(year, month - 1, day);
+}
