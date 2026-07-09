@@ -6,17 +6,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        login: { label: "Login", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         if (
-          credentials?.email === process.env.ADMIN_EMAIL &&
+          credentials?.login === process.env.ADMIN_LOGIN &&
           credentials?.password === process.env.ADMIN_PASSWORD
         ) {
           return {
             id: "1",
-            email: process.env.ADMIN_EMAIL,
             name: "Admin",
           };
         }

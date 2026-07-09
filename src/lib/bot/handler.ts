@@ -366,6 +366,10 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
   // Buyurtmani DB ga saqlash
   try {
     const { db } = await import("@/lib/db");
+    const template = s.templateSlug
+      ? await db.template.findUnique({ where: { slug: s.templateSlug } })
+      : null;
+
     await db.order.create({
       data: {
         telegramChatId: String(ctx.chat?.id),
@@ -385,6 +389,7 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
         cardNumber: s.cardNumber,
         cardHolder: s.cardHolder,
         notes: s.notes,
+        templateId: template?.id,
         status: "PAID",
       },
     });

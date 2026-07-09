@@ -29,7 +29,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full bg-white dark:bg-gray-950 transition-colors">{children}</body>
+      <body className="min-h-full bg-white dark:bg-gray-950 transition-colors" suppressHydrationWarning>{children}</body>
     </html>
   );
 }

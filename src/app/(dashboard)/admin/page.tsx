@@ -8,7 +8,7 @@ import { useEffect } from "react";
 export default function AdminLoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -23,13 +23,13 @@ export default function AdminLoginPage() {
     setError("");
 
     const res = await signIn("credentials", {
-      email,
+      login,
       password,
       redirect: false,
     });
 
     if (res?.error) {
-      setError("Email yoki parol noto'g'ri");
+      setError("Login yoki parol noto'g'ri");
       setLoading(false);
     } else {
       router.replace("/admin/orders");
@@ -58,15 +58,17 @@ export default function AdminLoginPage() {
         >
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-              Email
+              Login
             </label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={login}
+              onChange={(e) => setLogin(e.target.value)}
               required
+              autoCapitalize="off"
+              autoCorrect="off"
               className="w-full px-4 py-2.5 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/30 focus:border-[#8B1A1A] dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
-              placeholder="admin@wedly.uz"
+              placeholder="admin"
             />
           </div>
 
