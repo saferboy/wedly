@@ -18,7 +18,7 @@ export default async function OrderDetailPage({ params }: Props) {
   const { id } = await params;
   const order = await db.order.findUnique({
     where: { id },
-    include: { template: true, invitation: true },
+    include: { template: { include: { package: true } }, invitation: true },
   });
 
   if (!order) notFound();
@@ -37,6 +37,7 @@ export default async function OrderDetailPage({ params }: Props) {
     ["Karta", order.cardNumber],
     ["Karta egasi", order.cardHolder],
     ["Template", order.template?.name],
+    ["Paket", order.template?.package?.name],
     ["Izoh", order.notes],
     ["Telegram", order.telegramUsername ? `@${order.telegramUsername}` : order.telegramChatId],
     ["Buyurtma vaqti", formatDate(order.createdAt, "uz")],
@@ -93,15 +94,24 @@ export default async function OrderDetailPage({ params }: Props) {
           </div>
 
           {order.invitation ? (
-            <div className="bg-green-50 rounded-xl border border-green-100 dark:bg-green-900/20 dark:border-green-900/40 p-6">
+            <div className="bg-green-50 rounded-xl border border-green-100 dark:bg-green-900/20 dark:border-green-900/40 p-6 space-y-3">
               <h2 className="font-semibold text-green-800 dark:text-green-300 mb-2">Taklif tayyor ✓</h2>
               <Link
                 href={`/i/${order.invitation.slug}`}
                 target="_blank"
-                className="text-sm text-green-700 dark:text-green-400 underline break-all"
+                className="text-sm text-green-700 dark:text-green-400 underline break-all block"
               >
                 /i/{order.invitation.slug}
               </Link>
+              {order.template?.package?.hasPdfExport && (
+                <a
+                  href={`/api/orders/${order.id}/pdf`}
+                  download
+                  className="block w-full py-2.5 bg-white dark:bg-gray-900 border border-green-200 dark:border-green-900/40 text-green-800 dark:text-green-300 text-sm font-semibold text-center rounded-lg hover:bg-green-50 dark:hover:bg-green-900/30 transition-colors"
+                >
+                  PDF yuklab olish
+                </a>
+              )}
             </div>
           ) : (
             <Link

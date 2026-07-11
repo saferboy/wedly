@@ -46,8 +46,29 @@ model Template {
   sortOrder   Int       @default(0)
   createdAt   DateTime  @default(now())
 
+  // Qaysi paketga tegishli (narx, PDF eksport kabi funksiyalarni belgilaydi)
+  packageId   String?
+  package     Package?  @relation(fields: [packageId], references: [id], onDelete: SetNull)
+
   invitations Invitation[]
   orders      Order[]
+}
+
+// Narx paketlari (admin panelda boshqariladi)
+model Package {
+  id           String     @id @default(cuid())
+  name         String
+  slug         String     @unique  // "oddiy", "premium"
+  price        Int        // so'mda
+  description  String?
+  features     String[]   @default([]) // Homepage'da ko'rsatiladigan afzalliklar ro'yxati
+  hasPdfExport Boolean    @default(false)
+  isFeatured   Boolean    @default(false) // Homepage'da "ENG MASHHUR" belgisi bilan ajratiladi
+  isActive     Boolean    @default(true)
+  sortOrder    Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  templates    Template[]
 }
 
 // Telegram orqali kelgan buyurtmalar

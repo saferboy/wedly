@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 
 interface Props {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ print?: string }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -26,8 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function InvitationPage({ params }: Props) {
+export default async function InvitationPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const { print } = await searchParams;
 
   const invitation = await db.invitation.findUnique({
     where: { slug, isActive: true },
@@ -76,5 +78,5 @@ export default async function InvitationPage({ params }: Props) {
     },
   };
 
-  return <InvitationWrapper data={data} />;
+  return <InvitationWrapper data={data} initialOpened={print === "1"} />;
 }

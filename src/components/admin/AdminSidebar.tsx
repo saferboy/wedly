@@ -9,6 +9,7 @@ import {
   ShoppingBag,
   Globe,
   Music,
+  Package,
   Plus,
   LogOut,
   Menu,
@@ -22,6 +23,7 @@ const NAV = [
   { href: "/admin/invitations", label: "Takliflar", icon: Globe },
   { href: "/admin/create", label: "Yangi taklif", icon: Plus },
   { href: "/admin/music", label: "Musiqa", icon: Music },
+  { href: "/admin/packages", label: "Paketlar", icon: Package },
 ];
 
 export default function AdminSidebar() {

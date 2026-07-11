@@ -26,10 +26,11 @@ export const useLang = () => useContext(LangContext);
 
 interface Props {
   data: InvitationData;
+  initialOpened?: boolean;
 }
 
-export default function InvitationWrapper({ data }: Props) {
-  const [opened, setOpened] = useState(false);
+export default function InvitationWrapper({ data, initialOpened = false }: Props) {
+  const [opened, setOpened] = useState(initialOpened);
   const [lang, setLang] = useState<Language>("uz");
 
   const t = (uz: string, ru: string) => (lang === "uz" ? uz : ru);
