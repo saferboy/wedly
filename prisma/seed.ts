@@ -11,30 +11,6 @@ const db = new PrismaClient({ adapter });
 async function main() {
   console.log("Seed boshlandi...");
 
-  // Templatelarni DB ga kiritish
-  for (const t of TEMPLATES) {
-    await db.template.upsert({
-      where: { slug: t.slug },
-      update: {
-        name: t.name,
-        eventType: t.eventType,
-        previewImage: "",
-        description: t.description,
-        isActive: true,
-      },
-      create: {
-        slug: t.slug,
-        name: t.name,
-        eventType: t.eventType,
-        previewImage: "",
-        description: t.description,
-        isActive: true,
-        sortOrder: TEMPLATES.indexOf(t),
-      },
-    });
-    console.log(`✓ Template: ${t.name}`);
-  }
-
   // Default paketlar
   const packages = [
     {
@@ -87,6 +63,32 @@ async function main() {
       create: p,
     });
     console.log(`✓ Paket: ${p.name}`);
+  }
+
+  // Templatelarni DB ga kiritish (paketga bog'lab)
+  for (const t of TEMPLATES) {
+    await db.template.upsert({
+      where: { slug: t.slug },
+      update: {
+        name: t.name,
+        eventType: t.eventType,
+        previewImage: "",
+        description: t.description,
+        isActive: true,
+        package: { connect: { slug: t.packageSlug } },
+      },
+      create: {
+        slug: t.slug,
+        name: t.name,
+        eventType: t.eventType,
+        previewImage: "",
+        description: t.description,
+        isActive: true,
+        sortOrder: TEMPLATES.indexOf(t),
+        package: { connect: { slug: t.packageSlug } },
+      },
+    });
+    console.log(`✓ Template: ${t.name}`);
   }
 
   // Demo musiqa treklarini qo'shish

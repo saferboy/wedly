@@ -8,6 +8,7 @@ export interface TemplateConfig {
   description: string;
   theme: InvitationTheme;
   previewBg: string;
+  packageSlug: "oddiy" | "premium";
 }
 
 export const TEMPLATES: TemplateConfig[] = [
@@ -19,6 +20,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "WEDDING",
     description: "Qizil va oltin — an'anaviy o'zbek uslubi",
     previewBg: "#8B1A1A",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#8B1A1A",
       secondaryColor: "#6B0F0F",
@@ -36,6 +38,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "WEDDING",
     description: "Minimalist qora va oltin — zamonaviy uslub",
     previewBg: "#1a1a1a",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#1a1a1a",
       secondaryColor: "#2d2d2d",
@@ -53,6 +56,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "WEDDING",
     description: "To'q ko'k va kumush — hashamatli uslub",
     previewBg: "#1B2A4A",
+    packageSlug: "premium",
     theme: {
       primaryColor: "#1B2A4A",
       secondaryColor: "#152038",
@@ -72,6 +76,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "BACHELORETTE",
     description: "Pushti va gul bezaklari — nozik qizlar uslubi",
     previewBg: "#C2185B",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#C2185B",
       secondaryColor: "#AD1457",
@@ -89,6 +94,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "BACHELORETTE",
     description: "Limon sariq va oltin — nozik elegantlik",
     previewBg: "#4A3728",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#4A3728",
       secondaryColor: "#3A2A1E",
@@ -106,6 +112,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "BACHELORETTE",
     description: "Binafsha va rangli — quvnoq zamonaviy uslub",
     previewBg: "#6A1B9A",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#6A1B9A",
       secondaryColor: "#4A148C",
