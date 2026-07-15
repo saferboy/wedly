@@ -6,10 +6,11 @@ datasource db {
   provider = "postgresql"
 }
 
-// To'y yoki qizlar bazmi
+// To'y, qizlar bazmi yoki tug'ilgan kun
 enum EventType {
   WEDDING    // To'y
   BACHELORETTE // Qizlar bazmi
+  BIRTHDAY   // Tug'ilgan kun
 }
 
 // Buyurtma holati
@@ -66,6 +67,11 @@ model Order {
   venueName       String?     // To'yxona nomi
   venueAddress    String?     // Manzil
 
+  familyName      String?     // Oila nomi (masalan: Shomurodovlar oilasi)
+  language        String?     @default("uz") // Taklifnoma tili: "uz" | "ru"
+  letterText      String?     // Taklif xati (o'zbekcha)
+  letterTextRu    String?     // Taklif xati (ruscha)
+
   // Qo'shimcha
   yandexLink      String?     // Yandex xaritasi linki
   googleLink      String?     // Google Maps linki
@@ -75,6 +81,7 @@ model Order {
   cardNumber      String?     // To'yona uchun karta raqami
   cardHolder      String?     // Karta egasi ismi
   notes           String?     // Qo'shimcha xohishlar
+  source          String?     @default("telegram") // "telegram" | "web"
 
   // To'lov
   paymentScreenshotUrl String? // To'lov screenshoti

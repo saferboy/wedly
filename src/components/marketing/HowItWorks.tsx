@@ -5,13 +5,13 @@ const STEPS = [
     num: "01",
     icon: "🎨",
     title: "Template tanlang",
-    desc: "To'y yoki qiz bazmi uchun 6 ta chiroyli dizayndan birini tanlang. Preview orqali to'liq ko'rishingiz mumkin.",
+    desc: "To'y, qiz bazmi yoki tug'ilgan kun uchun 6 ta chiroyli dizayndan birini tanlang. Preview orqali to'liq ko'rishingiz mumkin.",
   },
   {
     num: "02",
-    icon: "💬",
-    title: "Telegram orqali buyurtma",
-    desc: "Telegram botimizga o'ting. Bot sizdan ismlar, sana, manzil, musiqa va boshqa ma'lumotlarni so'raydi. To'lovni adminimiz kartasiga o'tkazing.",
+    icon: "📝",
+    title: "Ma'lumotlarni to'ldiring",
+    desc: "Saytdagi qulay forma orqali ismlar, sana, manzil va musiqani kiriting. So'ng to'lovni Telegram orqali bir necha soniyada yakunlang.",
   },
   {
     num: "03",

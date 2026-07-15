@@ -4,6 +4,7 @@ import { useState } from "react";
 import { TEMPLATES } from "@/lib/templates";
 import TemplateCard from "@/components/templates/TemplateCard";
 import type { EventType } from "@/types/invitation";
+import { eventTypeLabel } from "@/lib/eventType";
 
 type Filter = "ALL" | EventType;
 
@@ -22,7 +23,7 @@ export default function TemplatesPage() {
             Templatelar
           </h1>
           <p className="text-gray-500 dark:text-gray-400">
-            To'y yoki qiz bazmi uchun o'zingizga mos dizaynni tanlang
+            To'y, qiz bazmi yoki tug'ilgan kun uchun o'zingizga mos dizaynni tanlang
           </p>
         </div>
       </div>
@@ -30,7 +31,7 @@ export default function TemplatesPage() {
       <div className="max-w-6xl mx-auto px-4 py-10">
         {/* Filter */}
         <div className="flex gap-2 justify-center mb-10">
-          {(["ALL", "WEDDING", "BACHELORETTE"] as Filter[]).map((f) => (
+          {(["ALL", "WEDDING", "BACHELORETTE", "BIRTHDAY"] as Filter[]).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
@@ -40,7 +41,7 @@ export default function TemplatesPage() {
                   : "bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 border dark:border-gray-700"
               }`}
             >
-              {f === "ALL" ? "Barchasi" : f === "WEDDING" ? "To'y" : "Qiz bazmi"}
+              {f === "ALL" ? "Barchasi" : eventTypeLabel(f)}
             </button>
           ))}
         </div>

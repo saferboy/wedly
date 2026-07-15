@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { TemplateConfig } from "@/lib/templates";
-import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
+import { eventTypeLabel } from "@/lib/eventType";
 
 interface Props {
   template: TemplateConfig;
@@ -55,7 +55,7 @@ export default function TemplateCard({ template }: Props) {
             color: template.previewBg,
           }}
         >
-          {template.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}
+          {eventTypeLabel(template.eventType)}
         </span>
       </div>
 
@@ -86,8 +86,7 @@ export default function TemplateCard({ template }: Props) {
             Preview
           </Link>
           <Link
-            href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${template.slug}`}
-            target="_blank"
+            href={`/buyurtma?template=${template.slug}`}
             className="flex-1 py-2 text-center text-sm font-medium rounded-lg text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: template.theme.primaryColor }}
           >

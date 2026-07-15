@@ -2,6 +2,13 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import { TEMPLATES } from "@/lib/templates";
+import { eventTypeLabel } from "@/lib/eventType";
+
+const PREVIEW_NAME: Record<string, string> = {
+  WEDDING: "Jasur & Nilufar",
+  BACHELORETTE: "Malika",
+  BIRTHDAY: "Diyora",
+};
 
 export default function TemplatesPreview() {
   const featured = TEMPLATES.slice(0, 3);
@@ -17,8 +24,8 @@ export default function TemplatesPreview() {
             Chiroyli templatelar
           </h2>
           <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            To'y va qiz bazmi uchun 6 ta noyob dizayn. Har biri o'z rang
-            sxemasi va uslubi bilan.
+            To'y, qiz bazmi va tug'ilgan kun uchun 6 ta noyob dizayn. Har biri
+            o'z rang sxemasi va uslubi bilan.
           </p>
         </div>
 
@@ -39,9 +46,7 @@ export default function TemplatesPreview() {
                   className="font-serif italic text-2xl"
                   style={{ color: "rgba(255,255,255,0.9)" }}
                 >
-                  {template.eventType === "WEDDING"
-                    ? "Jasur & Nilufar"
-                    : "Malika"}
+                  {PREVIEW_NAME[template.eventType] ?? "Malika"}
                 </p>
                 <div
                   className="w-8 h-px"
@@ -65,7 +70,7 @@ export default function TemplatesPreview() {
                     {template.name}
                   </p>
                   <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
-                    {template.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}
+                    {eventTypeLabel(template.eventType)}
                   </p>
                 </div>
                 <span className="text-xs text-[#8B1A1A] font-medium group-hover:translate-x-1 transition-transform inline-block">

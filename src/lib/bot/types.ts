@@ -23,7 +23,8 @@ export type BotStep =
 export interface BotSession {
   step: BotStep;
   templateSlug?: string;
-  eventType?: "WEDDING" | "BACHELORETTE";
+  orderId?: string; // Saytdan kelgan buyurtma (web) bilan bog'lash uchun
+  eventType?: "WEDDING" | "BACHELORETTE" | "BIRTHDAY";
   groomName?: string;
   brideName?: string;
   eventDate?: string;

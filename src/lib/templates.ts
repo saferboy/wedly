@@ -11,6 +11,26 @@ export interface TemplateConfig {
 }
 
 export const TEMPLATES: TemplateConfig[] = [
+  // ── TO'Y — PREMIUM (self-contained) ─────────────────────────
+  {
+    slug: "toy-nikoh",
+    name: "Nikoh",
+    nameRu: "Никох",
+    eventType: "WEDDING",
+    description:
+      "Zumrad yashil va oltin, uzuklar animatsiyasi — hashamatli nikoh to'yi uslubi",
+    previewBg: "#1F4D3D",
+    theme: {
+      primaryColor: "#1F4D3D",
+      secondaryColor: "#143A2C",
+      accentColor: "#C9A44C",
+      bgColor: "#FAF6EC",
+      textColor: "#22332B",
+      fontFamily: "'Playfair Display', Georgia, serif",
+      envelopeBg: "#1F4D3D",
+    },
+  },
+
   // ── TO'Y TEMPLATES ──────────────────────────────────────────
   {
     slug: "classic-red",
@@ -66,54 +86,40 @@ export const TEMPLATES: TemplateConfig[] = [
 
   // ── QIZ BAZMI TEMPLATES ─────────────────────────────────────
   {
-    slug: "floral-pink",
-    name: "Floral",
-    nameRu: "Флорал",
+    slug: "qizlar-bazmi",
+    name: "Qizlar bazmi",
+    nameRu: "Девичник",
     eventType: "BACHELORETTE",
-    description: "Pushti va gul bezaklari — nozik qizlar uslubi",
-    previewBg: "#C2185B",
+    description: "Qizil va oltin peonlar, samolyot animatsiyasi — nozik qizlar bazmi uslubi",
+    previewBg: "#B9223A",
     theme: {
-      primaryColor: "#C2185B",
-      secondaryColor: "#AD1457",
-      accentColor: "#F48FB1",
-      bgColor: "#FFF5F8",
-      textColor: "#880E4F",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#C2185B",
+      primaryColor: "#B9223A",
+      secondaryColor: "#8E1A2C",
+      accentColor: "#C8992C",
+      bgColor: "#FBF4E8",
+      textColor: "#3A2A22",
+      fontFamily: "'Cormorant Garamond', Georgia, serif",
+      envelopeBg: "#B9223A",
     },
   },
+
+  // ── TUG'ILGAN KUN TEMPLATE (self-contained) ─────────────────
   {
-    slug: "elegant-gold",
-    name: "Elegant",
-    nameRu: "Элегант",
-    eventType: "BACHELORETTE",
-    description: "Limon sariq va oltin — nozik elegantlik",
-    previewBg: "#4A3728",
+    slug: "tugilgan-kun",
+    name: "Tug'ilgan kun",
+    nameRu: "День рождения",
+    eventType: "BIRTHDAY",
+    description:
+      "Rang-barang sharlar va konfetti animatsiyasi — quvnoq tug'ilgan kun bazmi uslubi",
+    previewBg: "#FF6B8A",
     theme: {
-      primaryColor: "#4A3728",
-      secondaryColor: "#3A2A1E",
-      accentColor: "#D4AF37",
-      bgColor: "#FFFDF5",
-      textColor: "#4A3728",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#4A3728",
-    },
-  },
-  {
-    slug: "fun-purple",
-    name: "Fun",
-    nameRu: "Фан",
-    eventType: "BACHELORETTE",
-    description: "Binafsha va rangli — quvnoq zamonaviy uslub",
-    previewBg: "#6A1B9A",
-    theme: {
-      primaryColor: "#6A1B9A",
-      secondaryColor: "#4A148C",
-      accentColor: "#E040FB",
-      bgColor: "#FAF5FF",
-      textColor: "#4A148C",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#6A1B9A",
+      primaryColor: "#FF6B8A",
+      secondaryColor: "#E14E6E",
+      accentColor: "#FFC94D",
+      bgColor: "#FFF8F0",
+      textColor: "#3A2A3A",
+      fontFamily: "'Quicksand', system-ui, sans-serif",
+      envelopeBg: "#FF6B8A",
     },
   },
 ];

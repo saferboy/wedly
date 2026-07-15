@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTemplate, TEMPLATES } from "@/lib/templates";
-import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 import InvitationWrapper from "@/components/invitation/InvitationWrapper";
 import type { InvitationData } from "@/types/invitation";
 import type { Metadata } from "next";
@@ -73,10 +72,8 @@ export default async function TemplatePreviewPage({ params }: Props) {
           >
             ← Orqaga
           </Link>
-          <a
-            href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${id}`}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={`/buyurtma?template=${id}`}
             className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{
               background: template.theme.accentColor,
@@ -84,7 +81,7 @@ export default async function TemplatePreviewPage({ params }: Props) {
             }}
           >
             Buyurtma berish
-          </a>
+          </Link>
         </div>
       </div>
 

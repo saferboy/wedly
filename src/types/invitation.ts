@@ -1,4 +1,4 @@
-export type EventType = "WEDDING" | "BACHELORETTE";
+export type EventType = "WEDDING" | "BACHELORETTE" | "BIRTHDAY";
 export type Language = "uz" | "ru";
 
 export interface InvitationMusic {

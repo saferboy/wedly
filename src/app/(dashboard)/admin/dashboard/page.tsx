@@ -58,7 +58,8 @@ export default async function DashboardPage() {
 
   const weddingCount = orders.filter((o) => o.eventType === "WEDDING").length;
   const bacheloretteCount = orders.filter((o) => o.eventType === "BACHELORETTE").length;
-  const maxEventTypeCount = Math.max(1, weddingCount, bacheloretteCount);
+  const birthdayCount = orders.filter((o) => o.eventType === "BIRTHDAY").length;
+  const maxEventTypeCount = Math.max(1, weddingCount, bacheloretteCount, birthdayCount);
 
   const templateCounts = new Map<string, number>();
   for (const o of orders) {
@@ -122,6 +123,13 @@ export default async function DashboardPage() {
               max={maxEventTypeCount}
               barColor="bg-[#C9A84C]"
               textColor="text-[#8B6914] dark:text-[#C9A84C]"
+            />
+            <Bar
+              label="Tug'ilgan kun"
+              value={birthdayCount}
+              max={maxEventTypeCount}
+              barColor="bg-[#3ECFB0]"
+              textColor="text-[#1a8f78] dark:text-[#3ECFB0]"
             />
           </div>
           <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-sm">

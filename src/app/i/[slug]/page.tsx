@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import InvitationWrapper from "@/components/invitation/InvitationWrapper";
-import type { InvitationData } from "@/types/invitation";
+import type { InvitationData, EventType } from "@/types/invitation";
 import type { Metadata } from "next";
 
 interface Props {
@@ -18,7 +18,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title =
     invitation.eventType === "WEDDING" && invitation.groomName
       ? `${invitation.groomName} & ${invitation.brideName} — To'yga taklif`
-      : `${invitation.brideName} — Qiz bazmi taklifnomasi`;
+      : invitation.eventType === "BIRTHDAY"
+        ? `${invitation.brideName} — Tug'ilgan kun taklifnomasi`
+        : `${invitation.brideName} — Qiz bazmi taklifnomasi`;
 
   return {
     title,
@@ -48,7 +50,7 @@ export default async function InvitationPage({ params }: Props) {
   const data: InvitationData = {
     id: invitation.id,
     slug: invitation.slug,
-    eventType: invitation.eventType as "WEDDING" | "BACHELORETTE",
+    eventType: invitation.eventType as EventType,
     groomName: invitation.groomName,
     brideName: invitation.brideName,
     eventDate: invitation.eventDate.toISOString(),

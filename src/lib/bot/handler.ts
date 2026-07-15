@@ -4,6 +4,7 @@ import type { Update } from "telegraf/types";
 import { MSG, KEYBOARDS } from "./messages";
 import type { BotSession } from "./types";
 import { defaultSession } from "./types";
+import { eventTypeLabel } from "../eventType";
 
 interface SessionContext extends Context<Update> {
   session: BotSession;
@@ -42,6 +43,12 @@ export function createBot() {
       ctx.session = s;
     }
 
+    // Saytdagi wizard'dan kelgan buyurtma — to'lovga o'tamiz.
+    if (startParam?.startsWith("order_")) {
+      const ok = await startWebOrder(ctx, startParam.replace("order_", ""));
+      if (ok) return;
+    }
+
     await ctx.replyWithMarkdown(MSG.welcome);
     await ctx.replyWithMarkdown(MSG.chooseEventType, {
       reply_markup: KEYBOARDS.eventType,
@@ -71,7 +78,10 @@ export function createBot() {
 
     // Event type
     if (data.startsWith("event_")) {
-      s.eventType = data.replace("event_", "") as "WEDDING" | "BACHELORETTE";
+      s.eventType = data.replace("event_", "") as
+        | "WEDDING"
+        | "BACHELORETTE"
+        | "BIRTHDAY";
       s.step = s.eventType === "WEDDING" ? "groom_name" : "bride_name";
       const msg =
         s.eventType === "WEDDING" ? MSG.groomName : MSG.brideName(false);
@@ -318,7 +328,7 @@ async function sendSummaryAndPayment(ctx: SessionContext) {
   // Xulosa
   const summary =
     `📋 *Buyurtma xulosasi:*\n\n` +
-    `📌 Tur: ${s.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}\n` +
+    `📌 Tur: ${eventTypeLabel(s.eventType ?? "")}\n` +
     (s.groomName ? `👨 Kuyov: ${s.groomName}\n` : "") +
     `👰 Kelin: ${s.brideName}\n` +
     `📅 Sana: ${s.eventDate} soat ${s.eventTime}\n` +
@@ -366,6 +376,21 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
   // Buyurtmani DB ga saqlash
   try {
     const { db } = await import("@/lib/db");
+
+    // Saytdan kelgan buyurtma bo'lsa — mavjud yozuvni PAID ga o'tkazamiz.
+    if (s.orderId) {
+      await db.order.update({
+        where: { id: s.orderId },
+        data: {
+          status: "PAID",
+          telegramChatId: String(ctx.chat?.id),
+          telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
+          telegramUsername: ctx.from?.username,
+        },
+      });
+      return;
+    }
+
     const template = s.templateSlug
       ? await db.template.findUnique({ where: { slug: s.templateSlug } })
       : null;
@@ -395,6 +420,69 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
     });
   } catch (e) {
     console.error("DB saqlash xatosi:", e);
+  }
+}
+
+/**
+ * Saytdagi `/buyurtma` wizard'i yaratgan buyurtmani Telegram foydalanuvchisiga
+ * bog'laydi va to'lov bosqichiga o'tkazadi. Buyurtma topilmasa `false` qaytaradi.
+ */
+async function startWebOrder(ctx: SessionContext, orderId: string): Promise<boolean> {
+  try {
+    const { db } = await import("@/lib/db");
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      include: { template: true },
+    });
+    if (!order) return false;
+
+    // Telegram identifikatorlarini biriktiramiz.
+    await db.order.update({
+      where: { id: order.id },
+      data: {
+        telegramChatId: String(ctx.chat?.id),
+        telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
+        telegramUsername: ctx.from?.username,
+      },
+    });
+
+    const s = ctx.session;
+    s.orderId = order.id;
+    s.eventType = order.eventType;
+    s.groomName = order.groomName ?? undefined;
+    s.brideName = order.brideName;
+    s.eventDate = order.eventDate
+      ? `${String(order.eventDate.getDate()).padStart(2, "0")}.${String(
+          order.eventDate.getMonth() + 1
+        ).padStart(2, "0")}.${order.eventDate.getFullYear()}`
+      : undefined;
+    s.eventTime = order.eventTime ?? undefined;
+    s.venueName = order.venueName ?? undefined;
+    s.venueAddress = order.venueAddress ?? undefined;
+    s.yandexLink = order.yandexLink ?? undefined;
+    s.googleLink = order.googleLink ?? undefined;
+    s.cardNumber = order.cardNumber ?? undefined;
+    s.cardHolder = order.cardHolder ?? undefined;
+    s.notes = order.notes ?? undefined;
+    s.templateSlug = order.template?.slug;
+    s.musicChoice = (order.musicChoice?.split(":")[0] as typeof s.musicChoice) ?? "none";
+
+    const recap =
+      `🎉 *Buyurtmangiz topildi!*\n\n` +
+      `📌 Tur: ${eventTypeLabel(order.eventType)}\n` +
+      (order.groomName ? `👨 Kuyov: ${order.groomName}\n` : "") +
+      `👰 Ism: ${order.brideName}\n` +
+      (order.eventDate ? `📅 Sana: ${s.eventDate} soat ${order.eventTime ?? ""}\n` : "") +
+      (order.venueName ? `🏛 Manzil: ${order.venueName}\n` : "") +
+      `\nEndi to'lovni amalga oshiramiz.`;
+
+    await ctx.replyWithMarkdown(recap);
+    await ctx.replyWithMarkdown(MSG.paymentInfo("79 000 so'm"));
+    s.step = "payment_screenshot";
+    return true;
+  } catch (e) {
+    console.error("Web buyurtmani ochish xatosi:", e);
+    return false;
   }
 }
 

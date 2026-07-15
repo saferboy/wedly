@@ -1,7 +1,5 @@
-import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
-import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 export default function HeroSection() {
   return (
@@ -33,22 +31,17 @@ export default function HeroSection() {
             </h1>
 
             <p className="text-gray-600 dark:text-gray-400 text-lg leading-relaxed mb-8 max-w-md">
-              To'y yoki qiz bazmi uchun chiroyli raqamli taklifnoma yarating.
-              Template tanlang, ma'lumot qoldiring — biz 24 soat ichida
-              tayyor qilamiz.
+              To'y, qiz bazmi yoki tug'ilgan kun uchun chiroyli raqamli
+              taklifnoma yarating. Template tanlang, ma'lumot qoldiring — biz
+              24 soat ichida tayyor qilamiz.
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button href="/templates" size="lg">
-                Templateni ko'rish
+              <Button href="/buyurtma" size="lg">
+                Buyurtma berish
               </Button>
-              <Button
-                href={`https://t.me/${TELEGRAM_BOT_USERNAME}`}
-                variant="outline"
-                size="lg"
-                external
-              >
-                Telegram orqali buyurtma
+              <Button href="/templates" variant="outline" size="lg">
+                Templatelarni ko'rish
               </Button>
             </div>
 

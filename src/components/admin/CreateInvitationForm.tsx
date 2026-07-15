@@ -105,6 +105,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
             <select className="input" value={form.eventType} onChange={(e) => set("eventType", e.target.value)}>
               <option value="WEDDING">💍 To'y</option>
               <option value="BACHELORETTE">🌸 Qiz bazmi</option>
+              <option value="BIRTHDAY">🎈 Tug'ilgan kun</option>
             </select>
           </div>
           <div>

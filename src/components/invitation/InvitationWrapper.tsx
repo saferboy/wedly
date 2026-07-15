@@ -3,6 +3,9 @@
 import { useState, createContext, useContext } from "react";
 import type { InvitationData, Language } from "@/types/invitation";
 import { getTemplate, themeToCssVars } from "@/lib/templates";
+import QizlarBazmiTemplate from "./qizlar-bazmi/QizlarBazmiTemplate";
+import ToyTemplate from "./toy/ToyTemplate";
+import TugilganKunTemplate from "./tugilgan-kun/TugilganKunTemplate";
 import EnvelopeLanding from "./EnvelopeLanding";
 import HeroSection from "./HeroSection";
 import LetterSection from "./LetterSection";
@@ -33,6 +36,20 @@ export default function InvitationWrapper({ data }: Props) {
   const [lang, setLang] = useState<Language>("uz");
 
   const t = (uz: string, ru: string) => (lang === "uz" ? uz : ru);
+
+  // Fully custom, self-contained template with its own chrome (language
+  // switcher, music, intro animation), so it bypasses the generic layout.
+  if (data.template.slug === "qizlar-bazmi") {
+    return <QizlarBazmiTemplate data={data} />;
+  }
+
+  if (data.template.slug === "toy-nikoh") {
+    return <ToyTemplate data={data} />;
+  }
+
+  if (data.template.slug === "tugilgan-kun") {
+    return <TugilganKunTemplate data={data} />;
+  }
 
   const template = getTemplate(data.template.slug);
   const theme = template?.theme;

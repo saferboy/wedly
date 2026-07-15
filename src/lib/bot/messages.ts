@@ -1,3 +1,5 @@
+import { eventTypeLabel } from "../eventType";
+
 export const MSG = {
   welcome: `🌹 *Wedly botiga xush kelibsiz!*
 
@@ -54,7 +56,7 @@ Boshlaylikmi?`,
 
   adminNotification: (session: Record<string, string | undefined>) =>
     `🔔 *Yangi buyurtma!*\n\n` +
-    `📋 Tur: ${session.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}\n` +
+    `📋 Tur: ${eventTypeLabel(session.eventType ?? "")}\n` +
     (session.groomName ? `👨 Kuyov: ${session.groomName}\n` : "") +
     `👰 Kelin: ${session.brideName}\n` +
     `📅 Sana: ${session.eventDate} soat ${session.eventTime}\n` +
@@ -75,6 +77,7 @@ export const KEYBOARDS = {
         { text: "💍 To'y", callback_data: "event_WEDDING" },
         { text: "🌸 Qiz bazmi", callback_data: "event_BACHELORETTE" },
       ],
+      [{ text: "🎈 Tug'ilgan kun", callback_data: "event_BIRTHDAY" }],
     ],
   },
 

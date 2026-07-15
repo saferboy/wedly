@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
 import OrderStatusUpdater from "@/components/admin/OrderStatusUpdater";
+import { eventTypeLabelEmoji } from "@/lib/eventType";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -24,7 +25,7 @@ export default async function OrderDetailPage({ params }: Props) {
   if (!order) notFound();
 
   const rows: [string, string | null | undefined][] = [
-    ["Tur", order.eventType === "WEDDING" ? "💍 To'y" : "🌸 Qiz bazmi"],
+    ["Tur", eventTypeLabelEmoji(order.eventType)],
     ["Kuyov", order.groomName],
     ["Kelin", order.brideName],
     ["Sana", order.eventDate ? formatDate(order.eventDate, "uz") : null],

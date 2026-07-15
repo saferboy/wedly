@@ -1,8 +1,21 @@
-import "dotenv/config";
+import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { Pool } from "pg";
 import { TEMPLATES } from "../src/lib/templates";
+
+// Next.js ".env.local" dan foydalanadi; seed ham shuni o'qishi uchun ikkalasini yuklaymiz.
+config({ path: ".env" });
+config({ path: ".env.local" });
+
+if (!process.env.DATABASE_URL) {
+  console.error(
+    "\n✗ DATABASE_URL topilmadi.\n" +
+      "  Loyiha ildizida .env (yoki .env.local) fayl yarating va quyidagini kiriting:\n" +
+      '    DATABASE_URL="postgresql://postgres:PAROL@db.xxxx.supabase.co:5432/postgres"\n'
+  );
+  process.exit(1);
+}
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);

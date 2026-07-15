@@ -4,6 +4,7 @@ import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
+import { eventTypeLabel } from "@/lib/eventType";
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   PENDING:    { label: "Kutilmoqda",    color: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-300" },
@@ -91,7 +92,7 @@ export default async function OrdersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                        {order.eventType === "WEDDING" ? "To'y" : "Qiz bazmi"}
+                        {eventTypeLabel(order.eventType)}
                       </span>
                     </td>
                     <td className="px-4 py-3">
