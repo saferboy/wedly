@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import Ornaments from "./Ornaments";
 import type { QizlarBazmiStrings } from "./i18n";
 
 interface Props {
@@ -14,6 +15,7 @@ export default function InviteCard({ strings, text }: Props) {
 
   return (
     <section className={styles.invite}>
+      <Ornaments />
       <div
         ref={ref}
         className={`${styles.inviteCard} ${styles.reveal} ${revealed ? styles.inView : ""}`}

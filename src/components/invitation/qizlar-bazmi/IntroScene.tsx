@@ -11,48 +11,23 @@ interface Props {
 }
 
 /**
- * Opening scene: a paper plane flies across and drops a sealed envelope,
- * after which the invitation text and the "open" button fade in.
+ * Opening scene: a sealed invitation with a rose-gold floral wax seal
+ * rises gently into view and floats, after which the invitation text and
+ * the "open" button fade in.
  */
 export default function IntroScene({ strings, opened, onOpen }: Props) {
   const [landed, setLanded] = useState(false);
 
-  // Envelope finishes its drop (2s delay + 1.6s) → switch to the floating loop.
+  // Envelope finishes rising into place (0.3s delay + 1.4s) → floating loop.
   useEffect(() => {
-    const timer = setTimeout(() => setLanded(true), 3650);
+    const timer = setTimeout(() => setLanded(true), 1750);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <div className={`${styles.intro} ${opened ? styles.opened : ""}`}>
-      {/* Plane + envelope scene */}
-      <div className={styles.planeScene} aria-hidden="true">
-        <svg className={styles.planeTrail} viewBox="0 0 600 4" preserveAspectRatio="none">
-          <line
-            x1="0"
-            y1="2"
-            x2="600"
-            y2="2"
-            stroke="#C8992C"
-            strokeWidth="2"
-            strokeDasharray="10 8"
-            opacity="0.5"
-          />
-        </svg>
-
-        <svg className={styles.plane} viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8,20 Q30,8 72,20 Q30,32 8,20 Z" fill="#fff" stroke="#C8992C" strokeWidth="1.5" />
-          <ellipse cx="62" cy="20" rx="10" ry="7" fill="#B9223A" opacity="0.9" />
-          <ellipse cx="64" cy="20" rx="7" ry="5" fill="#FFE8CC" opacity="0.6" />
-          <path d="M30,20 Q40,4 55,8 Q46,16 30,20 Z" fill="#C8992C" opacity="0.9" />
-          <path d="M30,20 Q40,36 55,32 Q46,24 30,20 Z" fill="#C8992C" opacity="0.9" />
-          <path d="M10,20 Q14,10 22,12 Q18,18 10,20 Z" fill="#B9223A" />
-          <path d="M10,20 Q14,30 22,28 Q18,22 10,20 Z" fill="#B9223A" />
-          <circle cx="50" cy="18" r="3" fill="#A8C9E4" opacity="0.8" />
-          <circle cx="42" cy="18" r="3" fill="#A8C9E4" opacity="0.8" />
-          <rect x="35" y="25" width="14" height="5" rx="2.5" fill="#888" opacity="0.7" />
-        </svg>
-
+      {/* Sealed invitation with a floral wax seal */}
+      <div className={styles.introDecor} aria-hidden="true">
         <svg
           className={`${styles.envelope} ${landed ? styles.landed : ""}`}
           viewBox="0 0 80 56"

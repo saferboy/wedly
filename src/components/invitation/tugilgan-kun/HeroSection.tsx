@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./styles.module.css";
 import PartyDecoration from "./PartyDecoration";
+import SectionDecor from "./SectionDecor";
 import type { TugilganKunStrings } from "./i18n";
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 export default function HeroSection({ strings, name, dateLabel, photoUrl, animate }: Props) {
   return (
     <section className={styles.hero}>
+      <SectionDecor variant={0} />
       <div className={`${styles.heroCard} ${animate ? styles.animateParty : ""}`}>
         <div className={styles.eyebrow}>{strings.heroEyebrow}</div>
         <h1 className={styles.names}>{name}</h1>

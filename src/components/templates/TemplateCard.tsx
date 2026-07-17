@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { TemplateConfig } from "@/lib/templates";
 import { eventTypeLabel } from "@/lib/eventType";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 interface Props {
   template: TemplateConfig;
@@ -85,13 +86,15 @@ export default function TemplateCard({ template }: Props) {
           >
             Preview
           </Link>
-          <Link
-            href={`/buyurtma?template=${template.slug}`}
+          <a
+            href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${template.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex-1 py-2 text-center text-sm font-medium rounded-lg text-white transition-opacity hover:opacity-90"
             style={{ backgroundColor: template.theme.primaryColor }}
           >
             Buyurtma
-          </Link>
+          </a>
         </div>
       </div>
     </div>

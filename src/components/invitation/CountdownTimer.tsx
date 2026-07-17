@@ -36,7 +36,12 @@ function pad(n: number) {
 export default function CountdownTimer({ eventDate, t }: Props) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calcTimeLeft(eventDate));
-  const isPast = new Date(eventDate).getTime() <= Date.now();
+  // Derived from state (pure) — calcTimeLeft clamps to all-zeros once the date passes.
+  const isPast =
+    timeLeft.days === 0 &&
+    timeLeft.hours === 0 &&
+    timeLeft.minutes === 0 &&
+    timeLeft.seconds === 0;
 
   useEffect(() => {
     gsap.fromTo(

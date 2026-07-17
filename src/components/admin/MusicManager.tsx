@@ -19,18 +19,40 @@ interface Props {
 export default function MusicManager({ tracks }: Props) {
   const router = useRouter();
   const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({ title: "", artist: "", fileUrl: "" });
+  const [form, setForm] = useState({ title: "", artist: "" });
+  const [file, setFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!file) {
+      setError("Musiqa faylini tanlang");
+      return;
+    }
+    setError("");
     setSaving(true);
+
+    const uploadForm = new FormData();
+    uploadForm.append("file", file);
+    uploadForm.append("type", "music");
+    uploadForm.append("name", form.title);
+
+    const uploadRes = await fetch("/api/upload", { method: "POST", body: uploadForm });
+    const uploadData = await uploadRes.json();
+    if (!uploadRes.ok) {
+      setError(uploadData.error ?? "Yuklash xatosi");
+      setSaving(false);
+      return;
+    }
+
     await fetch("/api/music", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, fileUrl: uploadData.url }),
     });
-    setForm({ title: "", artist: "", fileUrl: "" });
+    setForm({ title: "", artist: "" });
+    setFile(null);
     setAdding(false);
     setSaving(false);
     router.refresh();
@@ -76,23 +98,24 @@ export default function MusicManager({ tracks }: Props) {
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">
-              Fayl URL (Supabase Storage) *
+              Musiqa fayli (mp3, max 15MB) *
             </label>
             <input
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8B1A1A]/20 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-500"
-              value={form.fileUrl}
-              onChange={(e) => setForm((f) => ({ ...f, fileUrl: e.target.value }))}
-              placeholder="https://xxx.supabase.co/storage/v1/..."
+              type="file"
+              accept="audio/*"
+              className="w-full text-sm text-gray-600 dark:text-gray-300 file:mr-3 file:px-3 file:py-2 file:rounded-lg file:border-0 file:bg-[#8B1A1A]/10 file:text-[#8B1A1A] file:text-sm file:font-medium hover:file:bg-[#8B1A1A]/20"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
               required
             />
           </div>
+          {error && <p className="text-sm text-red-500">{error}</p>}
           <div className="flex gap-3">
             <button
               type="submit"
               disabled={saving}
               className="px-4 py-2 bg-[#8B1A1A] text-white text-sm rounded-lg hover:bg-[#6B0F0F] transition-colors disabled:opacity-50"
             >
-              {saving ? "Saqlanmoqda..." : "Qo'shish"}
+              {saving ? "Yuklanmoqda..." : "Qo'shish"}
             </button>
             <button
               type="button"

@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTemplate, TEMPLATES } from "@/lib/templates";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 import InvitationWrapper from "@/components/invitation/InvitationWrapper";
 import type { InvitationData } from "@/types/invitation";
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 
 interface Props {
@@ -57,36 +59,42 @@ export default async function TemplatePreviewPage({ params }: Props) {
 
   return (
     <div className="relative">
-      {/* Preview banner */}
-      <div className="fixed top-0 left-0 right-0 z-[100] bg-black/80 backdrop-blur-sm text-white flex flex-wrap items-center justify-between gap-x-3 gap-y-1 px-3 sm:px-4 py-2">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <span className="shrink-0 text-xs bg-yellow-500 text-black px-2 py-0.5 rounded font-bold">
+      {/* Preview banner — fixed, single-row, responsive */}
+      <div className="fixed top-0 left-0 right-0 z-[100] h-12 bg-black/80 backdrop-blur-sm text-white flex items-center justify-between gap-2 px-3 sm:px-4">
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="shrink-0 text-[10px] sm:text-xs bg-yellow-500 text-black px-1.5 sm:px-2 py-0.5 rounded font-bold">
             PREVIEW
           </span>
-          <span className="text-sm font-medium truncate">{template.name}</span>
+          <span className="text-xs sm:text-sm font-medium truncate">{template.name}</span>
         </div>
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
           <Link
             href="/templates"
-            className="text-xs text-gray-300 hover:text-white transition-colors"
+            className="text-xs text-gray-300 hover:text-white transition-colors whitespace-nowrap"
           >
-            ← Orqaga
+            <span aria-hidden="true">←</span>
+            <span className="hidden sm:inline"> Orqaga</span>
           </Link>
-          <Link
-            href={`/buyurtma?template=${id}`}
-            className="px-3 sm:px-4 py-1.5 rounded-full text-xs font-bold transition-opacity hover:opacity-90 whitespace-nowrap"
+          <a
+            href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 sm:px-4 py-1.5 rounded-full text-[11px] sm:text-xs font-bold transition-opacity hover:opacity-90 whitespace-nowrap"
             style={{
               background: template.theme.accentColor,
               color: template.previewBg,
             }}
           >
-            Buyurtma berish
-          </Link>
+            Buyurtma <span className="hidden sm:inline">berish</span>
+          </a>
         </div>
       </div>
 
-      {/* Actual invitation preview */}
-      <div className="pt-12 sm:pt-10">
+      {/* Actual invitation preview — offset the template's fixed toggles below the banner */}
+      <div
+        className="pt-12"
+        style={{ ["--tpl-chrome-top"]: "48px" } as CSSProperties}
+      >
         <InvitationWrapper data={demoData} />
       </div>
     </div>

@@ -2,10 +2,13 @@
 
 import { useState, createContext, useContext } from "react";
 import type { InvitationData, Language } from "@/types/invitation";
-import { getTemplate, themeToCssVars } from "@/lib/templates";
+import { getTemplate } from "@/lib/templates";
 import QizlarBazmiTemplate from "./qizlar-bazmi/QizlarBazmiTemplate";
 import ToyTemplate from "./toy/ToyTemplate";
 import TugilganKunTemplate from "./tugilgan-kun/TugilganKunTemplate";
+import ClassicTemplate from "./classic/ClassicTemplate";
+import AuroraTemplate from "./aurora/AuroraTemplate";
+import ModernTemplate from "./modern/ModernTemplate";
 import EnvelopeLanding from "./EnvelopeLanding";
 import HeroSection from "./HeroSection";
 import LetterSection from "./LetterSection";
@@ -29,10 +32,11 @@ export const useLang = () => useContext(LangContext);
 
 interface Props {
   data: InvitationData;
+  initialOpened?: boolean;
 }
 
-export default function InvitationWrapper({ data }: Props) {
-  const [opened, setOpened] = useState(false);
+export default function InvitationWrapper({ data, initialOpened = false }: Props) {
+  const [opened, setOpened] = useState(initialOpened);
   const [lang, setLang] = useState<Language>("uz");
 
   const t = (uz: string, ru: string) => (lang === "uz" ? uz : ru);
@@ -49,6 +53,18 @@ export default function InvitationWrapper({ data }: Props) {
 
   if (data.template.slug === "tugilgan-kun") {
     return <TugilganKunTemplate data={data} />;
+  }
+
+  if (data.template.slug === "nikoh-classic") {
+    return <ClassicTemplate data={data} />;
+  }
+
+  if (data.template.slug === "nikoh-aurora") {
+    return <AuroraTemplate data={data} />;
+  }
+
+  if (data.template.slug === "nikoh-modern") {
+    return <ModernTemplate data={data} />;
   }
 
   const template = getTemplate(data.template.slug);

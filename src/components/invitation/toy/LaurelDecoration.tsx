@@ -14,12 +14,14 @@ export default function LaurelDecoration({ side }: Props) {
   const leafId = `laurelLeaf-${side}`;
   const goldId = `laurelGold-${side}`;
 
-  // Paired leaves distributed along the stem. Each entry mirrors above/below.
+  // Paired leaves distributed along the stem. The (t, y) points sit ON the
+  // stem curve (M10,230 C80,190 150,165 240,140) so the leaves fan out from the
+  // branch rather than floating above it.
   const leaves = [
-    { t: 30, y: 205, angUp: -55, angDn: 55, className: styles.leafA },
-    { t: 78, y: 178, angUp: -50, angDn: 50, className: styles.leafB },
-    { t: 128, y: 158, angUp: -46, angDn: 46, className: styles.leafC },
-    { t: 178, y: 145, angUp: -40, angDn: 40, className: styles.leafD },
+    { t: 31, y: 218, angUp: -55, angDn: 55, className: styles.leafA },
+    { t: 78, y: 196, angUp: -50, angDn: 50, className: styles.leafB },
+    { t: 128, y: 175, angUp: -46, angDn: 46, className: styles.leafC },
+    { t: 178, y: 159, angUp: -40, angDn: 40, className: styles.leafD },
   ];
 
   return (
@@ -62,8 +64,8 @@ export default function LaurelDecoration({ side }: Props) {
           </g>
         ))}
 
-        {/* Gold blossom at the tip (outer g positions, inner g scales) */}
-        <g transform="translate(244, 132)">
+        {/* Gold blossom at the stem tip (240,140) — outer g positions, inner g scales */}
+        <g transform="translate(240, 140)">
           <g className={styles.laurelBloomGroup}>
             <circle cx="0" cy="-12" r="7" fill={`url(#${goldId})`} />
             <circle cx="11" cy="-4" r="7" fill={`url(#${goldId})`} />

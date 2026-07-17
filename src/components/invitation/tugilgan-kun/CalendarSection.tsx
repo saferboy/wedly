@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import SectionDecor from "./SectionDecor";
 import { MONTHS_CAPTION, type TugilganKunStrings } from "./i18n";
 import type { Language } from "@/types/invitation";
 
@@ -33,6 +34,7 @@ export default function CalendarSection({ strings, lang, eventDate }: Props) {
 
   return (
     <section className={styles.calendar}>
+      <SectionDecor variant={2} />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}

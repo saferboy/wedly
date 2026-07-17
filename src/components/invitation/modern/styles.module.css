@@ -1,0 +1,1009 @@
+/* ============================================================
+   Modern (nikoh) wedding template
+   Dark, high-contrast editorial: near-black, warm ivory text,
+   gold accents. The hero is a FULL-BLEED, frameless photo with
+   the names overlaid. Full-viewport sections, one per scroll.
+   Scoped as a CSS Module under `.root`.
+   ============================================================ */
+
+.root {
+  --bg: #121012;
+  --bg-2: #1a171a;
+  --ink: #ece7e1;
+  --ink-soft: #a79e95;
+  --gold: #c9a86a;
+  --gold-lt: #e3ce9a;
+  --line: rgba(236, 231, 225, 0.16);
+
+  --display: var(--font-bodoni), "Bodoni Moda", Didot, Georgia, serif;
+  --sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--bg);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.root * {
+  box-sizing: border-box;
+}
+
+/* one section per scroll */
+.scroller {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scroller section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(56px, 12vh, 110px) 26px;
+  position: relative;
+}
+
+/* thin editorial frame + ambient gold glow that fill the empty margins
+   so every screen reads rich rather than blank */
+.scroller section:not(.hero) {
+  overflow: hidden;
+}
+.scroller section:not(.hero)::before {
+  content: "";
+  position: absolute;
+  inset: clamp(14px, 3.4vw, 32px);
+  border: 1px solid var(--line);
+  pointer-events: none;
+  opacity: 0;
+  animation: frameIn 1.8s ease forwards 0.3s;
+}
+.scroller section:not(.hero)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    58% 42% at 50% 32%,
+    rgba(201, 168, 106, 0.11),
+    transparent 72%
+  );
+}
+.scroller section:not(.hero) > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes frameIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- shared ---- */
+.eyebrow {
+  font-family: var(--sans);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  font-size: 11px;
+  color: var(--gold);
+  padding-left: 0.5em;
+}
+.rule {
+  position: relative;
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(180deg, transparent, var(--gold));
+  margin: 22px auto 30px;
+  transform-origin: top;
+}
+/* gold gem at the base of the divider */
+.rule::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  width: 6px;
+  height: 6px;
+  background: var(--gold-lt);
+  transform: translateX(-50%) rotate(45deg);
+  box-shadow: 0 0 12px rgba(201, 168, 106, 0.65);
+  animation: gemPulse 3.6s ease-in-out infinite;
+}
+@keyframes gemPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 8px rgba(201, 168, 106, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(201, 168, 106, 0.85);
+  }
+}
+/* the gold rule draws itself downward as its section reveals */
+.reveal .rule {
+  transform: scaleY(0);
+}
+.reveal.inView .rule {
+  transform: scaleY(1);
+  transition: transform 1.2s ease 0.2s;
+}
+.h {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: clamp(32px, 8vw, 52px);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+.lead {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: clamp(17px, 2.6vw, 21px);
+  line-height: 1.7;
+  max-width: 38ch;
+  margin: 0 auto;
+}
+
+/* ---- reveal ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.reveal.inView {
+  opacity: 1;
+  transform: none;
+}
+
+/* ================= HERO (full-bleed photo) ================= */
+.hero {
+  padding: 0 !important;
+  justify-content: flex-end !important;
+  overflow: hidden;
+}
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+.heroPhoto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.18) contrast(1.04) brightness(0.72) saturate(0.94);
+  transform-origin: center;
+  will-change: transform;
+  animation: kenburns 24s ease-in-out infinite alternate;
+}
+/* slow ken-burns drift; stays >=1 scale so no edges show */
+@keyframes kenburns {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1.14) translateY(-1.6%);
+  }
+}
+/* cinematic vignette — darkens the busy edges so text always reads */
+.heroPhoto::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    130% 100% at 50% 26%,
+    transparent 34%,
+    rgba(8, 7, 9, 0.35) 70%,
+    rgba(8, 7, 9, 0.7) 100%
+  );
+}
+/* strong cinematic dark wash so the names read over ANY photo */
+.heroPhoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 7, 9, 0.7) 0%,
+    rgba(8, 7, 9, 0.34) 24%,
+    rgba(8, 7, 9, 0.32) 46%,
+    rgba(8, 7, 9, 0.62) 66%,
+    rgba(8, 7, 9, 0.9) 84%,
+    rgba(8, 7, 9, 0.98) 100%
+  );
+}
+.heroInner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0 26px clamp(64px, 14vh, 130px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.heroKicker {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  font-size: 11px;
+  color: var(--gold-lt);
+  margin-bottom: 24px;
+  padding-left: 0.5em;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+.names {
+  font-family: var(--display);
+  font-weight: 500;
+  color: #fff;
+  font-size: clamp(46px, 13vw, 96px);
+  line-height: 1;
+  margin: 2px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.55), 0 8px 34px rgba(0, 0, 0, 0.7);
+}
+.and {
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-lt);
+  font-size: clamp(22px, 5vw, 32px);
+  margin: 10px 0;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+}
+.heroDate {
+  margin-top: 26px;
+  font-family: var(--sans);
+  font-weight: 300;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--ink);
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+}
+.scrollHint {
+  position: absolute;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 9px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: bob 2.4s ease-in-out infinite;
+}
+.scrollHint span {
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(180deg, var(--gold), transparent);
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, 6px);
+    opacity: 1;
+  }
+}
+
+/* ================= LETTER ================= */
+.letter {
+  background: var(--bg-2);
+}
+
+/* ================= DATE + COUNTDOWN ================= */
+.bigDate {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(34px, 9vw, 60px);
+  margin: 10px 0 6px;
+  background-image: linear-gradient(
+    100deg,
+    var(--gold) 0%,
+    var(--gold-lt) 38%,
+    #fff6df 50%,
+    var(--gold-lt) 62%,
+    var(--gold) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: goldSheen 7s ease-in-out infinite;
+}
+/* slow luminous sweep across gold display text */
+@keyframes goldSheen {
+  0%,
+  100% {
+    background-position: 120% 0;
+  }
+  50% {
+    background-position: -20% 0;
+  }
+}
+.timeNote {
+  font-family: var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 40px;
+}
+.timer {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  flex-wrap: wrap;
+}
+.timer .box {
+  padding: 0 clamp(14px, 4.5vw, 34px);
+  position: relative;
+}
+.timer .box + .box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 12%;
+  height: 76%;
+  width: 1px;
+  background: var(--line);
+}
+.timer .num {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: clamp(40px, 10vw, 66px);
+  line-height: 1;
+  animation: numGlow 4.5s ease-in-out infinite;
+}
+/* gentle gold breathing glow gives the countdown a live pulse */
+@keyframes numGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 0 rgba(201, 168, 106, 0);
+  }
+  50% {
+    text-shadow: 0 0 18px rgba(201, 168, 106, 0.28);
+  }
+}
+.timer .lab {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10px;
+  color: var(--gold);
+  margin-top: 12px;
+}
+
+/* ================= VENUE ================= */
+.venue {
+  background: var(--bg-2);
+}
+.venueName {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(30px, 7vw, 46px);
+  margin: 10px 0 12px;
+  animation: floatY 6s ease-in-out infinite;
+}
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.venueAddr {
+  font-family: var(--sans);
+  font-weight: 300;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 36ch;
+}
+.maps {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.maps a {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  padding: 15px 28px;
+  transition: 0.25s;
+}
+.maps a:hover {
+  border-color: var(--gold);
+  color: var(--gold-lt);
+}
+.maps a.alt {
+  background: var(--gold);
+  color: var(--bg);
+  border-color: var(--gold);
+}
+.maps a.alt:hover {
+  background: var(--gold-lt);
+  border-color: var(--gold-lt);
+  color: var(--bg);
+}
+
+/* ================= GIFT ================= */
+.giftNote {
+  font-family: var(--sans);
+  font-weight: 300;
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-top: 8px;
+}
+.cardNum {
+  font-family: var(--display);
+  color: var(--gold-lt);
+  font-size: clamp(26px, 6vw, 36px);
+  letter-spacing: 0.1em;
+  margin-top: 16px;
+}
+.cardHolder {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  background: #0d0b0d;
+}
+.footScript {
+  font-family: var(--display);
+  font-style: italic;
+  font-size: clamp(40px, 11vw, 66px);
+  background-image: linear-gradient(
+    100deg,
+    var(--gold) 0%,
+    var(--gold-lt) 38%,
+    #fff6df 50%,
+    var(--gold-lt) 62%,
+    var(--gold) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: goldSheen 8s ease-in-out infinite;
+}
+.footSign {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 12px;
+  color: var(--gold);
+  margin-top: 22px;
+}
+
+/* ---- language toggle ---- */
+.langToggle {
+  position: fixed;
+  top: calc(16px + var(--tpl-chrome-top, 0px));
+  right: 16px;
+  z-index: 60;
+  display: flex;
+  gap: 4px;
+  background: rgba(18, 16, 18, 0.7);
+  padding: 5px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  backdrop-filter: blur(6px);
+}
+.langToggle button {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+.langToggle button.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+/* ---- audio toggle ---- */
+.audioToggle {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(18, 16, 18, 0.75);
+  border: 1px solid var(--gold);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  z-index: 60;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s, opacity 0.4s;
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  pointer-events: none;
+}
+.audioToggle.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.audioToggle:hover {
+  transform: scale(1.08);
+}
+.audioToggle svg {
+  width: 24px;
+  height: 24px;
+}
+.audioToggle .iconPaused {
+  display: none;
+}
+.audioToggle.musicPaused .iconPlaying {
+  display: none;
+}
+.audioToggle.musicPaused .iconPaused {
+  display: block;
+}
+.audioToggle.musicPlaying .iconPlaying {
+  animation: spin 5s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= INTRO ================= */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(circle at 50% 34%, #201c20 0%, var(--bg) 60%, #0b090b 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 26px;
+  overflow-y: auto;
+  transition: opacity 1s ease, transform 1s ease;
+}
+.intro.opened {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+/* keep the animated content above the drifting embers */
+.intro > *:not(.embers) {
+  position: relative;
+  z-index: 2;
+}
+
+/* --- drifting gold embers --- */
+.embers {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.embers span {
+  position: absolute;
+  bottom: -12px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 7px rgba(201, 168, 106, 0.7);
+  opacity: 0;
+  animation: ember linear infinite;
+}
+.embers span:nth-child(1) {
+  left: 9%;
+  animation-duration: 10s;
+  animation-delay: 0s;
+}
+.embers span:nth-child(2) {
+  left: 22%;
+  animation-duration: 13s;
+  animation-delay: 2.4s;
+}
+.embers span:nth-child(3) {
+  left: 34%;
+  animation-duration: 8.5s;
+  animation-delay: 1.1s;
+}
+.embers span:nth-child(4) {
+  left: 46%;
+  animation-duration: 12s;
+  animation-delay: 3.6s;
+}
+.embers span:nth-child(5) {
+  left: 55%;
+  animation-duration: 9.5s;
+  animation-delay: 0.6s;
+}
+.embers span:nth-child(6) {
+  left: 66%;
+  animation-duration: 14s;
+  animation-delay: 4.2s;
+}
+.embers span:nth-child(7) {
+  left: 77%;
+  animation-duration: 8s;
+  animation-delay: 2s;
+}
+.embers span:nth-child(8) {
+  left: 88%;
+  animation-duration: 11.5s;
+  animation-delay: 5s;
+}
+.embers span:nth-child(9) {
+  left: 96%;
+  animation-duration: 10.5s;
+  animation-delay: 1.7s;
+}
+@keyframes ember {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.75;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translateY(-78vh) scale(0.35);
+    opacity: 0;
+  }
+}
+
+/* --- two interlocking wedding rings that draw & form --- */
+.introRings {
+  width: clamp(132px, 34vw, 168px);
+  height: auto;
+  margin-bottom: 30px;
+  overflow: visible;
+}
+.introRings circle {
+  fill: none;
+  stroke-linecap: round;
+}
+/* soft gold halo behind each ring, fading up after they form */
+.ringHalo {
+  stroke: var(--gold);
+  stroke-width: 7;
+  opacity: 0;
+  filter: blur(6px);
+  animation: ringHalo 2.4s ease forwards 1.4s;
+}
+.ringL,
+.ringR {
+  stroke: var(--gold-lt);
+  stroke-width: 2;
+  stroke-dasharray: 227;
+  stroke-dashoffset: 227;
+  transform-origin: center;
+}
+/* left ring draws clockwise from the top */
+.ringL {
+  transform: rotate(-90deg);
+  animation: draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards 0.2s,
+    ringGleam 5.5s ease-in-out infinite 2.4s;
+}
+/* right ring draws the opposite way so they meet in the middle */
+.ringR {
+  transform: rotate(90deg) scaleX(-1);
+  animation: draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards 0.5s,
+    ringGleam 5.5s ease-in-out infinite 2.7s;
+}
+/* a diamond sparkle blinks in where the rings meet */
+.ringSpark {
+  fill: #fff;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0) rotate(-25deg);
+  animation: spark 1.4s ease-in-out forwards 1.7s;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes ringHalo {
+  0% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.28;
+  }
+}
+@keyframes ringGleam {
+  0%,
+  100% {
+    stroke: var(--gold);
+  }
+  50% {
+    stroke: #fff6df;
+  }
+}
+@keyframes spark {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(-25deg);
+  }
+  55% {
+    opacity: 1;
+    transform: scale(1.25) rotate(0deg);
+  }
+  100% {
+    opacity: 0.92;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.intro .eyebrow {
+  margin-bottom: 18px;
+  opacity: 0;
+  animation: introUp 1s ease forwards 0.35s;
+}
+.introNames {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: clamp(42px, 12vw, 78px);
+  line-height: 1.04;
+  margin-bottom: 16px;
+}
+/* staggered word reveal + slow gold gleam sweeping across the names */
+.introNames .word {
+  display: inline-block;
+  margin: 0 0.14em;
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(7px);
+  background-image: linear-gradient(
+    100deg,
+    #fff 20%,
+    #fff 42%,
+    var(--gold-lt) 50%,
+    #fff 58%,
+    #fff 80%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: wordIn 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards,
+    nameShimmer 6.5s ease-in-out infinite 2.2s;
+}
+.introNames .word:nth-child(1) {
+  animation-delay: 0.5s, 2.2s;
+}
+.introNames .word:nth-child(2) {
+  animation-delay: 0.66s, 2.2s;
+}
+.introNames .word:nth-child(3) {
+  animation-delay: 0.82s, 2.2s;
+}
+.introNames .word:nth-child(4) {
+  animation-delay: 0.98s, 2.2s;
+}
+.introNames .word:nth-child(5) {
+  animation-delay: 1.14s, 2.2s;
+}
+.introNames .word:nth-child(n + 6) {
+  animation-delay: 1.3s, 2.2s;
+}
+@keyframes wordIn {
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+@keyframes nameShimmer {
+  0%,
+  16% {
+    background-position: 100% 0;
+  }
+  56%,
+  100% {
+    background-position: -60% 0;
+  }
+}
+.introSub {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 38ch;
+  opacity: 0;
+  animation: introUp 1.1s ease forwards 1.15s;
+}
+@keyframes introUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.openBtn {
+  margin-top: 42px;
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 12px;
+  color: var(--bg);
+  background: var(--gold);
+  border: none;
+  padding: 18px 54px;
+  cursor: pointer;
+  opacity: 0;
+  animation: introUp 1s ease forwards 1.55s;
+  transition: transform 0.3s, background-color 0.3s;
+}
+.openBtn:hover {
+  transform: translateY(-3px);
+  background: var(--gold-lt);
+}
+.openBtn:active {
+  transform: translateY(0);
+}
+
+/* keep each section within one viewport on small phones */
+@media (max-width: 480px) {
+  .scroller section {
+    padding: clamp(46px, 9vh, 78px) 22px;
+  }
+  .timeNote {
+    margin-bottom: 28px;
+  }
+  .maps {
+    margin-top: 26px;
+  }
+  .maps a {
+    padding: 13px 22px;
+  }
+  .introRings {
+    margin-bottom: 24px;
+  }
+}
+/* short viewports: compress vertical rhythm so nothing overflows */
+@media (max-height: 720px) {
+  .scroller section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .rule {
+    height: 44px;
+    margin: 16px auto 24px;
+  }
+  .timeNote {
+    margin-bottom: 24px;
+  }
+  .introRings {
+    margin-bottom: 22px;
+  }
+  .introSub {
+    font-size: 16px;
+  }
+  .openBtn {
+    margin-top: 30px;
+    padding: 15px 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroller {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+  .root * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  /* neutralize the cinematic intro + inner motion */
+  .embers {
+    display: none;
+  }
+  .introNames .word {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    -webkit-text-fill-color: var(--ink);
+    color: var(--ink);
+  }
+  .intro .eyebrow,
+  .introSub,
+  .openBtn {
+    opacity: 1;
+    transform: none;
+  }
+  .ringL {
+    stroke-dashoffset: 0;
+    transform: rotate(-90deg);
+  }
+  .ringR {
+    stroke-dashoffset: 0;
+    transform: rotate(90deg) scaleX(-1);
+  }
+  .ringHalo {
+    opacity: 0.28;
+  }
+  .ringSpark {
+    opacity: 0.92;
+    transform: scale(1) rotate(0deg);
+  }
+  .heroPhoto img {
+    animation: none;
+    transform: none;
+  }
+  .timer .num {
+    animation: none;
+    text-shadow: none;
+  }
+  .reveal .rule,
+  .reveal.inView .rule {
+    transform: none;
+  }
+}

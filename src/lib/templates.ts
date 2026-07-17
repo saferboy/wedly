@@ -8,6 +8,7 @@ export interface TemplateConfig {
   description: string;
   theme: InvitationTheme;
   previewBg: string;
+  packageSlug: "oddiy" | "premium";
 }
 
 export const TEMPLATES: TemplateConfig[] = [
@@ -20,6 +21,7 @@ export const TEMPLATES: TemplateConfig[] = [
     description:
       "Zumrad yashil va oltin, uzuklar animatsiyasi — hashamatli nikoh to'yi uslubi",
     previewBg: "#1F4D3D",
+    packageSlug: "premium",
     theme: {
       primaryColor: "#1F4D3D",
       secondaryColor: "#143A2C",
@@ -31,60 +33,70 @@ export const TEMPLATES: TemplateConfig[] = [
     },
   },
 
-  // ── TO'Y TEMPLATES ──────────────────────────────────────────
+  // ── TO'Y — self-contained (letterpress classic) ─────────────
   {
-    slug: "classic-red",
+    slug: "nikoh-classic",
     name: "Classic",
     nameRu: "Классик",
     eventType: "WEDDING",
-    description: "Qizil va oltin — an'anaviy o'zbek uslubi",
-    previewBg: "#8B1A1A",
+    description:
+      "Anor-qizil va oltin bosma nusxa, bir sahifali ramkali karta — an'anaviy nafis uslub",
+    previewBg: "#7E1620",
+    packageSlug: "premium",
     theme: {
-      primaryColor: "#8B1A1A",
-      secondaryColor: "#6B0F0F",
-      accentColor: "#C9A84C",
-      bgColor: "#FAF7F2",
-      textColor: "#2C1810",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#8B1A1A",
-    },
-  },
-  {
-    slug: "modern-dark",
-    name: "Modern",
-    nameRu: "Модерн",
-    eventType: "WEDDING",
-    description: "Minimalist qora va oltin — zamonaviy uslub",
-    previewBg: "#1a1a1a",
-    theme: {
-      primaryColor: "#1a1a1a",
-      secondaryColor: "#2d2d2d",
-      accentColor: "#D4AF37",
-      bgColor: "#F5F5F0",
-      textColor: "#1a1a1a",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#1a1a1a",
-    },
-  },
-  {
-    slug: "luxury-navy",
-    name: "Luxury",
-    nameRu: "Люкс",
-    eventType: "WEDDING",
-    description: "To'q ko'k va kumush — hashamatli uslub",
-    previewBg: "#1B2A4A",
-    theme: {
-      primaryColor: "#1B2A4A",
-      secondaryColor: "#152038",
-      accentColor: "#C0C0C0",
-      bgColor: "#F8F8FC",
-      textColor: "#1B2A4A",
-      fontFamily: "Georgia, serif",
-      envelopeBg: "#1B2A4A",
+      primaryColor: "#7E1620",
+      secondaryColor: "#5C0F17",
+      accentColor: "#B08D45",
+      bgColor: "#FAF6EC",
+      textColor: "#3A2318",
+      fontFamily: "'Cormorant Garamond', Georgia, serif",
+      envelopeBg: "#7E1620",
     },
   },
 
-  // ── QIZ BAZMI TEMPLATES ─────────────────────────────────────
+  // ── TO'Y — self-contained (airy modern minimalist) ──────────
+  {
+    slug: "nikoh-aurora",
+    name: "Aurora",
+    nameRu: "Аврора",
+    eventType: "WEDDING",
+    description:
+      "Ochiq sut rangi, ko'mir siyoh va pushti-oltin — havodor zamonaviy minimalist uslub",
+    previewBg: "#C0857A",
+    packageSlug: "premium",
+    theme: {
+      primaryColor: "#C0857A",
+      secondaryColor: "#A5675C",
+      accentColor: "#C9A67C",
+      bgColor: "#FBF6F1",
+      textColor: "#2E2925",
+      fontFamily: "'Fraunces', Georgia, serif",
+      envelopeBg: "#C0857A",
+    },
+  },
+
+  // ── TO'Y — self-contained (dark editorial, full-bleed photo) ─
+  {
+    slug: "nikoh-modern",
+    name: "Modern",
+    nameRu: "Модерн",
+    eventType: "WEDDING",
+    description:
+      "Qora, oltin va butun ekranli fotosurat — zamonaviy, dramatik editorial uslub",
+    previewBg: "#121012",
+    packageSlug: "premium",
+    theme: {
+      primaryColor: "#121012",
+      secondaryColor: "#1A171A",
+      accentColor: "#C9A86A",
+      bgColor: "#121012",
+      textColor: "#ECE7E1",
+      fontFamily: "'Bodoni Moda', Didot, Georgia, serif",
+      envelopeBg: "#121012",
+    },
+  },
+
+  // ── QIZ BAZMI TEMPLATE (self-contained) ─────────────────────
   {
     slug: "qizlar-bazmi",
     name: "Qizlar bazmi",
@@ -92,6 +104,7 @@ export const TEMPLATES: TemplateConfig[] = [
     eventType: "BACHELORETTE",
     description: "Qizil va oltin peonlar, samolyot animatsiyasi — nozik qizlar bazmi uslubi",
     previewBg: "#B9223A",
+    packageSlug: "oddiy",
     theme: {
       primaryColor: "#B9223A",
       secondaryColor: "#8E1A2C",
@@ -112,6 +125,7 @@ export const TEMPLATES: TemplateConfig[] = [
     description:
       "Rang-barang sharlar va konfetti animatsiyasi — quvnoq tug'ilgan kun bazmi uslubi",
     previewBg: "#FF6B8A",
+    packageSlug: "premium",
     theme: {
       primaryColor: "#FF6B8A",
       secondaryColor: "#E14E6E",

@@ -21,8 +21,9 @@ interface Props {
   data: InvitationData;
 }
 
-const FALLBACK_PHOTO = "/templates/invitation1/image.png";
-const FALLBACK_MUSIC = encodeURI("/templates/invitation1/Traditional Uzbek Music Karnai Solo.m4a");
+const FALLBACK_PHOTO = "/templates/birthday-hero.jpg";
+/** Festive piano/lo-fi track that autoplays once the invitation is opened. */
+const MUSIC_URL = "/music/piano-birthday.mp3";
 
 /** Combine the ISO event date with the "HH:MM" time into a single Date. */
 function buildEventDateTime(isoDate: string, time: string): Date {
@@ -47,7 +48,6 @@ export default function TugilganKunTemplate({ data }: Props) {
 
   const name = data.brideName;
   const photoUrl = data.photoUrl || FALLBACK_PHOTO;
-  const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const dateLabel = `${eventDate.getDate()} ${MONTHS[lang][eventDate.getMonth()]} · ${eventDate.getFullYear()}`;
 
@@ -79,31 +79,33 @@ export default function TugilganKunTemplate({ data }: Props) {
       <LangToggle lang={lang} onChange={setLang} />
       <Balloons />
       <Confetti active={opened} />
-      <MusicToggle url={musicUrl} started={opened} />
+      <MusicToggle url={MUSIC_URL} started={opened} />
 
       {!introGone && (
         <IntroScene strings={strings} opened={opened} onOpen={handleOpen} />
       )}
 
-      <main className={styles.main}>
-        <HeroSection
-          strings={strings}
-          name={name}
-          dateLabel={dateLabel}
-          photoUrl={photoUrl}
-          animate={opened}
-        />
-        <InviteCard strings={strings} text={inviteText} />
-        <CalendarSection strings={strings} lang={lang} eventDate={eventDate} />
-        <CountdownSection strings={strings} target={targetDateTime} />
-        <LocationSection
-          strings={strings}
-          venue={venue}
-          googleMapUrl={data.googleMapUrl}
-          yandexMapUrl={data.yandexMapUrl}
-        />
-        <FooterSection strings={strings} name={name} />
-      </main>
+      <div className={styles.scroller}>
+        <main className={styles.main}>
+          <HeroSection
+            strings={strings}
+            name={name}
+            dateLabel={dateLabel}
+            photoUrl={photoUrl}
+            animate={opened}
+          />
+          <InviteCard strings={strings} text={inviteText} />
+          <CalendarSection strings={strings} lang={lang} eventDate={eventDate} />
+          <CountdownSection strings={strings} target={targetDateTime} />
+          <LocationSection
+            strings={strings}
+            venue={venue}
+            googleMapUrl={data.googleMapUrl}
+            yandexMapUrl={data.yandexMapUrl}
+          />
+          <FooterSection strings={strings} name={name} />
+        </main>
+      </div>
     </div>
   );
 }

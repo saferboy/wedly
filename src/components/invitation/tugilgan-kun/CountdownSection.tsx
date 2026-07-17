@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import SectionDecor from "./SectionDecor";
 import type { TugilganKunStrings } from "./i18n";
 
 interface Props {
@@ -57,6 +58,7 @@ export default function CountdownSection({ strings, target }: Props) {
 
   return (
     <section className={styles.countdown}>
+      <SectionDecor variant={3} />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}

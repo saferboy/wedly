@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import SectionDecor from "./SectionDecor";
 import type { ToyStrings } from "./i18n";
 
 interface Props {
@@ -25,6 +26,7 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
 
   return (
     <section className={styles.location}>
+      <SectionDecor />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}
@@ -34,6 +36,9 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.locTitle}
       </h2>
+      <div className={styles.divider}>
+        <i>&#10086;</i>
+      </div>
       <p
         ref={venueRef}
         className={`${styles.venue} ${styles.reveal} ${venueIn ? styles.inView : ""}`}

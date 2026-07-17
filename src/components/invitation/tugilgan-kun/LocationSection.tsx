@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import SectionDecor from "./SectionDecor";
 import type { TugilganKunStrings } from "./i18n";
 
 interface Props {
@@ -25,6 +26,7 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
 
   return (
     <section className={styles.location}>
+      <SectionDecor variant={4} />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}

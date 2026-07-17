@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./styles.module.css";
 import PeonyDecoration from "./PeonyDecoration";
+import Ornaments from "./Ornaments";
 import type { QizlarBazmiStrings } from "./i18n";
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 export default function HeroSection({ strings, name, dateLabel, photoUrl, animate }: Props) {
   return (
     <section className={styles.hero}>
+      <Ornaments />
       <div className={`${styles.heroCard} ${animate ? styles.animateFlowers : ""}`}>
         <div className={styles.eyebrow}>{strings.heroEyebrow}</div>
         <h1 className={styles.names}>{name}</h1>

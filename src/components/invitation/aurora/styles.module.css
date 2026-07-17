@@ -1,0 +1,884 @@
+/* ============================================================
+   Aurora (nikoh) wedding template
+   Airy modern-minimalist: warm ivory, charcoal ink, dusty
+   rose-gold accent, thin-line sun/arch motif. Full-viewport
+   sections, one section per scroll (scroll-snap).
+   Scoped as a CSS Module under `.root`.
+   ============================================================ */
+
+.root {
+  --ivory: #fbf6f1;
+  --ivory-2: #f3e9e0;
+  --ink: #2e2925;
+  --ink-soft: #7c6f65;
+  --rose: #c0857a;
+  --rose-deep: #a5675c;
+  --gold: #c9a67c;
+  --line: rgba(46, 41, 37, 0.16);
+
+  --display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+
+  font-family: var(--sans);
+  color: var(--ink);
+  background: var(--ivory);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+.root * {
+  box-sizing: border-box;
+}
+
+/* one section per scroll */
+.scroller {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scroller section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(24px, 5vh, 60px) 24px;
+  position: relative;
+  /* own stacking context so the z-index:-1 ambient decor sits above the
+     section background but below the content (the decor clips itself) */
+  isolation: isolate;
+}
+
+/* soft alternating section tints */
+.tint {
+  background: linear-gradient(180deg, var(--ivory) 0%, var(--ivory-2) 100%);
+}
+
+/* ---- shared ---- */
+.eyebrow {
+  font-family: var(--sans);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  font-size: 12px;
+  color: var(--rose-deep);
+  padding-left: 0.42em;
+}
+.rule {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(180deg, var(--rose), transparent);
+  margin: 18px auto;
+}
+.h {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(30px, 7vw, 46px);
+  line-height: 1.1;
+}
+.lead {
+  font-family: var(--display);
+  font-weight: 400;
+  color: var(--ink-soft);
+  font-size: clamp(16px, 2.4vw, 19px);
+  line-height: 1.7;
+  max-width: 40ch;
+  margin: 0 auto;
+}
+
+/* ---- reveal ---- */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+.reveal.inView {
+  opacity: 1;
+  transform: none;
+}
+
+/* ================= HERO ================= */
+.hero {
+  overflow: hidden;
+}
+/* thin outlined "sun" behind the names — gently breathes */
+.sun {
+  position: absolute;
+  top: 11%;
+  left: 50%;
+  width: min(520px, 104vw);
+  height: min(520px, 104vw);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  pointer-events: none;
+  z-index: -1;
+  animation: sunBreathe 9s ease-in-out infinite;
+}
+.sun::after {
+  content: "";
+  position: absolute;
+  inset: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+}
+@keyframes sunBreathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+/* slowly rotating dashed rose-gold orbit adds life behind the names */
+.orbit {
+  position: absolute;
+  top: 11%;
+  left: 50%;
+  width: min(600px, 118vw);
+  height: min(600px, 118vw);
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 1px dashed rgba(201, 166, 124, 0.32);
+  pointer-events: none;
+  z-index: -1;
+  animation: orbitSpin 64s linear infinite;
+}
+@keyframes orbitSpin {
+  to {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+.heroKicker {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.42em;
+  font-size: 12px;
+  color: var(--rose-deep);
+  margin-bottom: 16px;
+  padding-left: 0.42em;
+}
+.names {
+  font-family: var(--display);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(38px, 11vw, 88px);
+  line-height: 1.02;
+  margin: 2px 0;
+}
+.and {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--rose);
+  font-size: clamp(22px, 5.5vw, 32px);
+  margin: 4px 0;
+}
+/* frameless watercolor photo — soft radial fade blends its light
+   edges into the ivory background (no border, no hard shadow) */
+.photoWrap {
+  position: relative;
+  width: min(260px, 62vw);
+  aspect-ratio: 3 / 3.4;
+  margin: 18px auto 16px;
+  -webkit-mask-image: radial-gradient(125% 108% at 50% 46%, #000 52%, transparent 90%);
+  mask-image: radial-gradient(125% 108% at 50% 46%, #000 52%, transparent 90%);
+  animation: photoFloat 7s ease-in-out infinite;
+}
+/* rose-gold ring hugging the frameless photo */
+.photoWrap::before {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 166, 124, 0.4);
+  -webkit-mask-image: radial-gradient(closest-side, transparent 78%, #000 82%, #000 92%, transparent 100%);
+  mask-image: radial-gradient(closest-side, transparent 78%, #000 82%, #000 92%, transparent 100%);
+  animation: haloPulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes haloPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.03);
+  }
+}
+.photoWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@keyframes photoFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+.datePill {
+  font-family: var(--sans);
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 4px;
+}
+
+/* ================= LETTER ================= */
+.letter .lead {
+  margin-top: 20px;
+}
+
+/* ================= DATE + COUNTDOWN ================= */
+.bigDate {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--rose-deep);
+  font-size: clamp(30px, 8vw, 52px);
+  margin: 8px 0 4px;
+}
+.timeNote {
+  font-family: var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 26px;
+}
+.timer {
+  display: flex;
+  gap: clamp(14px, 4vw, 30px);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.timer .box {
+  min-width: 74px;
+}
+.timer .num {
+  font-family: var(--display);
+  font-weight: 500;
+  color: var(--ink);
+  font-size: clamp(38px, 9vw, 58px);
+  line-height: 1;
+}
+.timer .lab {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 10px;
+}
+
+/* ================= VENUE ================= */
+.venueName {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(28px, 7vw, 42px);
+  margin: 8px 0 10px;
+}
+.venueAddr {
+  font-family: var(--sans);
+  font-weight: 300;
+  color: var(--ink-soft);
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 36ch;
+}
+.maps {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+.maps a {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+  text-decoration: none;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 14px 26px;
+  border-radius: 999px;
+  transition: 0.25s;
+}
+.maps a:hover {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.maps a.alt {
+  border-color: var(--rose-deep);
+  color: var(--rose-deep);
+}
+.maps a.alt:hover {
+  background: var(--rose-deep);
+  color: var(--ivory);
+}
+
+/* ================= GIFT ================= */
+.giftNote {
+  font-family: var(--sans);
+  font-weight: 300;
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin-top: 6px;
+}
+.cardNum {
+  font-family: var(--display);
+  color: var(--rose-deep);
+  font-size: clamp(24px, 6vw, 34px);
+  letter-spacing: 0.08em;
+  margin-top: 14px;
+}
+.cardHolder {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 8px;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  background: var(--ink);
+  color: var(--ivory);
+}
+.footer .footScript {
+  font-family: var(--display);
+  font-style: italic;
+  color: #f0e2d6;
+  font-size: clamp(40px, 11vw, 66px);
+}
+.footer .footSign {
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 12px;
+  color: var(--gold);
+  margin-top: 20px;
+}
+.footer .rule {
+  background: linear-gradient(180deg, var(--gold), transparent);
+}
+
+/* ================= AMBIENT SECTION DECOR ================= */
+/* Fills the negative space in each section with soft, on-brand
+   ivory + rose-gold glows, a faint concentric watermark ring, and
+   a few slow twinkles. Sits at z-index:-1 (below the content, above
+   the section background thanks to `isolation` on the section). */
+.deco {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+.orbA,
+.orbB {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(34px);
+}
+.orbA {
+  width: 230px;
+  height: 230px;
+  top: -60px;
+  left: -70px;
+  background: radial-gradient(circle at 40% 40%, var(--rose), transparent 68%);
+  opacity: 0.2;
+  animation: orbDriftA 18s ease-in-out infinite;
+}
+.orbB {
+  width: 280px;
+  height: 280px;
+  bottom: -90px;
+  right: -80px;
+  background: radial-gradient(circle at 60% 40%, var(--gold), transparent 70%);
+  opacity: 0.18;
+  animation: orbDriftB 22s ease-in-out infinite;
+}
+@keyframes orbDriftA {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(26px, 22px);
+  }
+}
+@keyframes orbDriftB {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-30px, -18px);
+  }
+}
+/* faint concentric watermark ring, slowly rotating (dashed outer ring
+   makes the motion legible without being busy) */
+.ringDeco {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(116vw, 720px);
+  height: min(116vw, 720px);
+  transform: translate(-50%, -50%);
+  opacity: 0.55;
+  animation: ringSpin 90s linear infinite;
+}
+.ringDeco circle {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 0.5;
+}
+.ringDeco circle:first-child {
+  stroke-dasharray: 2 9;
+}
+@keyframes ringSpin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+/* twinkling rose-gold sparks */
+.spark {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, var(--gold));
+  box-shadow: 0 0 9px 1px rgba(201, 166, 124, 0.6);
+  opacity: 0;
+  animation: twinkle 5s ease-in-out infinite;
+}
+.spark1 {
+  top: 21%;
+  left: 15%;
+  animation-delay: 0.4s;
+}
+.spark2 {
+  top: 71%;
+  left: 82%;
+  animation-delay: 1.9s;
+}
+.spark3 {
+  top: 38%;
+  left: 87%;
+  animation-delay: 3.1s;
+}
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+/* gold-tinted decor reads better over the dark footer */
+.decoDark .orbA {
+  background: radial-gradient(circle at 40% 40%, var(--gold), transparent 70%);
+  opacity: 0.16;
+}
+.decoDark .orbB {
+  background: radial-gradient(circle at 60% 40%, var(--rose), transparent 72%);
+  opacity: 0.14;
+}
+.decoDark .ringDeco circle {
+  stroke: rgba(201, 166, 124, 0.28);
+}
+
+/* ---- ornamental divider (line · gem · line) ---- */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 18px auto;
+}
+.divLine {
+  width: clamp(34px, 12vw, 60px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rose));
+}
+.divLine:last-child {
+  background: linear-gradient(90deg, var(--rose), transparent);
+}
+.divGem {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  animation: gemPulse 3.4s ease-in-out infinite;
+}
+.divGem path {
+  fill: none;
+  stroke: var(--rose-deep);
+  stroke-width: 1.3;
+  stroke-linejoin: round;
+}
+.divGem.gold path {
+  stroke: var(--gold);
+}
+@keyframes gemPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* ---- language toggle ---- */
+.langToggle {
+  position: fixed;
+  top: calc(16px + var(--tpl-chrome-top, 0px));
+  right: 16px;
+  z-index: 60;
+  display: flex;
+  gap: 4px;
+  background: rgba(251, 246, 241, 0.9);
+  padding: 5px;
+  border-radius: 20px;
+  box-shadow: 0 6px 16px rgba(46, 41, 37, 0.14);
+}
+.langToggle button {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  padding: 6px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+.langToggle button.active {
+  background: var(--rose-deep);
+  color: var(--ivory);
+}
+
+/* ---- audio toggle ---- */
+.audioToggle {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: rgba(251, 246, 241, 0.92);
+  border: 1px solid var(--gold);
+  box-shadow: 0 10px 26px rgba(46, 41, 37, 0.18);
+  z-index: 60;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s, opacity 0.4s;
+  opacity: 0;
+  pointer-events: none;
+}
+.audioToggle.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.audioToggle:hover {
+  transform: scale(1.08);
+}
+.audioToggle svg {
+  width: 24px;
+  height: 24px;
+}
+.audioToggle .iconPaused {
+  display: none;
+}
+.audioToggle.musicPaused .iconPlaying {
+  display: none;
+}
+.audioToggle.musicPaused .iconPaused {
+  display: block;
+}
+.audioToggle.musicPlaying .iconPlaying {
+  animation: spin 5s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= INTRO ================= */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: radial-gradient(circle at 50% 34%, #ffffff 0%, var(--ivory) 55%, var(--ivory-2) 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 26px;
+  transition: opacity 1s ease, transform 1s ease;
+}
+.intro.opened {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+/* ---- self-drawing line-art (concentric rings + rose-gold spark) ---- */
+.introArt {
+  width: 132px;
+  height: 132px;
+  margin-bottom: 24px;
+  overflow: visible;
+}
+.introArt circle,
+.introArt path {
+  fill: none;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.introRingA,
+.introRingB,
+.introSpark {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.introRingA {
+  stroke: var(--gold);
+  animation: draw 1.5s ease forwards 0.15s;
+}
+.introRingB {
+  stroke: var(--rose);
+  animation: draw 1.5s ease forwards 0.5s;
+}
+.introSpark {
+  stroke: var(--rose-deep);
+  animation: draw 1.3s ease forwards 1s;
+}
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+/* shimmering rose-gold core, lit once the sparkle is drawn */
+.introGlow {
+  fill: var(--gold);
+  stroke: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: shimmer 2.6s ease-in-out 1.6s infinite;
+}
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}
+
+/* ---- softly falling petals ---- */
+.petals {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.petals span {
+  position: absolute;
+  top: -8%;
+  width: 13px;
+  height: 13px;
+  border-radius: 82% 8% 82% 8%;
+  background: radial-gradient(circle at 32% 28%, var(--rose), var(--gold));
+  opacity: 0;
+  animation: fall linear infinite;
+}
+.petals span:nth-child(1) {
+  left: 9%;
+  animation-duration: 9.5s;
+  animation-delay: 0s;
+}
+.petals span:nth-child(2) {
+  left: 23%;
+  width: 9px;
+  height: 9px;
+  animation-duration: 12s;
+  animation-delay: 2.4s;
+}
+.petals span:nth-child(3) {
+  left: 38%;
+  width: 11px;
+  height: 11px;
+  animation-duration: 10.5s;
+  animation-delay: 1.1s;
+}
+.petals span:nth-child(4) {
+  left: 54%;
+  animation-duration: 13s;
+  animation-delay: 3.6s;
+}
+.petals span:nth-child(5) {
+  left: 68%;
+  width: 8px;
+  height: 8px;
+  animation-duration: 11s;
+  animation-delay: 0.8s;
+}
+.petals span:nth-child(6) {
+  left: 81%;
+  width: 12px;
+  height: 12px;
+  animation-duration: 9s;
+  animation-delay: 4.2s;
+}
+.petals span:nth-child(7) {
+  left: 91%;
+  width: 10px;
+  height: 10px;
+  animation-duration: 12.5s;
+  animation-delay: 1.9s;
+}
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(112vh) translateX(46px) rotate(320deg);
+    opacity: 0;
+  }
+}
+
+.intro .eyebrow {
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: introFade 1s ease forwards 0.25s;
+}
+
+/* ---- staggered name reveal ---- */
+.introNames {
+  font-family: var(--display);
+  font-style: italic;
+  color: var(--ink);
+  font-size: clamp(40px, 11vw, 72px);
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+.introChar {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(20px) rotate(3deg);
+  animation: charIn 0.85s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.introChar.amp {
+  color: var(--rose);
+  font-size: 0.62em;
+  padding: 0 0.14em;
+  vertical-align: 0.12em;
+}
+@keyframes charIn {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.introSub {
+  font-family: var(--display);
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.7;
+  max-width: 40ch;
+  opacity: 0;
+  animation: introFade 1s ease forwards 1.5s;
+}
+.openBtn {
+  margin-top: 40px;
+  font-family: var(--sans);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-size: 13px;
+  color: var(--ivory);
+  background: var(--ink);
+  border: none;
+  padding: 18px 52px;
+  border-radius: 999px;
+  cursor: pointer;
+  opacity: 0;
+  animation: introFade 1s ease forwards 1.8s;
+  transition: transform 0.3s, background-color 0.3s;
+}
+@keyframes introFade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.openBtn:hover {
+  transform: translateY(-3px);
+  background: var(--rose-deep);
+}
+.openBtn:active {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroller {
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+  }
+  .root * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

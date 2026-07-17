@@ -20,8 +20,8 @@ interface Props {
   data: InvitationData;
 }
 
-const FALLBACK_PHOTO = "/templates/invitation1/image.png";
-const FALLBACK_MUSIC = encodeURI("/templates/invitation1/Traditional Uzbek Music Karnai Solo.m4a");
+const FALLBACK_PHOTO = "/templates/qizlar-hero.jpg";
+const FALLBACK_MUSIC = "/music/qaynona.m4a";
 
 /** Combine the ISO event date with the "HH:MM" time into a single Date. */
 function buildEventDateTime(isoDate: string, time: string): Date {
@@ -83,25 +83,29 @@ export default function QizlarBazmiTemplate({ data }: Props) {
         <IntroScene strings={strings} opened={opened} onOpen={handleOpen} />
       )}
 
-      <main className={styles.main}>
-        <HeroSection
-          strings={strings}
-          name={name}
-          dateLabel={dateLabel}
-          photoUrl={photoUrl}
-          animate={opened}
-        />
-        <InviteCard strings={strings} text={inviteText} />
-        <CalendarSection strings={strings} lang={lang} eventDate={eventDate} />
-        <CountdownSection strings={strings} target={targetDateTime} />
-        <LocationSection
-          strings={strings}
-          venue={venue}
-          googleMapUrl={data.googleMapUrl}
-          yandexMapUrl={data.yandexMapUrl}
-        />
-        <FooterSection strings={strings} name={name} />
-      </main>
+      <div className={styles.scroller}>
+        <main className={styles.main}>
+          <HeroSection
+            strings={strings}
+            name={name}
+            dateLabel={dateLabel}
+            photoUrl={photoUrl}
+            animate={opened}
+          />
+          <InviteCard strings={strings} text={inviteText} />
+          <CalendarSection strings={strings} lang={lang} eventDate={eventDate} />
+          <CountdownSection strings={strings} target={targetDateTime} />
+          <div className={styles.finale}>
+            <LocationSection
+              strings={strings}
+              venue={venue}
+              googleMapUrl={data.googleMapUrl}
+              yandexMapUrl={data.yandexMapUrl}
+            />
+            <FooterSection strings={strings} name={name} />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

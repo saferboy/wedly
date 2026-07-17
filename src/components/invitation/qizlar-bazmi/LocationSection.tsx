@@ -2,6 +2,8 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import Ornaments, { Flourish } from "./Ornaments";
+import VenueSketch from "./VenueSketch";
 import type { QizlarBazmiStrings } from "./i18n";
 
 interface Props {
@@ -17,6 +19,7 @@ const DEFAULT_YANDEX = "https://yandex.com/maps/?text=Toshkent";
 export default function LocationSection({ strings, venue, googleMapUrl, yandexMapUrl }: Props) {
   const { ref: eyebrowRef, revealed: eyebrowIn } = useReveal<HTMLDivElement>();
   const { ref: titleRef, revealed: titleIn } = useReveal<HTMLHeadingElement>();
+  const { ref: sketchRef, revealed: sketchIn } = useReveal<HTMLDivElement>();
   const { ref: venueRef, revealed: venueIn } = useReveal<HTMLParagraphElement>();
   const { ref: linksRef, revealed: linksIn } = useReveal<HTMLDivElement>();
 
@@ -25,6 +28,7 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
 
   return (
     <section className={styles.location}>
+      <Ornaments />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}
@@ -34,6 +38,10 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.locTitle}
       </h2>
+      <Flourish />
+      <div ref={sketchRef}>
+        <VenueSketch drawn={sketchIn} />
+      </div>
       <p
         ref={venueRef}
         className={`${styles.venue} ${styles.reveal} ${venueIn ? styles.inView : ""}`}

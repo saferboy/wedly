@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import SectionDecor from "./SectionDecor";
 import type { ToyStrings } from "./i18n";
 
 interface Props {
@@ -57,6 +58,7 @@ export default function CountdownSection({ strings, target }: Props) {
 
   return (
     <section className={styles.countdown}>
+      <SectionDecor />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}
@@ -66,6 +68,9 @@ export default function CountdownSection({ strings, target }: Props) {
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.cdTitle}
       </h2>
+      <div className={styles.divider}>
+        <i>&#10086;</i>
+      </div>
       <div
         ref={timerRef}
         className={`${styles.timer} ${styles.reveal} ${timerIn ? styles.inView : ""}`}

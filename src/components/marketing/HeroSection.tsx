@@ -1,5 +1,6 @@
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 export default function HeroSection() {
   return (
@@ -37,7 +38,7 @@ export default function HeroSection() {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <Button href="/buyurtma" size="lg">
+              <Button href={`https://t.me/${TELEGRAM_BOT_USERNAME}`} external size="lg">
                 Buyurtma berish
               </Button>
               <Button href="/templates" variant="outline" size="lg">

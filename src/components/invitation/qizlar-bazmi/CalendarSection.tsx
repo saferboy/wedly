@@ -2,6 +2,7 @@
 
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
+import Ornaments, { Flourish } from "./Ornaments";
 import { MONTHS_CAPTION, type QizlarBazmiStrings } from "./i18n";
 import type { Language } from "@/types/invitation";
 
@@ -33,6 +34,7 @@ export default function CalendarSection({ strings, lang, eventDate }: Props) {
 
   return (
     <section className={styles.calendar}>
+      <Ornaments />
       <div
         ref={eyebrowRef}
         className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}
@@ -42,6 +44,7 @@ export default function CalendarSection({ strings, lang, eventDate }: Props) {
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.calTitle}
       </h2>
+      <Flourish />
       <div
         ref={wrapRef}
         className={`${styles.calWrap} ${styles.reveal} ${wrapIn ? styles.inView : ""}`}

@@ -1,10 +1,11 @@
-import { Telegraf, session } from "telegraf";
+import { Telegraf } from "telegraf";
 import type { Context } from "telegraf";
 import type { Update } from "telegraf/types";
 import { MSG, KEYBOARDS } from "./messages";
 import type { BotSession } from "./types";
 import { defaultSession } from "./types";
 import { eventTypeLabel } from "../eventType";
+import { getTemplate } from "@/lib/templates";
 
 interface SessionContext extends Context<Update> {
   session: BotSession;
@@ -32,7 +33,7 @@ export function createBot() {
   // /start komandasi
   bot.start(async (ctx) => {
     const chatId = ctx.chat?.id;
-    const startParam = ctx.startPayload; // template_classic-red
+    const startParam = ctx.startPayload; // template_nikoh-classic
 
     if (chatId) {
       const s = defaultSession();
@@ -50,6 +51,27 @@ export function createBot() {
     }
 
     await ctx.replyWithMarkdown(MSG.welcome);
+
+    // Saytda template tanlangan bo'lsa — tadbir turini shundan aniqlab,
+    // "tur" savolini o'tkazib yuboramiz va to'g'ridan-to'g'ri ismga o'tamiz.
+    const preset = ctx.session.templateSlug
+      ? getTemplate(ctx.session.templateSlug)
+      : undefined;
+    if (preset) {
+      ctx.session.eventType = preset.eventType;
+      await ctx.replyWithMarkdown(
+        `✨ *${preset.name}* dizayni tanlandi — bu *${eventTypeLabel(preset.eventType)}* uchun.`
+      );
+      if (preset.eventType === "WEDDING") {
+        ctx.session.step = "groom_name";
+        await ctx.replyWithMarkdown(MSG.groomName);
+      } else {
+        ctx.session.step = "bride_name";
+        await ctx.replyWithMarkdown(MSG.brideName(false));
+      }
+      return;
+    }
+
     await ctx.replyWithMarkdown(MSG.chooseEventType, {
       reply_markup: KEYBOARDS.eventType,
     });
@@ -177,10 +199,13 @@ export function createBot() {
       s.paymentScreenshotFileId = photos[photos.length - 1].file_id;
       s.step = "done";
 
-      // Admin ga xabar
+      // Admin ga xabar va buyurtmani DB ga saqlaymiz.
       await notifyAdmin(ctx, s);
+      await savePaidOrder(ctx, s);
 
+      // Taklifnoma admin tomonidan tayyorlanadi va link 24 soat ichida yuboriladi.
       await ctx.replyWithMarkdown(MSG.done);
+
       sessions.delete(ctx.chat.id);
     }
   });
@@ -372,10 +397,20 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
       caption: `💳 To'lov cheki — ${s.brideName}${s.groomName ? " & " + s.groomName : ""}`,
     });
   }
+}
 
-  // Buyurtmani DB ga saqlash
+/**
+ * To'lov kelgach buyurtmani DB ga saqlaydi (yoki saytdan kelgan bo'lsa yangilaydi)
+ * va PAID holatiga o'tkazadi. Mijoz yuborgan rasmni ham Storage'ga yuklaydi.
+ * Taklifnomaning o'zi admin tomonidan tayyorlanadi va linki 24 soat ichida yuboriladi.
+ */
+async function savePaidOrder(ctx: SessionContext, s: BotSession): Promise<void> {
   try {
     const { db } = await import("@/lib/db");
+
+    // Mijoz yuborgan rasmni (bo'lsa) Storage'ga yuklaymiz — best-effort.
+    let photoUrl: string | null = null;
+    if (s.photoFileId) photoUrl = await uploadTelegramPhoto(ctx, s.photoFileId);
 
     // Saytdan kelgan buyurtma bo'lsa — mavjud yozuvni PAID ga o'tkazamiz.
     if (s.orderId) {
@@ -386,40 +421,70 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
           telegramChatId: String(ctx.chat?.id),
           telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
           telegramUsername: ctx.from?.username,
+          ...(photoUrl ? { photoUrl } : {}),
         },
       });
       return;
     }
 
-    const template = s.templateSlug
-      ? await db.template.findUnique({ where: { slug: s.templateSlug } })
-      : null;
+    const templateId = s.templateSlug
+      ? (await db.template.findUnique({ where: { slug: s.templateSlug } }))?.id
+      : undefined;
 
     await db.order.create({
       data: {
         telegramChatId: String(ctx.chat?.id),
+        telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
         telegramUsername: ctx.from?.username,
         eventType: s.eventType!,
         groomName: s.groomName,
         brideName: s.brideName!,
-        eventDate: parseDate(s.eventDate!),
+        eventDate: s.eventDate ? parseDate(s.eventDate) : undefined,
         eventTime: s.eventTime,
         venueName: s.venueName,
         venueAddress: s.venueAddress,
         yandexLink: s.yandexLink,
         googleLink: s.googleLink,
-        musicChoice: s.musicChoice === "library"
-          ? `library:${s.musicTrackId}`
-          : s.musicChoice ?? "none",
+        photoUrl,
+        musicChoice:
+          s.musicChoice === "library" ? `library:${s.musicTrackId}` : s.musicChoice ?? "none",
         cardNumber: s.cardNumber,
         cardHolder: s.cardHolder,
         notes: s.notes,
-        templateId: template?.id,
+        templateId,
         status: "PAID",
       },
     });
   } catch (e) {
-    console.error("DB saqlash xatosi:", e);
+    console.error("Buyurtmani saqlash xatosi:", e);
+  }
+}
+
+/**
+ * Telegram rasmini Supabase Storage'ga yuklab, ochiq URL qaytaradi.
+ * Har qanday xatolikda `null` qaytaradi — bu taklifnoma yaratishni to'xtatmaydi
+ * (template o'zining zaxira rasmini ko'rsatadi).
+ */
+async function uploadTelegramPhoto(ctx: SessionContext, fileId: string): Promise<string | null> {
+  try {
+    const fileLink = await ctx.telegram.getFileLink(fileId);
+    const res = await fetch(fileLink.toString());
+    if (!res.ok) return null;
+    const buffer = Buffer.from(await res.arrayBuffer());
+
+    const { getSupabaseAdmin, STORAGE_BUCKETS } = await import("@/lib/supabase");
+    const admin = getSupabaseAdmin();
+    const path = `telegram/${fileId}.jpg`;
+    const { error } = await admin.storage
+      .from(STORAGE_BUCKETS.photos)
+      .upload(path, buffer, { contentType: "image/jpeg", upsert: true });
+    if (error) return null;
+
+    const { data } = admin.storage.from(STORAGE_BUCKETS.photos).getPublicUrl(path);
+    return data.publicUrl;
+  } catch (e) {
+    console.error("Rasm yuklash xatosi:", e);
+    return null;
   }
 }
 
