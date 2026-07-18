@@ -119,11 +119,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   text-align: center;
   padding: 40px 24px;
   transition: opacity 1.1s ease, transform 1.1s ease;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .intro.opened {
   opacity: 0;
@@ -169,28 +170,32 @@
 }
 
 .openBtn {
-  margin-top: 40px;
+  margin-top: 32px;
   font-family: var(--font-marcellus), "Marcellus", serif;
-  font-size: 18px;
-  letter-spacing: 0.2em;
+  font-size: 14px;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #fff;
-  background: var(--crimson);
+  background: linear-gradient(135deg, var(--crimson) 0%, var(--crimson-deep) 100%);
   border: none;
-  padding: 20px 58px;
-  border-radius: 40px;
+  padding: 13px 38px;
+  /* Kreativ "gulbarg" shakli — nomutanosib burchaklar */
+  border-radius: 40px 14px 40px 14px;
   cursor: pointer;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 224, 130, 0.35);
   position: relative;
   overflow: hidden;
   opacity: 0;
   animation: floatIn 1.4s 2.4s ease forwards;
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+  transition: transform 0.35s, box-shadow 0.35s, border-radius 0.45s ease,
+    background-color 0.3s;
 }
 .openBtn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 16px 34px rgba(140, 20, 40, 0.28);
-  background: var(--crimson-deep);
+  box-shadow: 0 16px 34px rgba(140, 20, 40, 0.28),
+    inset 0 0 0 1px rgba(255, 224, 130, 0.55);
+  /* Hover'da gulbarg burchaklari almashadi — jonli effekt */
+  border-radius: 14px 40px 14px 40px;
 }
 .openBtn:active {
   transform: translateY(0);
@@ -204,37 +209,38 @@
   overflow: hidden;
   z-index: 2;
 }
+/* Konvert — sarlavha ostida oqim ichida, biroz qiya va yumshoq tebranib turadi */
 .envelope {
-  position: absolute;
-  width: 72px;
-  left: 50%;
-  top: 18%;
+  display: block;
+  width: 58px;
+  height: auto;
+  margin: clamp(10px, 1.6vh, 18px) auto clamp(6px, 1.2vh, 12px);
   opacity: 0;
-  transform: translateX(-50%) translateY(-16px) rotate(-4deg);
+  transform: translateY(-14px) rotate(-9deg) scale(0.85);
   filter: drop-shadow(0 8px 16px rgba(185, 34, 58, 0.25));
-  animation: envRise 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+  animation: envRise 1.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
 }
 @keyframes envRise {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(-16px) rotate(-4deg) scale(0.85);
+    transform: translateY(-14px) rotate(-9deg) scale(0.85);
   }
   100% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0) rotate(0deg) scale(1);
+    transform: translateY(0) rotate(-8deg) scale(1);
   }
 }
 .envelope.landed {
   opacity: 1;
-  animation: envFloat 3.6s ease-in-out infinite;
+  animation: envFloat 3.8s ease-in-out infinite;
 }
 @keyframes envFloat {
   0%,
   100% {
-    transform: translateX(-50%) translateY(0) rotate(0deg);
+    transform: translateY(0) rotate(-8deg);
   }
   50% {
-    transform: translateX(-50%) translateY(-10px) rotate(2deg);
+    transform: translateY(-8px) rotate(-3deg);
   }
 }
 
@@ -953,6 +959,31 @@
   .root h3,
   .script {
     font-size: 40px;
+  }
+  /* Intro — past viewport'da ixcham, "ochish" tugmasi ko'rinib tursin */
+  .intro {
+    padding: 22px 20px;
+  }
+  .intro h1 {
+    font-size: clamp(34px, 8vw, 54px);
+    margin: 8px 0 4px;
+  }
+  .intro p.sub {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .glyph {
+    font-size: 28px;
+    margin-bottom: 2px;
+  }
+  .envelope {
+    width: 48px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+  .openBtn {
+    margin-top: 22px;
+    padding: 12px 34px;
   }
   .footer .script {
     font-size: clamp(44px, 11vw, 56px);

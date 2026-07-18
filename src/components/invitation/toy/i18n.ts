@@ -39,7 +39,7 @@ export const toyI18n: Record<Language, ToyStrings> = {
       "Hayotimizdagi eng baxtli kun — nikoh to'yimizni aynan siz bilan birga nishonlashni orzu qilamiz",
     openBtn: "Ochish",
     heroEyebrow: "Nikoh to'yi",
-    heroAnd: "S I Z N I  T A K L I F  Q I L A M I Z",
+    heroAnd: "Sizni taklif qilamiz",
     inviteTitle: "Aziz mehmon!",
     inviteText:
       "Ikki qalb bir umrga birlashayotgan ushbu muborak kunda — nikoh to'yimizda siz bilan birga bo'lishni chin dildan orzu qilamiz. Kelib, baxtimizga sherik bo'lishingizni astoydil kutamiz.",
@@ -68,7 +68,7 @@ export const toyI18n: Record<Language, ToyStrings> = {
       "Самый счастливый день в нашей жизни — свадьбу — мы мечтаем встретить именно с вами",
     openBtn: "Открыть",
     heroEyebrow: "Свадьба",
-    heroAnd: "П Р И Г Л А Ш А Е М  В А С",
+    heroAnd: "Приглашаем вас",
     inviteTitle: "Дорогой гость!",
     inviteText:
       "В этот благословенный день, когда два сердца соединяются навсегда — на нашей свадьбе — мы искренне желаем видеть вас рядом. Будем счастливы разделить с вами эту радость.",

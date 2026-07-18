@@ -295,9 +295,6 @@ export default function AuroraTemplate({ data }: Props) {
             <Divider />
           </Reveal>
           <Reveal>
-            <h2 className={styles.h}>{s.letterTitle}</h2>
-          </Reveal>
-          <Reveal>
             <p className={styles.lead}>{letter}</p>
           </Reveal>
         </section>

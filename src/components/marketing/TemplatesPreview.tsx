@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import Reveal from "@/components/ui/Reveal";
 import { TEMPLATES } from "@/lib/templates";
 import { eventTypeLabel } from "@/lib/eventType";
 
@@ -14,46 +15,46 @@ export default function TemplatesPreview() {
   const featured = TEMPLATES.slice(0, 3);
 
   return (
-    <section className="py-24 bg-[#FAF7F2] dark:bg-gray-950">
+    <section className="bg-[#FAF7F2] py-16 sm:py-20 lg:py-24 dark:bg-night-soft">
       <Container>
-        <div className="text-center mb-16">
-          <span className="text-xs font-semibold tracking-[0.3em] text-[#C9A84C] uppercase">
+        <Reveal className="mb-10 text-center sm:mb-14">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#a9782a] sm:text-xs dark:text-gold">
             ✦ Dizaynlar ✦
           </span>
-          <h2 className="mt-3 text-4xl font-serif italic text-[#2C1810] dark:text-white">
+          <h2 className="mt-3 font-serif text-2xl text-[#2C1810] sm:text-3xl lg:text-4xl dark:text-white">
             Chiroyli templatelar
           </h2>
-          <p className="mt-4 text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            To'y, qiz bazmi va tug'ilgan kun uchun 6 ta noyob dizayn. Har biri
-            o'z rang sxemasi va uslubi bilan.
+          <p className="mx-auto mt-3 max-w-md text-sm text-gray-500 sm:text-base dark:text-gray-400">
+            To&apos;y, qiz bazmi va tug&apos;ilgan kun uchun 6 ta noyob dizayn. Har
+            biri o&apos;z rang sxemasi va uslubi bilan.
           </p>
-        </div>
+        </Reveal>
 
         {/* Template kartalar */}
-        <div className="grid md:grid-cols-3 gap-6 mb-10">
-          {featured.map((template) => (
-            <Link
-              key={template.slug}
-              href={`/templates/${template.slug}`}
-              className="group block rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
-            >
+        <div className="mb-8 grid gap-5 sm:mb-10 sm:gap-6 md:grid-cols-3">
+          {featured.map((template, i) => (
+            <Reveal key={template.slug} delay={i * 120} className="h-full">
+              <Link
+                href={`/templates/${template.slug}`}
+                className="group block h-full overflow-hidden rounded-2xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-xl dark:border-white/5"
+              >
               {/* Preview */}
               <div
-                className="h-52 flex flex-col items-center justify-center gap-3 transition-transform duration-300 group-hover:scale-[1.03]"
+                className="flex h-44 flex-col items-center justify-center gap-3 transition-transform duration-300 group-hover:scale-[1.03] sm:h-52"
                 style={{ backgroundColor: template.previewBg }}
               >
                 <p
-                  className="font-serif italic text-2xl"
+                  className="font-serif text-2xl italic"
                   style={{ color: "rgba(255,255,255,0.9)" }}
                 >
                   {PREVIEW_NAME[template.eventType] ?? "Malika"}
                 </p>
                 <div
-                  className="w-8 h-px"
+                  className="h-px w-8"
                   style={{ background: template.theme.accentColor }}
                 />
                 <span
-                  className="text-xs px-3 py-1 rounded-full font-medium"
+                  className="rounded-full px-3 py-1 text-xs font-medium"
                   style={{
                     background: template.theme.accentColor,
                     color: template.previewBg,
@@ -64,28 +65,29 @@ export default function TemplatesPreview() {
               </div>
 
               {/* Info */}
-              <div className="bg-white dark:bg-gray-900 p-4 flex items-center justify-between">
+              <div className="flex items-center justify-between bg-white p-4 dark:bg-night">
                 <div>
-                  <p className="font-semibold text-gray-900 dark:text-white text-sm">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">
                     {template.name}
                   </p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                  <p className="mt-0.5 text-xs text-gray-400 dark:text-gray-500">
                     {eventTypeLabel(template.eventType)}
                   </p>
                 </div>
-                <span className="text-xs text-[#8B1A1A] font-medium group-hover:translate-x-1 transition-transform inline-block">
+                <span className="inline-block text-xs font-medium text-[#a9782a] transition-transform group-hover:translate-x-1 dark:text-gold">
                   Preview →
                 </span>
               </div>
-            </Link>
+              </Link>
+            </Reveal>
           ))}
         </div>
 
-        <div className="text-center">
-          <Button href="/templates" variant="outline" size="lg">
-            Barcha 6 ta templateni ko'rish
+        <Reveal className="text-center">
+          <Button href="/templates" variant="goldOutline" size="md">
+            Qolgan templatelarni ko&apos;rish
           </Button>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

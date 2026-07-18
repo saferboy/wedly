@@ -4,13 +4,13 @@ import { TELEGRAM_BOT_USERNAME } from "@/lib/constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2C1810] text-white py-12">
+    <footer className="border-t border-white/5 bg-night py-12 text-white">
       <Container>
-        <div className="grid md:grid-cols-3 gap-10 mb-10">
+        <div className="mb-10 grid gap-8 sm:gap-10 md:grid-cols-3">
           {/* Brand */}
           <div>
-            <p className="font-serif italic text-3xl text-white mb-2">Wedly</p>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="mb-2 font-serif text-3xl italic text-gold-gradient">Wedly</p>
+            <p className="text-sm leading-relaxed text-gray-400">
               O'zbekistondagi to'y va qiz bazmi uchun chiroyli onlayn
               taklifnomalar.
             </p>

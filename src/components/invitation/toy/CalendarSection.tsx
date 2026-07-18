@@ -13,7 +13,6 @@ interface Props {
 }
 
 export default function CalendarSection({ strings, lang, eventDate }: Props) {
-  const { ref: eyebrowRef, revealed: eyebrowIn } = useReveal<HTMLDivElement>();
   const { ref: titleRef, revealed: titleIn } = useReveal<HTMLHeadingElement>();
   const { ref: wrapRef, revealed: wrapIn } = useReveal<HTMLDivElement>();
 
@@ -35,12 +34,6 @@ export default function CalendarSection({ strings, lang, eventDate }: Props) {
   return (
     <section className={styles.calendar}>
       <SectionDecor />
-      <div
-        ref={eyebrowRef}
-        className={`${styles.eyebrow} ${styles.reveal} ${eyebrowIn ? styles.inView : ""}`}
-      >
-        {strings.calEyebrow}
-      </div>
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.calTitle}
       </h2>

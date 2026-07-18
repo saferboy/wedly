@@ -177,9 +177,13 @@
 .heroPhoto img {
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   object-fit: cover;
-  object-position: center;
-  filter: grayscale(0.18) contrast(1.04) brightness(0.72) saturate(0.94);
+  /* Kuyov-kelin rasmning markazidan biroz o'ngda — fokusni ularga suramiz,
+     aks holda tor mobil ekranda faqat kuyov ko'rinib qoladi. */
+  object-position: 60% center;
+  filter: grayscale(0.12) contrast(1.03) brightness(0.82) saturate(0.96);
   transform-origin: center;
   will-change: transform;
   animation: kenburns 24s ease-in-out infinite alternate;
@@ -214,12 +218,12 @@
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(8, 7, 9, 0.7) 0%,
-    rgba(8, 7, 9, 0.34) 24%,
-    rgba(8, 7, 9, 0.32) 46%,
-    rgba(8, 7, 9, 0.62) 66%,
-    rgba(8, 7, 9, 0.9) 84%,
-    rgba(8, 7, 9, 0.98) 100%
+    rgba(8, 7, 9, 0.5) 0%,
+    rgba(8, 7, 9, 0.14) 26%,
+    rgba(8, 7, 9, 0.16) 50%,
+    rgba(8, 7, 9, 0.48) 72%,
+    rgba(8, 7, 9, 0.82) 88%,
+    rgba(8, 7, 9, 0.95) 100%
   );
 }
 .heroInner {
@@ -906,9 +910,34 @@
 }
 
 /* keep each section within one viewport on small phones */
+/* Mobil (portret) — rasm fokusini kuyov-kelinга suramiz, ikkalasi markazda
+   ko'rinsin (aks holda tor ekran faqat kuyovni kesib ko'rsatadi). */
+@media (max-width: 700px) {
+  .heroPhoto img {
+    object-position: 65% center;
+  }
+}
+
 @media (max-width: 480px) {
   .scroller section {
     padding: clamp(46px, 9vh, 78px) 22px;
+  }
+  .heroInner {
+    padding: 0 22px clamp(44px, 10vh, 88px);
+  }
+  .names {
+    font-size: clamp(40px, 12.5vw, 62px);
+  }
+  .and {
+    font-size: clamp(20px, 5vw, 26px);
+    margin: 6px 0;
+  }
+  .heroKicker {
+    margin-bottom: 16px;
+  }
+  .heroDate {
+    margin-top: 16px;
+    padding-top: 14px;
   }
   .timeNote {
     margin-bottom: 28px;

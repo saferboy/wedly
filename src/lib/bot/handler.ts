@@ -98,6 +98,13 @@ export function createBot() {
 
     const s = ctx.session;
 
+    // Admin: to'lovni tasdiqlab, taklifnomani yaratib, mijozga link yuborish
+    // (admin panelidagi "To'lovni tasdiqlash va link yuborish" bilan bir xil).
+    if (data.startsWith("approve_")) {
+      await handleAdminApprove(ctx, data.replace("approve_", ""));
+      return;
+    }
+
     // Event type
     if (data.startsWith("event_")) {
       s.eventType = data.replace("event_", "") as
@@ -199,9 +206,10 @@ export function createBot() {
       s.paymentScreenshotFileId = photos[photos.length - 1].file_id;
       s.step = "done";
 
-      // Admin ga xabar va buyurtmani DB ga saqlaymiz.
-      await notifyAdmin(ctx, s);
-      await savePaidOrder(ctx, s);
+      // Avval buyurtmani DB ga saqlaymiz (id kerak), so'ng admin'ga
+      // tasdiqlash tugmasi bilan xabar yuboramiz.
+      const orderId = await savePaidOrder(ctx, s);
+      await notifyAdmin(ctx, s, orderId);
 
       // Taklifnoma admin tomonidan tayyorlanadi va link 24 soat ichida yuboriladi.
       await ctx.replyWithMarkdown(MSG.done);
@@ -230,12 +238,21 @@ export function createBot() {
 
     switch (s.step) {
       case "groom_name":
+        // Faqat ism yetarli — familiya shart emas.
+        if (!text) {
+          await ctx.replyWithMarkdown(MSG.groomName);
+          return;
+        }
         s.groomName = text;
         s.step = "bride_name";
         await ctx.replyWithMarkdown(MSG.brideName(true));
         break;
 
       case "bride_name":
+        if (!text) {
+          await ctx.replyWithMarkdown(MSG.brideName(s.eventType === "WEDDING"));
+          return;
+        }
         s.brideName = text;
         s.step = "event_date";
         await ctx.replyWithMarkdown(MSG.eventDate);
@@ -313,7 +330,13 @@ export function createBot() {
         break;
 
       default:
-        await ctx.reply("Iltimos /start bosib qaytadan boshlang.");
+        // Sessiya boshlang'ich holatda (masalan tadbir tanlanmagan yoki
+        // avvalgi buyurtma tugagan) — "dead-end" o'rniga oqimni muloyim
+        // tiklaymiz: to'g'ridan-to'g'ri tadbir turini tanlashni so'raymiz.
+        await ctx.replyWithMarkdown(MSG.chooseEventType, {
+          reply_markup: KEYBOARDS.eventType,
+        });
+        s.step = "event_type";
     }
   });
 
@@ -368,7 +391,11 @@ async function sendSummaryAndPayment(ctx: SessionContext) {
   ctx.session.step = "payment_screenshot";
 }
 
-async function notifyAdmin(ctx: SessionContext, s: BotSession) {
+async function notifyAdmin(
+  ctx: SessionContext,
+  s: BotSession,
+  orderId?: string | null
+) {
   const adminChatId = Number(process.env.TELEGRAM_ADMIN_CHAT_ID);
   if (!adminChatId) return;
 
@@ -389,7 +416,43 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
     musicChoice: s.musicChoice,
   });
 
-  await ctx.telegram.sendMessage(adminChatId, msg, { parse_mode: "Markdown" });
+  // Real vaqtda avtomatik yaratilgan taklifnoma holatini ko'rsatamiz.
+  let statusLine = "";
+  let replyMarkup: { inline_keyboard: { text: string; callback_data: string }[][] } | undefined;
+
+  if (orderId) {
+    try {
+      const { db } = await import("@/lib/db");
+      const { invitationUrl } = await import("@/lib/invitation/generate");
+      const order = await db.order.findUnique({
+        where: { id: orderId },
+        include: { invitation: true },
+      });
+      if (order?.invitation) {
+        statusLine = `\n✅ *Taklifnoma avtomatik tayyorlandi.*\n👁 Ko'rish: ${invitationUrl(order.invitation.slug)}`;
+      } else {
+        statusLine = `\n⚠️ *Taklifnoma yaratilmadi* — dizayn tanlanmagan bo'lishi mumkin. Admin panelidan tekshiring.`;
+      }
+    } catch {
+      /* status ko'rsatilmasa ham buyurtma xabari yuboriladi */
+    }
+
+    replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: "✅ To'lovni tasdiqlab, link yuborish",
+            callback_data: `approve_${orderId}`,
+          },
+        ],
+      ],
+    };
+  }
+
+  await ctx.telegram.sendMessage(adminChatId, msg + statusLine, {
+    parse_mode: "Markdown",
+    reply_markup: replyMarkup,
+  });
 
   // Screenshot ni ham yuborish
   if (s.paymentScreenshotFileId) {
@@ -400,17 +463,71 @@ async function notifyAdmin(ctx: SessionContext, s: BotSession) {
 }
 
 /**
+ * Admin inline tugmani bosganда: taklifnomani buyurtma ma'lumotidan avtomatik
+ * yaratadi, buyurtmani COMPLETED qiladi va tayyor havolani mijozga yuboradi.
+ * (Web admin panelidagi /api/orders/[id]/approve bilan bir xil mantiq.)
+ */
+async function handleAdminApprove(ctx: SessionContext, orderId: string) {
+  // Faqat admin tasdiqlashi mumkin.
+  const adminChatId = String(process.env.TELEGRAM_ADMIN_CHAT_ID ?? "");
+  if (adminChatId && String(ctx.chat?.id) !== adminChatId) {
+    await ctx.reply("⛔️ Bu amal faqat admin uchun.");
+    return;
+  }
+
+  try {
+    const { createInvitationFromOrder, invitationUrl } = await import(
+      "@/lib/invitation/generate"
+    );
+    const { db } = await import("@/lib/db");
+
+    const result = await createInvitationFromOrder(orderId);
+    await db.order.update({
+      where: { id: orderId },
+      data: { status: "COMPLETED" },
+    });
+
+    const order = await db.order.findUnique({ where: { id: orderId } });
+    const link = invitationUrl(result.slug);
+
+    let sent = false;
+    if (order?.telegramChatId) {
+      await ctx.telegram.sendMessage(
+        order.telegramChatId,
+        `🎉 *Taklifnomangiz tayyor!*\n\n${link}\n\nHavolani mehmonlaringizga ulashing. Wedly'dan foydalanganingiz uchun rahmat! 💛`,
+        { parse_mode: "Markdown" }
+      );
+      sent = true;
+    }
+
+    // Tugmani olib tashlaymiz (qayta bosilmasin).
+    await ctx.editMessageReplyMarkup(undefined).catch(() => {});
+    await ctx.reply(
+      `✅ Tasdiqlandi.\n${sent ? "Havola mijozga yuborildi:" : "Havola tayyor (mijoz Telegram'i yo'q):"}\n${link}`
+    );
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "noma'lum xatolik";
+    await ctx.reply(`✗ Xatolik: ${message}`);
+  }
+}
+
+/**
  * To'lov kelgach buyurtmani DB ga saqlaydi (yoki saytdan kelgan bo'lsa yangilaydi)
  * va PAID holatiga o'tkazadi. Mijoz yuborgan rasmni ham Storage'ga yuklaydi.
  * Taklifnomaning o'zi admin tomonidan tayyorlanadi va linki 24 soat ichida yuboriladi.
  */
-async function savePaidOrder(ctx: SessionContext, s: BotSession): Promise<void> {
+async function savePaidOrder(ctx: SessionContext, s: BotSession): Promise<string | null> {
   try {
     const { db } = await import("@/lib/db");
 
-    // Mijoz yuborgan rasmni (bo'lsa) Storage'ga yuklaymiz — best-effort.
+    // Mijoz yuborgan rasmlarni (bo'lsa) Storage'ga yuklaymiz — best-effort.
     let photoUrl: string | null = null;
     if (s.photoFileId) photoUrl = await uploadTelegramPhoto(ctx, s.photoFileId);
+
+    // To'lov chekini ham saqlaymiz — admin panelida ko'rinishi uchun.
+    let paymentScreenshotUrl: string | null = null;
+    if (s.paymentScreenshotFileId)
+      paymentScreenshotUrl = await uploadTelegramPhoto(ctx, s.paymentScreenshotFileId);
 
     // Saytdan kelgan buyurtma bo'lsa — mavjud yozuvni PAID ga o'tkazamiz.
     if (s.orderId) {
@@ -422,16 +539,19 @@ async function savePaidOrder(ctx: SessionContext, s: BotSession): Promise<void> 
           telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
           telegramUsername: ctx.from?.username,
           ...(photoUrl ? { photoUrl } : {}),
+          ...(paymentScreenshotUrl ? { paymentScreenshotUrl } : {}),
         },
       });
-      return;
+      // Taklifnomani darrov, real vaqtda avtomatik yaratamiz.
+      await autoGenerateInvitation(s.orderId);
+      return s.orderId;
     }
 
     const templateId = s.templateSlug
       ? (await db.template.findUnique({ where: { slug: s.templateSlug } }))?.id
       : undefined;
 
-    await db.order.create({
+    const created = await db.order.create({
       data: {
         telegramChatId: String(ctx.chat?.id),
         telegramUserId: ctx.from?.id ? String(ctx.from.id) : undefined,
@@ -452,11 +572,33 @@ async function savePaidOrder(ctx: SessionContext, s: BotSession): Promise<void> 
         cardHolder: s.cardHolder,
         notes: s.notes,
         templateId,
+        paymentScreenshotUrl,
         status: "PAID",
       },
     });
+    // Taklifnomani darrov, real vaqtda avtomatik yaratamiz.
+    await autoGenerateInvitation(created.id);
+    return created.id;
   } catch (e) {
     console.error("Buyurtmani saqlash xatosi:", e);
+    return null;
+  }
+}
+
+/**
+ * Buyurtma ma'lumotidan taklifnomani DARHOL avtomatik yaratadi (idempotent).
+ * Xatolik (masalan dizayn tanlanmagan) buyurtma saqlanishini to'xtatmaydi —
+ * admin keyinroq panelдан to'g'rilashi mumkin.
+ */
+async function autoGenerateInvitation(orderId: string): Promise<void> {
+  try {
+    const { createInvitationFromOrder } = await import("@/lib/invitation/generate");
+    await createInvitationFromOrder(orderId);
+  } catch (e) {
+    console.error(
+      "Avtomatik generatsiya bajarilmadi:",
+      e instanceof Error ? e.message : e
+    );
   }
 }
 

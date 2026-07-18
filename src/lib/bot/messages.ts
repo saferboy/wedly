@@ -14,12 +14,12 @@ Boshlaylikmi?`,
 
   chooseEventType: `📋 *Tadbir turini tanlang:*`,
 
-  groomName: `👨 *Kuyovning ismi va familiyasini kiriting:*\n\n_Misol: Jasur Toshmatov_`,
+  groomName: `👨 *Kuyovning ismini kiriting:*\n\n_Familiya shart emas. Misol: Jasur yoki Jasur Toshmatov_`,
 
   brideName: (isWedding: boolean) =>
     isWedding
-      ? `👰 *Kelinning ismi va familiyasini kiriting:*\n\n_Misol: Nilufar Karimova_`
-      : `👰 *Sizning ismingiz va familiyangizni kiriting:*\n\n_Misol: Malika Yusupova_`,
+      ? `👰 *Kelinning ismini kiriting:*\n\n_Familiya shart emas. Misol: Nilufar yoki Nilufar Karimova_`
+      : `👰 *Ismingizni kiriting:*\n\n_Familiya shart emas. Misol: Malika yoki Malika Yusupova_`,
 
   eventDate: `📅 *To'y sanasini kiriting:*\n\n_Format: KK.OO.YYYY\nMisol: 15.06.2026_`,
 

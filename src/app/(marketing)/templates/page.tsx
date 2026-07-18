@@ -5,6 +5,9 @@ import { TEMPLATES } from "@/lib/templates";
 import TemplateCard from "@/components/templates/TemplateCard";
 import type { EventType } from "@/types/invitation";
 import { eventTypeLabel } from "@/lib/eventType";
+import Container from "@/components/ui/Container";
+import Navbar from "@/components/marketing/Navbar";
+import Footer from "@/components/marketing/Footer";
 
 type Filter = "ALL" | EventType;
 
@@ -15,30 +18,40 @@ export default function TemplatesPage() {
     filter === "ALL" ? TEMPLATES : TEMPLATES.filter((t) => t.eventType === filter);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
-      <div className="bg-white dark:bg-gray-900 border-b dark:border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 py-10 text-center">
-          <h1 className="text-4xl font-serif italic text-gray-900 dark:text-white mb-2">
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-night">
+      <Navbar />
+
+      {/* Header band */}
+      <section className="relative overflow-hidden bg-[#FAF7F2] pt-16 text-center dark:bg-night">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_50%_0%,rgba(201,168,76,0.14),transparent_60%)] blur-2xl"
+        />
+        <Container className="relative py-12 sm:py-16">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.3em] text-[#a9782a] sm:text-xs dark:text-gold">
+            ✦ Dizaynlar ✦
+          </span>
+          <h1 className="mt-3 font-serif text-3xl text-[#2C1810] sm:text-4xl lg:text-5xl dark:text-white">
             Templatelar
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
-            To'y, qiz bazmi yoki tug'ilgan kun uchun o'zingizga mos dizaynni tanlang
+          <p className="mx-auto mt-3 max-w-md text-sm text-gray-500 sm:text-base dark:text-gray-400">
+            To&apos;y, qiz bazmi yoki tug&apos;ilgan kun uchun o&apos;zingizga mos
+            dizaynni tanlang
           </p>
-        </div>
-      </div>
+        </Container>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 py-10">
+      <Container className="pb-16 sm:pb-24">
         {/* Filter */}
-        <div className="flex gap-2 justify-center mb-10">
+        <div className="mb-8 flex flex-wrap justify-center gap-2 sm:mb-10">
           {(["ALL", "WEDDING", "BACHELORETTE", "BIRTHDAY"] as Filter[]).map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all sm:px-5 ${
                 filter === f
-                  ? "bg-[#8B1A1A] text-white shadow-sm"
-                  : "bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 border dark:border-gray-700"
+                  ? "bg-gradient-to-b from-[#e6c976] to-[#c9a84c] text-[#2a2012] shadow-[0_8px_20px_-8px_rgba(201,168,76,0.6)]"
+                  : "border border-gold/30 bg-white text-gray-600 hover:border-gold/60 hover:text-[#a9782a] dark:bg-night-soft dark:text-gray-300 dark:hover:text-gold"
               }`}
             >
               {f === "ALL" ? "Barchasi" : eventTypeLabel(f)}
@@ -47,12 +60,14 @@ export default function TemplatesPage() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
           {filtered.map((template) => (
             <TemplateCard key={template.slug} template={template} />
           ))}
         </div>
-      </div>
+      </Container>
+
+      <Footer />
     </div>
   );
 }

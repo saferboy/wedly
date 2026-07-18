@@ -23,8 +23,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Majburiy maydonlar to'ldirilmagan" }, { status: 400 });
     }
 
-    // Template mavjudligini tekshirish
-    const template = await db.template.findUnique({ where: { slug: templateSlug } });
+    // Template mavjudligini tekshirish (slug yoki id bo'yicha).
+    const template = await db.template.findFirst({
+      where: { OR: [{ slug: templateSlug }, { id: templateSlug }] },
+    });
     if (!template) {
       return NextResponse.json({ error: "Template topilmadi" }, { status: 400 });
     }

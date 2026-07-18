@@ -11,10 +11,21 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Serif sarlavhalar uchun Playfair */
+  --font-serif: var(--font-playfair), Georgia, "Times New Roman", serif;
+
+  /* Lux dark palitra */
+  --color-night: #0b0a0a; /* asosiy fon */
+  --color-night-soft: #14110f; /* ko'tarilgan panellar */
+  --color-night-line: #262019; /* chegara chiziqlari */
+  --color-gold: #c9a84c;
+  --color-gold-light: #e6c976;
+  --color-gold-dim: #8a7434;
 }
 
 .dark {
-  --background: #0a0a0a;
+  --background: #0b0a0a;
   --foreground: #ededed;
 }
 
@@ -22,4 +33,44 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Scrollda chiqib keladigan animatsiya (Reveal komponenti) */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-on-scroll {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Oltin gradientli matn — qorong'i fon uchun yorqin */
+.text-gold-gradient {
+  background: linear-gradient(120deg, #e6c976 0%, #c9a84c 55%, #a9863a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Tema-sezgir oltin urg'u: light'da to'q oltin, dark'da yorqin gradient
+   (krem fonda gradient past kontrast bo'lgani uchun) */
+.headline-accent {
+  color: #a9782a;
+}
+.dark .headline-accent {
+  background: linear-gradient(120deg, #e6c976 0%, #c9a84c 55%, #a9863a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }

@@ -1,0 +1,25 @@
+services:
+  db:
+    image: postgres:18
+    container_name: wedly-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: wedly
+      POSTGRES_USER: wedly
+      POSTGRES_PASSWORD: wedly_dev_pw
+      # Match the data path used by the existing container so the
+      # migrated volume is picked up as-is.
+      PGDATA: /var/lib/postgresql/18/docker
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U wedly -d wedly"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+    name: wedly_pgdata
