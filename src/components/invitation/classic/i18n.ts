@@ -5,6 +5,9 @@ export { MONTHS } from "../qizlar-bazmi/i18n";
 
 export interface ClassicStrings {
   sealOpen: string;
+  introTitle: string;
+  introSub: string;
+  openBtn: string;
   heroEyebrow: string;
   heroKicker: string;
   familyLabel: string;
@@ -27,6 +30,10 @@ export interface ClassicStrings {
 export const classicI18n: Record<Language, ClassicStrings> = {
   uz: {
     sealOpen: "Ochish uchun bosing",
+    introTitle: "Sizga taklifnoma bor",
+    introSub:
+      "Farzandlarimizning nikoh to'yi marosimiga Sizni chin dildan taklif etamiz",
+    openBtn: "Ochish",
     heroEyebrow: "Taklifnoma",
     heroKicker: "Nikoh to'yi",
     familyLabel: "oilasi",
@@ -48,6 +55,10 @@ export const classicI18n: Record<Language, ClassicStrings> = {
   },
   ru: {
     sealOpen: "Нажмите, чтобы открыть",
+    introTitle: "У вас есть приглашение",
+    introSub:
+      "Сердечно приглашаем Вас на свадебное торжество наших детей",
+    openBtn: "Открыть",
     heroEyebrow: "Приглашение",
     heroKicker: "Свадьба",
     familyLabel: "семья",

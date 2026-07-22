@@ -38,7 +38,10 @@ const emptyForm = {
 };
 
 function formatPrice(price: number) {
-  return `${new Intl.NumberFormat("uz-UZ").format(price)} so'm`;
+  // Manual grouping with a plain space so the server and client render
+  // identically (Intl locale data can differ → hydration mismatch).
+  const grouped = String(Math.round(price)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return `${grouped} so'm`;
 }
 
 function splitFeatures(text: string) {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-import { getSupabaseAdmin, STORAGE_BUCKETS, getPublicUrl } from "@/lib/supabase";
+import { saveFile, STORAGE_BUCKETS } from "@/lib/storage";
 
 const MAX_PHOTO_SIZE = 5 * 1024 * 1024;  // 5MB
 const MAX_MUSIC_SIZE = 15 * 1024 * 1024; // 15MB
@@ -36,18 +36,13 @@ export async function POST(req: NextRequest) {
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
 
-  const { error } = await getSupabaseAdmin().storage
-    .from(bucket)
-    .upload(fileName, buffer, {
-      contentType: file.type,
-      upsert: false,
-    });
-
-  if (error) {
-    console.error("Supabase upload xatosi:", error);
+  let publicUrl: string;
+  try {
+    publicUrl = await saveFile(bucket, fileName, buffer);
+  } catch (error) {
+    console.error("Fayl saqlash xatosi:", error);
     return NextResponse.json({ error: "Yuklash xatosi" }, { status: 500 });
   }
 
-  const publicUrl = getPublicUrl(bucket, fileName);
   return NextResponse.json({ url: publicUrl, fileName });
 }

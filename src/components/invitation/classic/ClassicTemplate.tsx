@@ -16,8 +16,6 @@ const FALLBACK_PHOTO = "/templates/classic-hero.jpg";
 const FALLBACK_MUSIC = "/music/kuyov-kelinchak.m4a";
 /** Skip the intro of the track — start (and loop) from this offset in seconds. */
 const MUSIC_START = 30;
-const DEFAULT_GOOGLE = "https://www.google.com/maps/search/?api=1&query=Tashkent";
-const DEFAULT_YANDEX = "https://yandex.com/maps/?text=Toshkent";
 
 function buildEventDateTime(isoDate: string, time: string): Date {
   const date = new Date(isoDate);
@@ -41,102 +39,88 @@ function Reveal({ children, className }: { children: ReactNode; className?: stri
   );
 }
 
+/* ============================================================
+   Ornaments — a small, cohesive "islimi + suzani" gold vocabulary.
+   ============================================================ */
+
+/** Islimi (vine-scroll) corner filigree. Placed at the four corners of a
+ *  section's decorative page frame so the screen is framed like a printed leaf. */
+function Islimi({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 70 70" fill="none" aria-hidden="true">
+      <g stroke="var(--gold)" strokeWidth="1.3" strokeLinecap="round">
+        <path d="M6 6 C32 8 42 22 42 44" />
+        <path d="M6 6 C8 32 22 42 44 42" />
+        <path d="M42 44 C42 31 34 25 26 31 C21 35 26 43 32 39" />
+        <path d="M44 42 C31 42 25 34 31 26 C35 21 43 26 39 32" />
+      </g>
+      <circle cx="10" cy="10" r="2.4" fill="var(--garnet)" />
+    </svg>
+  );
+}
+
+/** The decorative gold double-rule "page" with islimi corners. Purely visual
+ *  (absolutely positioned) — it never clips the content that scrolls above it. */
+function PageFrame() {
+  return (
+    <div className={styles.frame} aria-hidden="true">
+      <Islimi className={`${styles.corner} ${styles.cTL}`} />
+      <Islimi className={`${styles.corner} ${styles.cTR}`} />
+      <Islimi className={`${styles.corner} ${styles.cBL}`} />
+      <Islimi className={`${styles.corner} ${styles.cBR}`} />
+    </div>
+  );
+}
+
+/** Interlocked wedding rings — the couple's mark. Used on the cover seal and as
+ *  the footer sign-off. `currentColor` sets the metal tone for each context. */
+function Rings({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 72 48" fill="none" aria-hidden="true">
+      <circle cx="28" cy="27" r="15" stroke="currentColor" strokeWidth="2.2" />
+      <circle cx="44" cy="27" r="15" stroke="currentColor" strokeWidth="2.2" opacity="0.72" />
+      <path d="M36 3 l3.2 5.4 -3.2 5.4 -3.2 -5.4 z" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Slim horizontal divider: gold rule — diamond trio — gold rule. */
 function Flourish() {
   return (
     <div className={styles.flourish} aria-hidden="true">
-      <span className={styles.line} />
-      <span className={styles.dot} />
-      <span className={`${styles.dot} ${styles.fill}`} />
-      <span className={styles.dot} />
-      <span className={`${styles.line} ${styles.rev}`} />
-    </div>
-  );
-}
-
-/** A single five-petal flower rendered as an SVG group that blooms open. */
-function Bud({ cx, cy, r, petal }: { cx: number; cy: number; r: number; petal: string }) {
-  return (
-    <g className={styles.bud}>
-      {[0, 72, 144, 216, 288].map((a) => (
-        <ellipse
-          key={a}
-          cx={cx}
-          cy={cy - r * 0.62}
-          rx={r * 0.4}
-          ry={r * 0.66}
-          transform={`rotate(${a} ${cx} ${cy})`}
-          fill={petal}
-        />
-      ))}
-      <circle cx={cx} cy={cy} r={r * 0.3} fill="var(--gold)" />
-    </g>
-  );
-}
-
-/**
- * Cluster of small flowers ("to'p-to'p gullar") that bloom open with a
- * staggered scale/rotate once the hero is revealed. Purely decorative.
- */
-function Flowers({ className }: { className?: string }) {
-  const { ref, revealed } = useReveal<HTMLDivElement>();
-  return (
-    <div
-      ref={ref}
-      className={`${styles.flowers} ${revealed ? styles.bloom : ""} ${className ?? ""}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 100 100">
-        <Bud cx={30} cy={70} r={20} petal="var(--garnet)" />
-        <Bud cx={62} cy={78} r={15} petal="var(--gold-lt)" />
-        <Bud cx={50} cy={44} r={13} petal="var(--garnet)" />
-        <Bud cx={78} cy={54} r={11} petal="var(--gold-lt)" />
+      <span className={styles.fLine} />
+      <svg className={styles.fMark} viewBox="0 0 34 12" fill="none">
+        <path d="M17 0 l4.5 6 -4.5 6 -4.5 -6 z" fill="var(--garnet)" />
+        <path d="M5 2 l3 4 -3 4 -3 -4 z" fill="var(--gold)" />
+        <path d="M29 2 l3 4 -3 4 -3 -4 z" fill="var(--gold)" />
       </svg>
+      <span className={`${styles.fLine} ${styles.rev}`} />
     </div>
   );
 }
 
-/**
- * Symmetric gold vine flourish that draws itself in on reveal. Placed
- * (absolutely) at the top/bottom of a section so its content is framed and
- * the screen fills elegantly instead of floating in empty space.
- */
-function Sprig({ className }: { className?: string }) {
-  const { ref, revealed } = useReveal<HTMLDivElement>();
+/** A gold palmette finial that crowns the hero arch. */
+function Crest() {
   return (
-    <div
-      ref={ref}
-      className={`${styles.sprig} ${revealed ? styles.drawn : ""} ${className ?? ""}`}
-      aria-hidden="true"
-    >
-      <svg viewBox="0 0 240 46" fill="none">
-        <g stroke="var(--gold)" strokeWidth="1.4" strokeLinecap="round">
-          <path className={styles.vine} pathLength={1} d="M120 23 C96 11 72 11 40 20" />
-          <path className={styles.vine} pathLength={1} d="M120 23 C144 11 168 11 200 20" />
-          <path className={styles.vine} pathLength={1} d="M120 23 C96 35 72 35 40 26" />
-          <path className={styles.vine} pathLength={1} d="M120 23 C144 35 168 35 200 26" />
-        </g>
-        <g className={styles.leaf} fill="var(--gold)">
-          <ellipse cx="80" cy="14" rx="7" ry="3" transform="rotate(-22 80 14)" />
-          <ellipse cx="160" cy="14" rx="7" ry="3" transform="rotate(22 160 14)" />
-          <ellipse cx="80" cy="32" rx="7" ry="3" transform="rotate(22 80 32)" />
-          <ellipse cx="160" cy="32" rx="7" ry="3" transform="rotate(-22 160 32)" />
-        </g>
-        <g className={styles.berry}>
-          <circle cx="120" cy="23" r="4.6" fill="var(--garnet)" />
-          <circle cx="120" cy="23" r="1.7" fill="var(--gold-lt)" />
-          <circle cx="40" cy="23" r="3" fill="var(--garnet)" />
-          <circle cx="200" cy="23" r="3" fill="var(--garnet)" />
-        </g>
-      </svg>
-    </div>
+    <svg className={styles.crest} viewBox="0 0 80 44" fill="none" aria-hidden="true">
+      <g stroke="var(--gold)" strokeWidth="1.4" strokeLinecap="round">
+        <path d="M40 42 V14" />
+        <path d="M40 24 C29 24 23 16 21 6 C31 9 38 14 40 24" />
+        <path d="M40 24 C51 24 57 16 59 6 C49 9 42 14 40 24" />
+        <path d="M40 14 l5 -6 M40 14 l-5 -6" />
+      </g>
+      <circle cx="40" cy="8" r="3" fill="var(--garnet)" />
+      <circle cx="21" cy="6" r="2.2" fill="var(--gold-lt)" />
+      <circle cx="59" cy="6" r="2.2" fill="var(--gold-lt)" />
+    </svg>
   );
 }
 
-/** A few gold petals drifting down behind the hero. Purely decorative. */
-function Petals() {
+/** Fine gold dust drifting down behind the hero. Purely decorative. */
+function GoldDust() {
   return (
-    <div className={styles.petals} aria-hidden="true">
-      {Array.from({ length: 7 }).map((_, i) => (
+    <div className={styles.dust} aria-hidden="true">
+      {Array.from({ length: 9 }).map((_, i) => (
         <span key={i} />
       ))}
     </div>
@@ -171,15 +155,10 @@ function VenueScene({ photoUrl, alt }: { photoUrl?: string | null; alt: string }
 
   if (photoUrl) {
     return (
-      <div
-        ref={ref}
-        className={`${styles.venuePhoto} ${revealed ? styles.inView : ""}`}
-      >
+      <div ref={ref} className={`${styles.venuePhoto} ${revealed ? styles.inView : ""}`}>
         <div className={styles.venuePhotoFrame}>
           <Image src={photoUrl} alt={alt} width={420} height={300} />
         </div>
-        <Flowers className={styles.flowersLeft} />
-        <Flowers className={styles.flowersRight} />
       </div>
     );
   }
@@ -192,7 +171,6 @@ function VenueScene({ photoUrl, alt }: { photoUrl?: string | null; alt: string }
     >
       <svg viewBox="0 0 240 168" fill="none">
         <circle className={styles.houseGlow} cx="120" cy="98" r="72" fill="var(--gold-lt)" />
-        {/* lit windows (fade in after the outline is drawn) */}
         <g className={styles.windows} fill="var(--gold-lt)">
           <path d="M104 146 V108 A16 16 0 0 1 136 108 V146 Z" />
           <path d="M78 132 V112 A7 7 0 0 1 92 112 V132 Z" />
@@ -236,28 +214,33 @@ export default function ClassicTemplate({ data }: Props) {
     [data.eventDate, data.eventTime]
   );
 
-  const initials = useMemo(() => {
-    const g = data.groomName?.trim()?.[0] ?? "";
-    const b = data.brideName?.trim()?.[0] ?? "";
-    return [g, b].filter(Boolean).join("&") || "❦";
-  }, [data.groomName, data.brideName]);
-
   const photoUrl = data.photoUrl || FALLBACK_PHOTO;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const monthName = MONTHS[lang][eventDate.getMonth()];
   const capMonth = monthName.charAt(0) + monthName.slice(1).toLowerCase();
   const weekday = s.weekdays[eventDate.getDay()];
-  const dateBig = `${weekday}, ${eventDate.getDate()} ${capMonth}`;
-  const dateSub = `${lang === "uz" ? "Kechki soat" : "Вечер, в"} ${data.eventTime}${lang === "uz" ? " dan" : ""}`;
-  const subline = `${eventDate.getDate()} ${capMonth} ${eventDate.getFullYear()} · ${weekday} · ${data.eventTime}`;
+  const dateBig = `${eventDate.getDate()} ${capMonth}`;
+  const dateSub = `${weekday} · ${lang === "uz" ? "soat" : "в"} ${data.eventTime}`;
+  const subline = `${eventDate.getDate()} ${capMonth} ${eventDate.getFullYear()} · ${data.eventTime}`;
 
   const letter =
     (lang === "uz" ? data.letterText : data.letterTextRu)?.trim() || s.letterText;
 
   const venueAddr = data.venueAddress?.trim();
-  const google = data.googleMapUrl && data.googleMapUrl !== "#" ? data.googleMapUrl : DEFAULT_GOOGLE;
-  const yandex = data.yandexMapUrl && data.yandexMapUrl !== "#" ? data.yandexMapUrl : DEFAULT_YANDEX;
+  // Without an explicit map link, search the real venue so the map app opens
+  // the actual location (and can navigate there via GPS).
+  const mapQuery = encodeURIComponent(
+    [data.venueName, data.venueAddress].filter(Boolean).join(", ").trim() || "Toshkent"
+  );
+  const google =
+    data.googleMapUrl && data.googleMapUrl !== "#"
+      ? data.googleMapUrl
+      : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const yandex =
+    data.yandexMapUrl && data.yandexMapUrl !== "#"
+      ? data.yandexMapUrl
+      : `https://yandex.com/maps/?text=${mapQuery}`;
 
   // Countdown — start null on the server, tick on the client (no hydration mismatch).
   useEffect(() => {
@@ -331,6 +314,8 @@ export default function ClassicTemplate({ data }: Props) {
     .filter(Boolean)
     .join(" ");
 
+  const who = data.groomName ? `${data.groomName} & ${data.brideName}` : data.brideName;
+
   return (
     <div className={`${classicFontVars} ${styles.root}`}>
       <div className={styles.langToggle}>
@@ -362,53 +347,55 @@ export default function ClassicTemplate({ data }: Props) {
 
       {!introGone && (
         <div className={`${styles.intro} ${opened ? styles.opened : ""}`}>
-          <button type="button" className={styles.introSeal} onClick={handleOpen}>
-            <span>{initials}</span>
-          </button>
-          <div className={styles.introHint}>{s.sealOpen}</div>
+          <GoldDust />
+          <div className={styles.introInner}>
+            <div className={styles.introGlyph} aria-hidden="true">
+              ❦
+            </div>
+            <p className={styles.introEyebrow}>{s.heroEyebrow}</p>
+            <h1 className={styles.introTitle}>{s.introTitle}</h1>
+            <svg className={styles.envelope} viewBox="0 0 100 72" fill="none" aria-hidden="true">
+              <rect x="5" y="18" width="90" height="48" rx="4" fill="#fdf7e9" stroke="var(--gold)" strokeWidth="2" />
+              <line x1="5" y1="65" x2="50" y2="42" stroke="var(--gold)" strokeWidth="1.4" opacity="0.5" />
+              <line x1="95" y1="65" x2="50" y2="42" stroke="var(--gold)" strokeWidth="1.4" opacity="0.5" />
+              <path d="M5 18 L50 48 L95 18" fill="#f6ecd4" stroke="var(--gold)" strokeWidth="2" strokeLinejoin="round" />
+              <circle cx="50" cy="40" r="12" fill="var(--garnet)" />
+              <circle cx="45.5" cy="40" r="4.4" fill="none" stroke="var(--gold-lt)" strokeWidth="1.5" />
+              <circle cx="54.5" cy="40" r="4.4" fill="none" stroke="var(--gold-lt)" strokeWidth="1.5" opacity="0.8" />
+            </svg>
+            <p className={styles.introSub}>{s.introSub}</p>
+            <button type="button" className={styles.openBtn} onClick={handleOpen}>
+              {s.openBtn}
+            </button>
+          </div>
         </div>
       )}
 
       <div className={styles.scroller}>
         <main className={styles.main}>
           {/* HERO */}
-          <section className={styles.hero}>
-            <Petals />
-            <div className={styles.card}>
-              <Reveal>
-                <div className={styles.seal}>
-                  <span>{initials}</span>
-                </div>
-              </Reveal>
+          <section className={`${styles.panel} ${styles.hero}`}>
+            <PageFrame />
+            <GoldDust />
+            <div className={styles.inner}>
               <Reveal>
                 <p className={styles.eyebrow}>{s.heroEyebrow}</p>
               </Reveal>
+              <Reveal className={styles.archWrap}>
+                <div className={styles.arch}>
+                  <Crest />
+                  <Image src={photoUrl} alt={who} width={320} height={400} priority />
+                </div>
+              </Reveal>
+              <Reveal>
+                <div className={styles.coupleNames}>
+                  {data.groomName && <h1 className={styles.names}>{data.groomName}</h1>}
+                  <span className={styles.amp}>&amp;</span>
+                  <h1 className={styles.names}>{data.brideName}</h1>
+                </div>
+              </Reveal>
               <Reveal>
                 <p className={styles.kicker}>{s.heroKicker}</p>
-              </Reveal>
-              {data.groomName && (
-                <Reveal>
-                  <h1 className={styles.names}>{data.groomName}</h1>
-                </Reveal>
-              )}
-              <Reveal>
-                <div className={styles.amp}>&amp;</div>
-              </Reveal>
-              <Reveal>
-                <h1 className={styles.names}>{data.brideName}</h1>
-              </Reveal>
-              <Reveal>
-                <div className={styles.arch}>
-                  <Image
-                    src={photoUrl}
-                    alt={data.brideName}
-                    width={300}
-                    height={340}
-                    priority
-                  />
-                  <Flowers className={styles.flowersLeft} />
-                  <Flowers className={styles.flowersRight} />
-                </div>
               </Reveal>
               <Reveal>
                 <p className={styles.subline}>{subline}</p>
@@ -418,13 +405,15 @@ export default function ClassicTemplate({ data }: Props) {
           </section>
 
           {/* LETTER */}
-          <section className={styles.letter}>
-            <div className={styles.card}>
-              <Sprig className={styles.ornTop} />
+          <section className={styles.panel}>
+            <PageFrame />
+            <div className={styles.inner}>
               <Reveal>
-                <p className={`${styles.eyebrow} ${styles.center}`}>{s.letterEyebrow}</p>
+                <p className={styles.eyebrow}>{s.letterEyebrow}</p>
               </Reveal>
-              <div className={`${styles.gap} ${styles.sm}`} />
+              <Reveal>
+                <Flourish />
+              </Reveal>
               <Reveal>
                 <div className={styles.letterCard}>
                   <span className={styles.quote} aria-hidden="true">
@@ -433,26 +422,27 @@ export default function ClassicTemplate({ data }: Props) {
                   <p>{letter}</p>
                 </div>
               </Reveal>
-              <Reveal>
-                <Flourish />
-              </Reveal>
-              <Sprig className={styles.ornBottom} />
             </div>
           </section>
 
           {/* DATE + COUNTDOWN */}
-          <section>
-            <div className={styles.card}>
-              <Sprig className={styles.ornTop} />
+          <section className={styles.panel}>
+            <PageFrame />
+            <div className={styles.inner}>
               <Reveal>
-                <p className={`${styles.eyebrow} ${styles.center}`}>{s.dateEyebrow}</p>
+                <p className={styles.eyebrow}>{s.dateEyebrow}</p>
               </Reveal>
-              <div className={`${styles.gap} ${styles.sm}`} />
               <Reveal>
-                <div className={styles.detail}>
-                  <div className={styles.big}>{dateBig}</div>
-                  <div className={styles.sm}>{dateSub}</div>
+                <Flourish />
+              </Reveal>
+              <Reveal>
+                <div className={styles.ribbon}>
+                  <div className={styles.ribbonBig}>{dateBig}</div>
+                  <div className={styles.ribbonYear}>{eventDate.getFullYear()}</div>
                 </div>
+              </Reveal>
+              <Reveal>
+                <p className={styles.ribbonSub}>{dateSub}</p>
               </Reveal>
               <Reveal>
                 <div className={styles.count}>
@@ -463,30 +453,31 @@ export default function ClassicTemplate({ data }: Props) {
                     { n: cd.s, u: s.cdSec },
                   ].map((c, i) => (
                     <div key={i} className={styles.cell}>
-                      <div className={styles.num}>{pad(c.n)}</div>
-                      <div className={styles.unit}>{c.u}</div>
+                      <div className={styles.cellNum}>{pad(c.n)}</div>
+                      <div className={styles.cellUnit}>{c.u}</div>
                     </div>
                   ))}
                 </div>
               </Reveal>
-              <Sprig className={styles.ornBottom} />
             </div>
           </section>
 
           {/* VENUE */}
-          <section className={styles.venue}>
-            <div className={styles.card}>
-              <Sprig className={styles.ornTop} />
+          <section className={styles.panel}>
+            <PageFrame />
+            <div className={styles.inner}>
               <Reveal>
                 <p className={styles.eyebrow}>{s.venueEyebrow}</p>
               </Reveal>
-              <div className={`${styles.gap} ${styles.sm}`} />
               <Reveal>
-                <div className={styles.name}>{data.venueName}</div>
+                <Flourish />
+              </Reveal>
+              <Reveal>
+                <div className={styles.venueName}>{data.venueName}</div>
               </Reveal>
               {venueAddr && (
                 <Reveal>
-                  <div className={styles.addr}>{venueAddr}</div>
+                  <div className={styles.venueAddr}>{venueAddr}</div>
                 </Reveal>
               )}
               <VenueScene photoUrl={data.photoUrl} alt={data.venueName} />
@@ -500,19 +491,20 @@ export default function ClassicTemplate({ data }: Props) {
                   </a>
                 </div>
               </Reveal>
-              <Sprig className={styles.ornBottom} />
             </div>
           </section>
 
           {data.cardNumber && (
             /* GIFT */
-            <section>
-              <div className={styles.card}>
-                <Sprig className={styles.ornTop} />
+            <section className={styles.panel}>
+              <PageFrame />
+              <div className={styles.inner}>
                 <Reveal>
-                  <p className={`${styles.eyebrow} ${styles.center}`}>{s.giftEyebrow}</p>
+                  <p className={styles.eyebrow}>{s.giftEyebrow}</p>
                 </Reveal>
-                <div className={`${styles.gap} ${styles.sm}`} />
+                <Reveal>
+                  <Flourish />
+                </Reveal>
                 <Reveal>
                   <div className={styles.gift}>
                     <svg className={styles.giftIcon} viewBox="0 0 24 22" aria-hidden="true">
@@ -523,43 +515,32 @@ export default function ClassicTemplate({ data }: Props) {
                         strokeWidth="1.4"
                       />
                     </svg>
-                    <div className={styles.sm}>{s.giftNote}</div>
-                    <div className={styles.num}>{data.cardNumber}</div>
-                    {data.cardHolder && <div className={styles.holder}>{data.cardHolder}</div>}
+                    <div className={styles.giftNote}>{s.giftNote}</div>
+                    <div className={styles.giftNum}>{data.cardNumber}</div>
+                    {data.cardHolder && (
+                      <div className={styles.giftHolder}>{data.cardHolder}</div>
+                    )}
                   </div>
                 </Reveal>
-                <Sprig className={styles.ornBottom} />
               </div>
             </section>
           )}
 
           {/* FOOTER */}
-          <section className={styles.foot}>
-            <div className={styles.card}>
-              <Sprig className={styles.ornTop} />
+          <section className={`${styles.panel} ${styles.foot}`}>
+            <PageFrame />
+            <div className={styles.inner}>
               <Reveal>
-                <svg
-                  className={styles.monogram}
-                  viewBox="0 0 120 60"
-                  fill="none"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path d="M10 40 Q30 10 60 30 Q90 50 110 20" strokeWidth="1.4" opacity="0.7" />
-                  <circle cx="60" cy="30" r="4" fill="currentColor" stroke="none" />
-                  <path d="M40 44 L60 30 L80 44" strokeWidth="1.2" opacity="0.5" />
-                </svg>
+                <Rings className={styles.footRings} />
               </Reveal>
               <Reveal>
-                <div className={styles.msg}>{s.footMsg}</div>
+                <div className={styles.footMsg}>{s.footMsg}</div>
               </Reveal>
               <Reveal>
-                <div className={styles.who}>
-                  {data.groomName ? `${data.groomName} & ${data.brideName}` : data.brideName} ·{" "}
-                  {eventDate.getFullYear()}
+                <div className={styles.footWho}>
+                  {who} · {eventDate.getFullYear()}
                 </div>
               </Reveal>
-              <Sprig className={styles.ornBottom} />
             </div>
           </section>
         </main>

@@ -131,15 +131,26 @@ export function createBot() {
     if (data === "music_library") {
       s.musicChoice = "library";
       s.step = "music_library";
-      // Demo kutubxona (haqiqiysi DB dan keladi)
-      const demoTracks = [
-        { id: "1", title: "Muhabbat", artist: "Ozodbek Nazarbekov" },
-        { id: "2", title: "Sevgim", artist: "Shaxriyor" },
-        { id: "3", title: "Qalbim", artist: "Ulugbek Rahmatullayev" },
-        { id: "4", title: "Seni sevaman", artist: "Jasur Umirov" },
-      ];
+      // Haqiqiy kutubxona — admin panelidan qo'shilgan musiqalar DB dan keladi.
+      const { db } = await import("@/lib/db");
+      const tracks = await db.musicTrack.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: "desc" },
+        select: { id: true, title: true, artist: true },
+        take: 30,
+      });
+      if (tracks.length === 0) {
+        // Kutubxona bo'sh — mijozga o'z musiqasini yuklashni taklif qilamiz.
+        await ctx.replyWithMarkdown(
+          "🎵 Hozircha kutubxonada tayyor musiqa yo'q. O'z musiqangizni yuklashingiz mumkin.",
+          { reply_markup: KEYBOARDS.musicChoice }
+        );
+        return;
+      }
       await ctx.replyWithMarkdown(MSG.musicLibrary, {
-        reply_markup: KEYBOARDS.musicLibrary(demoTracks),
+        reply_markup: KEYBOARDS.musicLibrary(
+          tracks.map((t) => ({ id: t.id, title: t.title, artist: t.artist ?? undefined }))
+        ),
       });
       return;
     }
@@ -179,8 +190,7 @@ export function createBot() {
     }
 
     if (data === "card_no") {
-      s.step = "notes";
-      await ctx.replyWithMarkdown(MSG.notes);
+      await askNotesOrFinish(ctx);
       return;
     }
   });
@@ -312,8 +322,7 @@ export function createBot() {
 
       case "card_holder":
         s.cardHolder = text.toUpperCase();
-        s.step = "notes";
-        await ctx.replyWithMarkdown(MSG.notes);
+        await askNotesOrFinish(ctx);
         break;
 
       case "notes":
@@ -344,6 +353,26 @@ export function createBot() {
 }
 
 // Yordamchi funksiyalar
+
+/** Tanlangan dizayn "premium" paketga tegishlimi. Tilaklar/izoh qadami faqat
+ *  premium paket uchun ko'rsatiladi (oddiy paketda o'tkazib yuboriladi). */
+function isPremiumTemplate(s: BotSession): boolean {
+  return s.templateSlug
+    ? getTemplate(s.templateSlug)?.packageSlug === "premium"
+    : false;
+}
+
+/** Karta bosqichidan keyin: premium dizayn bo'lsa mijozdan tilaklar/izoh
+ *  so'raymiz, aks holda to'g'ridan-to'g'ri xulosa va to'lovga o'tamiz. */
+async function askNotesOrFinish(ctx: SessionContext) {
+  if (isPremiumTemplate(ctx.session)) {
+    ctx.session.step = "notes";
+    await ctx.replyWithMarkdown(MSG.notes);
+  } else {
+    await sendSummaryAndPayment(ctx);
+  }
+}
+
 async function handleSkip(ctx: SessionContext) {
   const s = ctx.session;
 
@@ -614,16 +643,9 @@ async function uploadTelegramPhoto(ctx: SessionContext, fileId: string): Promise
     if (!res.ok) return null;
     const buffer = Buffer.from(await res.arrayBuffer());
 
-    const { getSupabaseAdmin, STORAGE_BUCKETS } = await import("@/lib/supabase");
-    const admin = getSupabaseAdmin();
-    const path = `telegram/${fileId}.jpg`;
-    const { error } = await admin.storage
-      .from(STORAGE_BUCKETS.photos)
-      .upload(path, buffer, { contentType: "image/jpeg", upsert: true });
-    if (error) return null;
-
-    const { data } = admin.storage.from(STORAGE_BUCKETS.photos).getPublicUrl(path);
-    return data.publicUrl;
+    const { saveFile, STORAGE_BUCKETS } = await import("../storage");
+    const objectPath = `telegram/${fileId}.jpg`;
+    return await saveFile(STORAGE_BUCKETS.photos, objectPath, buffer);
   } catch (e) {
     console.error("Rasm yuklash xatosi:", e);
     return null;

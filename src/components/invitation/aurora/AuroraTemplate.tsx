@@ -16,8 +16,6 @@ const FALLBACK_PHOTO = "/templates/aurora-hero.jpg";
 const FALLBACK_MUSIC = "/music/kuyov-kelinchak.m4a";
 /** Skip the track's quiet intro and loop from this offset (seconds). */
 const MUSIC_START = 30;
-const DEFAULT_GOOGLE = "https://www.google.com/maps/search/?api=1&query=Tashkent";
-const DEFAULT_YANDEX = "https://yandex.com/maps/?text=Toshkent";
 
 function buildEventDateTime(isoDate: string, time: string): Date {
   const date = new Date(isoDate);
@@ -101,8 +99,19 @@ export default function AuroraTemplate({ data }: Props) {
   const letter =
     (lang === "uz" ? data.letterText : data.letterTextRu)?.trim() || s.letterText;
   const venueAddr = data.venueAddress?.trim();
-  const google = data.googleMapUrl && data.googleMapUrl !== "#" ? data.googleMapUrl : DEFAULT_GOOGLE;
-  const yandex = data.yandexMapUrl && data.yandexMapUrl !== "#" ? data.yandexMapUrl : DEFAULT_YANDEX;
+  // Without an explicit map link, search the real venue so the map app opens
+  // the actual location (and can navigate there via GPS).
+  const mapQuery = encodeURIComponent(
+    [data.venueName, data.venueAddress].filter(Boolean).join(", ").trim() || "Toshkent"
+  );
+  const google =
+    data.googleMapUrl && data.googleMapUrl !== "#"
+      ? data.googleMapUrl
+      : `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+  const yandex =
+    data.yandexMapUrl && data.yandexMapUrl !== "#"
+      ? data.yandexMapUrl
+      : `https://yandex.com/maps/?text=${mapQuery}`;
 
   useEffect(() => {
     if (!opened) return;

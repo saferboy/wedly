@@ -12,17 +12,23 @@ interface Props {
   yandexMapUrl?: string | null;
 }
 
-const DEFAULT_GOOGLE = "https://www.google.com/maps/search/?api=1&query=Tashkent";
-const DEFAULT_YANDEX = "https://yandex.com/maps/?text=Toshkent";
-
 export default function LocationSection({ strings, venue, googleMapUrl, yandexMapUrl }: Props) {
   const { ref: eyebrowRef, revealed: eyebrowIn } = useReveal<HTMLDivElement>();
   const { ref: titleRef, revealed: titleIn } = useReveal<HTMLHeadingElement>();
   const { ref: venueRef, revealed: venueIn } = useReveal<HTMLParagraphElement>();
   const { ref: linksRef, revealed: linksIn } = useReveal<HTMLDivElement>();
 
-  const google = googleMapUrl && googleMapUrl !== "#" ? googleMapUrl : DEFAULT_GOOGLE;
-  const yandex = yandexMapUrl && yandexMapUrl !== "#" ? yandexMapUrl : DEFAULT_YANDEX;
+  // Without an explicit map link, search for the actual venue address so the
+  // map app opens the real location (and can navigate there via GPS).
+  const query = encodeURIComponent(venue?.trim() || "Toshkent");
+  const google =
+    googleMapUrl && googleMapUrl !== "#"
+      ? googleMapUrl
+      : `https://www.google.com/maps/search/?api=1&query=${query}`;
+  const yandex =
+    yandexMapUrl && yandexMapUrl !== "#"
+      ? yandexMapUrl
+      : `https://yandex.com/maps/?text=${query}`;
 
   return (
     <section className={styles.location}>

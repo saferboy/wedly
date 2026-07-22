@@ -28,7 +28,13 @@ export async function GET(_req: NextRequest, { params }: Props) {
     return NextResponse.json({ error: "Bu paketda PDF eksport mavjud emas" }, { status: 403 });
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  // PDF puppeteer shu serverda ishlaydi — sahifani ichki (localhost) manzildan
+  // ochamiz. Ommaviy `NEXT_PUBLIC_APP_URL` (masalan tunnel) o'lik bo'lsa ham
+  // PDF ishlayveradi.
+  const baseUrl =
+    process.env.INTERNAL_APP_URL ??
+    process.env.NEXTAUTH_URL ??
+    "http://localhost:3000";
   const pageUrl = `${baseUrl}/i/${order.invitation.slug}?print=1`;
   const isProd = process.env.VERCEL_ENV === "production";
 

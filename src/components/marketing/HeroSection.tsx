@@ -1,4 +1,4 @@
-import { Users, Clock, Heart, ShieldCheck, Sparkles, BookOpen } from "lucide-react";
+import { Users, Clock, Heart, ShieldCheck, MessageCircle, BookOpen } from "lucide-react";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
 import Reveal from "@/components/ui/Reveal";
@@ -54,7 +54,7 @@ export default function HeroSection() {
                   variant="gold"
                   size="md"
                 >
-                  <Sparkles size={15} /> Buyurtma berish
+                  <MessageCircle size={15} /> Buyurtma berish
                 </Button>
                 <Button href="/templates" variant="goldOutline" size="md">
                   <BookOpen size={15} /> Templatelarni ko&apos;rish

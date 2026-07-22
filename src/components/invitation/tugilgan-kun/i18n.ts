@@ -39,7 +39,7 @@ export const tugilganKunI18n: Record<Language, TugilganKunStrings> = {
       "Eng quvonchli kunimizni — tug'ilgan kun bazmini birga nishonlashga sizni taklif qilamiz",
     openBtn: "Ochish",
     heroEyebrow: "Tug'ilgan kun",
-    heroAnd: "S I Z N I  K U T A M I Z",
+    heroAnd: "Tug'ilgan kuni muborak!",
     inviteTitle: "Aziz mehmon!",
     inviteText:
       "Hayotimizdagi eng shirin va quvonchli kunlardan birini — tug'ilgan kunni aynan siz bilan birga nishonlashni istaymiz. Kelib, bayramimizga fayz va quvonch ulashishingizni astoydil kutamiz.",
@@ -68,7 +68,7 @@ export const tugilganKunI18n: Record<Language, TugilganKunStrings> = {
       "Приглашаем вас вместе отметить наш самый радостный день — день рождения",
     openBtn: "Открыть",
     heroEyebrow: "День рождения",
-    heroAnd: "М Ы  Ж Д Ё М  В А С",
+    heroAnd: "С днём рождения!",
     inviteTitle: "Дорогой гость!",
     inviteText:
       "Один из самых тёплых и радостных дней нашей жизни — день рождения — мы хотим отметить именно с вами. Будем искренне рады разделить с вами эту радость и праздничное настроение.",
