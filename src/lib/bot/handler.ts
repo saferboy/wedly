@@ -458,9 +458,9 @@ async function notifyAdmin(
         include: { invitation: true },
       });
       if (order?.invitation) {
-        statusLine = `\n✅ *Taklifnoma avtomatik tayyorlandi.*\n👁 Ko'rish: ${invitationUrl(order.invitation.slug)}`;
+        statusLine = `\n✅ <b>Taklifnoma avtomatik tayyorlandi.</b>\n👁 Ko'rish: ${invitationUrl(order.invitation.slug)}`;
       } else {
-        statusLine = `\n⚠️ *Taklifnoma yaratilmadi* — dizayn tanlanmagan bo'lishi mumkin. Admin panelidan tekshiring.`;
+        statusLine = `\n⚠️ <b>Taklifnoma yaratilmadi</b> — dizayn tanlanmagan bo'lishi mumkin. Admin panelidan tekshiring.`;
       }
     } catch {
       /* status ko'rsatilmasa ham buyurtma xabari yuboriladi */
@@ -479,7 +479,7 @@ async function notifyAdmin(
   }
 
   await ctx.telegram.sendMessage(adminChatId, msg + statusLine, {
-    parse_mode: "Markdown",
+    parse_mode: "HTML",
     reply_markup: replyMarkup,
   });
 
@@ -523,8 +523,8 @@ async function handleAdminApprove(ctx: SessionContext, orderId: string) {
     if (order?.telegramChatId) {
       await ctx.telegram.sendMessage(
         order.telegramChatId,
-        `🎉 *Taklifnomangiz tayyor!*\n\n${link}\n\nHavolani mehmonlaringizga ulashing. Wedly'dan foydalanganingiz uchun rahmat! 💛`,
-        { parse_mode: "Markdown" }
+        `🎉 <b>Taklifnomangiz tayyor!</b>\n\n${link}\n\nHavolani mehmonlaringizga ulashing. Wedly'dan foydalanganingiz uchun rahmat! 💛`,
+        { parse_mode: "HTML" }
       );
       sent = true;
     }

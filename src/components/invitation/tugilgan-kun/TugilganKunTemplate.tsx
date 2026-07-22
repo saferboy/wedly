@@ -22,8 +22,8 @@ interface Props {
 }
 
 const FALLBACK_PHOTO = "/templates/birthday-hero.jpg";
-/** Festive piano/lo-fi track that autoplays once the invitation is opened. */
-const MUSIC_URL = "/music/piano-birthday.mp3";
+/** Buyurtmada musiqa tanlanmagan bo'lsa ishlatiladigan standart trek. */
+const FALLBACK_MUSIC = "/music/piano-birthday.mp3";
 
 /** Combine the ISO event date with the "HH:MM" time into a single Date. */
 function buildEventDateTime(isoDate: string, time: string): Date {
@@ -48,6 +48,8 @@ export default function TugilganKunTemplate({ data }: Props) {
 
   const name = data.brideName;
   const photoUrl = data.photoUrl || FALLBACK_PHOTO;
+  // Mijoz tanlagan musiqa (yuklangan yoki kutubxonadan); bo'lmasa — standart.
+  const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const dateLabel = `${eventDate.getDate()} ${MONTHS[lang][eventDate.getMonth()]} · ${eventDate.getFullYear()}`;
 
@@ -79,7 +81,7 @@ export default function TugilganKunTemplate({ data }: Props) {
       <LangToggle lang={lang} onChange={setLang} />
       <Balloons />
       <Confetti active={opened} />
-      <MusicToggle url={MUSIC_URL} started={opened} />
+      <MusicToggle url={musicUrl} started={opened} />
 
       {!introGone && (
         <IntroScene strings={strings} opened={opened} onOpen={handleOpen} />

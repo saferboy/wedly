@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { slugify } from "@/lib/utils";
+import { deriveMapLinks } from "./mapLinks";
 
 export interface GenerateResult {
   slug: string;
@@ -64,6 +65,12 @@ export async function createInvitationFromOrder(
     }
   }
 
+  // Mijoz faqat bittasini tashlasa, ikkinchisini koordinatadan avtomatik yasaymiz.
+  const { yandexMapUrl, googleMapUrl } = deriveMapLinks(
+    order.yandexLink,
+    order.googleLink
+  );
+
   const invitation = await db.invitation.create({
     data: {
       slug,
@@ -75,8 +82,8 @@ export async function createInvitationFromOrder(
       eventTime: order.eventTime,
       venueName: order.venueName,
       venueAddress: order.venueAddress,
-      yandexMapUrl: order.yandexLink,
-      googleMapUrl: order.googleLink,
+      yandexMapUrl,
+      googleMapUrl,
       letterText: order.letterText ?? "",
       letterTextRu: order.letterTextRu ?? "",
       photoUrl: order.photoUrl,

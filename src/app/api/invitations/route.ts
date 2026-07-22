@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { slugify } from "@/lib/utils";
 import { TEMPLATES } from "@/lib/templates";
+import { deriveMapLinks } from "@/lib/invitation/mapLinks";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -40,6 +41,9 @@ export async function POST(req: NextRequest) {
     const existing = await db.invitation.findUnique({ where: { slug: finalSlug } });
     if (existing) finalSlug = `${finalSlug}-${Date.now().toString().slice(-4)}`;
 
+    // Bittasi berilsa, ikkinchisini koordinatadan avtomatik yasaymiz.
+    const maps = deriveMapLinks(yandexMapUrl, googleMapUrl);
+
     const invitation = await db.invitation.create({
       data: {
         slug: finalSlug,
@@ -51,8 +55,8 @@ export async function POST(req: NextRequest) {
         eventTime,
         venueName,
         venueAddress,
-        yandexMapUrl: yandexMapUrl || null,
-        googleMapUrl: googleMapUrl || null,
+        yandexMapUrl: maps.yandexMapUrl,
+        googleMapUrl: maps.googleMapUrl,
         letterText: letterText || "",
         letterTextRu: letterTextRu || "",
         cardNumber: cardNumber || null,

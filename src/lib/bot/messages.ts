@@ -1,5 +1,13 @@
 import { eventTypeLabel } from "../eventType";
 
+/**
+ * HTML parse_mode uchun maxsus belgilarni ekranlaydi. Foydalanuvchi kiritgan
+ * ismlar/manzillar va URL'lardagi `_` `*` kabi belgilar HTML'da oddiy matn
+ * bo'lgani uchun Markdown'dagi "entity" xatolari yuzaga kelmaydi.
+ */
+const escapeHtml = (v?: string) =>
+  (v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
 export const MSG = {
   welcome: `🌹 *Wedly botiga xush kelibsiz!*
 
@@ -54,20 +62,21 @@ Boshlaylikmi?`,
 
   done: `🎉 *Rahmat!*\n\nSizning buyurtmangiz adminimizga yuborildi. *24 soat ichida* tayyor taklifnoma linkini bu yerga yuboramiz!`,
 
+  // HTML parse_mode — URL'lardagi `_` va boshqa belgilar xatoga sabab bo'lmasin.
   adminNotification: (session: Record<string, string | undefined>) =>
-    `🔔 *Yangi buyurtma!*\n\n` +
-    `📋 Tur: ${eventTypeLabel(session.eventType ?? "")}\n` +
-    (session.groomName ? `👨 Kuyov: ${session.groomName}\n` : "") +
-    `👰 Kelin: ${session.brideName}\n` +
-    `📅 Sana: ${session.eventDate} soat ${session.eventTime}\n` +
-    `🏛 To'yxona: ${session.venueName}\n` +
-    `📍 Manzil: ${session.venueAddress}\n` +
-    (session.yandexLink ? `🗺 Yandex: ${session.yandexLink}\n` : "") +
-    (session.googleLink ? `🗺 Google: ${session.googleLink}\n` : "") +
-    (session.cardNumber ? `💳 Karta: ${session.cardNumber} (${session.cardHolder})\n` : "") +
-    (session.notes ? `📝 Izoh: ${session.notes}\n` : "") +
-    `\n🎨 Template: ${session.templateSlug || "tanlanmagan"}\n` +
-    `🎵 Musiqa: ${session.musicChoice || "yo'q"}`,
+    `🔔 <b>Yangi buyurtma!</b>\n\n` +
+    `📋 Tur: ${escapeHtml(eventTypeLabel(session.eventType ?? ""))}\n` +
+    (session.groomName ? `👨 Kuyov: ${escapeHtml(session.groomName)}\n` : "") +
+    `👰 Kelin: ${escapeHtml(session.brideName)}\n` +
+    `📅 Sana: ${escapeHtml(session.eventDate)} soat ${escapeHtml(session.eventTime)}\n` +
+    `🏛 To'yxona: ${escapeHtml(session.venueName)}\n` +
+    `📍 Manzil: ${escapeHtml(session.venueAddress)}\n` +
+    (session.yandexLink ? `🗺 Yandex: ${escapeHtml(session.yandexLink)}\n` : "") +
+    (session.googleLink ? `🗺 Google: ${escapeHtml(session.googleLink)}\n` : "") +
+    (session.cardNumber ? `💳 Karta: ${escapeHtml(session.cardNumber)} (${escapeHtml(session.cardHolder)})\n` : "") +
+    (session.notes ? `📝 Izoh: ${escapeHtml(session.notes)}\n` : "") +
+    `\n🎨 Template: ${escapeHtml(session.templateSlug || "tanlanmagan")}\n` +
+    `🎵 Musiqa: ${escapeHtml(session.musicChoice || "yo'q")}`,
 };
 
 export const KEYBOARDS = {
