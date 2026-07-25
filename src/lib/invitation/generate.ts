@@ -86,7 +86,9 @@ export async function createInvitationFromOrder(
       googleMapUrl,
       letterText: order.letterText ?? "",
       letterTextRu: order.letterTextRu ?? "",
+      notes: order.notes,
       photoUrl: order.photoUrl,
+      photoType: order.photoType ?? "couple",
       musicTrackId,
       customMusicUrl: order.customMusicUrl,
       cardNumber: order.cardNumber,
@@ -97,6 +99,65 @@ export async function createInvitationFromOrder(
   });
 
   return { slug, invitationId: invitation.id, created: true };
+}
+
+/**
+ * Buyurtma tahrirlanganда mavjud taklifnomani YANGILAYDI (slug/havola o'zgarmaydi
+ * — mehmonlarga tarqatilgan link ishlashda davom etadi). Taklifnoma hali
+ * yaratilmagan bo'lsa — yaratadi.
+ */
+export async function updateInvitationFromOrder(orderId: string): Promise<void> {
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    include: { invitation: true, template: true },
+  });
+  if (!order) throw new Error("Buyurtma topilmadi");
+
+  // Taklifnoma hali yo'q — odatiy yaratish yo'li bilan yaratamiz.
+  if (!order.invitation) {
+    await createInvitationFromOrder(orderId);
+    return;
+  }
+
+  // Musiqa: "library:<trackId>" bo'lsa va DB'да mavjud bo'lsa bog'laymiz.
+  let musicTrackId: string | null = null;
+  if (order.musicChoice?.startsWith("library:")) {
+    const trackId = order.musicChoice.split(":")[1];
+    if (trackId) {
+      const track = await db.musicTrack.findUnique({ where: { id: trackId } });
+      if (track) musicTrackId = track.id;
+    }
+  }
+
+  const { yandexMapUrl, googleMapUrl } = deriveMapLinks(
+    order.yandexLink,
+    order.googleLink
+  );
+
+  // Taklifnomadagi majburiy maydonlar null bo'lolmaydi — order'да yo'q bo'lsa
+  // eskisini saqlaymiz.
+  await db.invitation.update({
+    where: { id: order.invitation.id },
+    data: {
+      eventType: order.eventType,
+      groomName: order.groomName,
+      brideName: order.brideName,
+      eventDate: order.eventDate ?? order.invitation.eventDate,
+      eventTime: order.eventTime ?? order.invitation.eventTime,
+      venueName: order.venueName ?? order.invitation.venueName,
+      venueAddress: order.venueAddress ?? order.invitation.venueAddress,
+      yandexMapUrl,
+      googleMapUrl,
+      notes: order.notes,
+      photoUrl: order.photoUrl,
+      photoType: order.photoType ?? "couple",
+      musicTrackId,
+      customMusicUrl: order.customMusicUrl,
+      cardNumber: order.cardNumber,
+      cardHolder: order.cardHolder,
+      templateId: order.templateId ?? order.invitation.templateId,
+    },
+  });
 }
 
 /** Taklifnoma to'liq (public) havolasini quradi.

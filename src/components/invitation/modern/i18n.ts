@@ -9,6 +9,7 @@ export interface ModernStrings {
   heroKicker: string;
   scrollHint: string;
   letterEyebrow: string;
+  wishesEyebrow: string;
   letterText: string;
   dateEyebrow: string;
   cdTitle: string;
@@ -34,6 +35,7 @@ export const modernI18n: Record<Language, ModernStrings> = {
     heroKicker: "Nikoh to'yi",
     scrollHint: "pastga suring",
     letterEyebrow: "Taklif",
+    wishesEyebrow: "Bir necha so'z",
     letterText:
       "Eng muhim kunimizda yonimizda bo'lishingizni istaymiz. Sizning ishtirokingiz bu bayramni yanada yorqin va unutilmas qiladi.",
     dateEyebrow: "Sana",
@@ -58,6 +60,7 @@ export const modernI18n: Record<Language, ModernStrings> = {
     heroKicker: "Свадьба",
     scrollHint: "листайте вниз",
     letterEyebrow: "Приглашение",
+    wishesEyebrow: "Несколько слов",
     letterText:
       "Мы хотим, чтобы в самый важный для нас день вы были рядом. Ваше присутствие сделает этот праздник ещё ярче и незабываемее.",
     dateEyebrow: "Дата",

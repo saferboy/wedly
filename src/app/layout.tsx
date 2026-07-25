@@ -11,7 +11,7 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "Wedly — Onlayn to'y taklifnomalari",
   description:
-    "To'y va qiz bazmi uchun chiroyli raqamli taklifnomalar. Template tanlang, buyurtma bering — 24 soat ichida tayyor.",
+    "To'y va qiz bazmi uchun chiroyli raqamli taklifnomalar. Shablon tanlang, buyurtma bering — 24 soat ichida tayyor.",
   keywords: "to'y taklifnoma, wedding invitation, qiz bazmi, onlayn taklif, uzbekistan",
 };
 

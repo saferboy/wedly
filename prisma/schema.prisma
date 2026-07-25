@@ -96,7 +96,8 @@ model Order {
   // Qo'shimcha
   yandexLink      String?     // Yandex xaritasi linki
   googleLink      String?     // Google Maps linki
-  photoUrl        String?     // To'yxona rasmi (Supabase Storage)
+  photoUrl        String?     // Mijoz yuklagan rasm (Supabase Storage)
+  photoType       String?     @default("couple") // "couple" (kelin-kuyov) | "venue" (to'yxona)
   musicChoice     String?     // "library:track-id" yoki "custom" yoki "none"
   customMusicUrl  String?     // Mijoz yuborgan musiqa (Supabase Storage)
   cardNumber      String?     // To'yona uchun karta raqami
@@ -116,6 +117,26 @@ model Order {
   updatedAt       DateTime    @updatedAt
 
   invitation      Invitation?
+  feedbacks       Feedback[]
+}
+
+// Mijoz (buyurtmachi) qoldirgan fikr va takliflar.
+// Taklifnoma linki bilan birga yuborilgan `/fikr` web formasidan keladi va
+// admin panelda "Fikrlar" bo'limida ko'rinadi.
+model Feedback {
+  id        String   @id @default(cuid())
+  name      String?  // Ixtiyoriy — buyurtma bo'lsa oldindan to'ldiriladi
+  phone     String?  // Ixtiyoriy aloqa raqami
+  message   String   // Fikr / taklif matni
+  isRead    Boolean  @default(false)
+
+  // Qaysi buyurtmaga tegishli (link `?ref=<orderId>` orqali biriktiriladi)
+  orderId   String?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+
+  @@index([isRead])
 }
 
 // Tayyor taklif sahifalari
@@ -141,8 +162,12 @@ model Invitation {
   letterText  String    @default("")
   letterTextRu String   @default("") // Rus tilida
 
+  // Mijozning qo'shimcha tilaklari/izohi — alohida bo'lim sifatida ko'rsatiladi
+  notes       String?
+
   // Media
-  photoUrl    String?   // To'yxona/kelin rasmi
+  photoUrl    String?   // Mijoz yuklagan rasm
+  photoType   String?   @default("couple") // "couple" | "venue" — rasm qayerda ko'rsatiladi
   musicTrackId String?
   musicTrack  MusicTrack? @relation(fields: [musicTrackId], references: [id])
   customMusicUrl String? // Custom musiqa

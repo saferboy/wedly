@@ -412,6 +412,18 @@
   margin: 10px 0 12px;
   animation: floatY 6s ease-in-out infinite;
 }
+.venuePhoto {
+  width: min(88%, 400px);
+  margin: 18px auto 6px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.venuePhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 @keyframes floatY {
   0%,
   100% {

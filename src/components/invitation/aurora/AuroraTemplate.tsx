@@ -86,7 +86,10 @@ export default function AuroraTemplate({ data }: Props) {
   );
 
   const names = data.groomName ? `${data.groomName} & ${data.brideName}` : data.brideName;
-  const photoUrl = data.photoUrl || FALLBACK_PHOTO;
+  // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero (kelin-kuyov)da.
+  const isVenuePhoto = data.photoType === "venue";
+  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
+  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const monthName = MONTHS[lang][eventDate.getMonth()];
@@ -286,7 +289,7 @@ export default function AuroraTemplate({ data }: Props) {
           </Reveal>
           <Reveal>
             <div className={styles.photoWrap}>
-              <Image src={photoUrl} alt={names} width={300} height={360} priority />
+              <Image src={heroPhoto} alt={names} width={300} height={360} priority />
             </div>
           </Reveal>
           <Reveal>
@@ -307,6 +310,22 @@ export default function AuroraTemplate({ data }: Props) {
             <p className={styles.lead}>{letter}</p>
           </Reveal>
         </section>
+
+        {/* WISHES — mijozning qo'shimcha tilagi (faqat kiritilgan bo'lsa) */}
+        {data.notes?.trim() && (
+          <section className={styles.letter}>
+            <SectionDeco />
+            <Reveal>
+              <div className={styles.eyebrow}>{s.wishesEyebrow}</div>
+            </Reveal>
+            <Reveal>
+              <Divider />
+            </Reveal>
+            <Reveal>
+              <p className={styles.lead}>{data.notes.trim()}</p>
+            </Reveal>
+          </section>
+        )}
 
         {/* DATE + COUNTDOWN */}
         <section>
@@ -352,6 +371,13 @@ export default function AuroraTemplate({ data }: Props) {
           {venueAddr && (
             <Reveal>
               <p className={styles.venueAddr}>{venueAddr}</p>
+            </Reveal>
+          )}
+          {venuePhoto && (
+            <Reveal>
+              <div className={styles.venuePhoto}>
+                <Image src={venuePhoto} alt={data.venueName} width={400} height={260} />
+              </div>
             </Reveal>
           )}
           <Reveal>

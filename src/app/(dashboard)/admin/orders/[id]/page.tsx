@@ -38,7 +38,7 @@ export default async function OrderDetailPage({ params }: Props) {
     ["Musiqa", order.musicChoice],
     ["Karta", order.cardNumber],
     ["Karta egasi", order.cardHolder],
-    ["Template", order.template?.name],
+    ["Shablon", order.template?.name],
     ["Paket", order.template?.package?.name],
     ["Izoh", order.notes],
     ["Telegram", order.telegramUsername ? `@${order.telegramUsername}` : order.telegramChatId],

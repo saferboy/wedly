@@ -7,6 +7,8 @@ const TELEGRAM_API = "https://api.telegram.org";
 interface SendOptions {
   parseMode?: "Markdown" | "HTML";
   disablePreview?: boolean;
+  /** Inline klaviatura (masalan "Fikr qoldirish" tugmasi). */
+  replyMarkup?: { inline_keyboard: { text: string; callback_data: string }[][] };
 }
 
 export async function sendTelegramMessage(
@@ -29,6 +31,7 @@ export async function sendTelegramMessage(
         text,
         parse_mode: opts.parseMode ?? "Markdown",
         disable_web_page_preview: opts.disablePreview ?? false,
+        ...(opts.replyMarkup ? { reply_markup: opts.replyMarkup } : {}),
       }),
     });
 
@@ -43,7 +46,19 @@ export async function sendTelegramMessage(
   }
 }
 
-/** Mijozga tayyor taklifnoma havolasini yuborish uchun tayyor xabar. */
+/** Fikr-taklif formasi havolasi. Boshqa qurilmada ochilgani uchun
+ *  `NEXT_PUBLIC_APP_URL` prod manziliga sozlangan bo'lishi kerak. */
+export function feedbackUrl(orderId?: string | null): string {
+  const base = (
+    process.env.NEXT_PUBLIC_APP_URL ||
+    process.env.NEXTAUTH_URL ||
+    ""
+  ).replace(/\/$/, "");
+  return orderId ? `${base}/fikr?ref=${orderId}` : `${base}/fikr`;
+}
+
+/** Mijozga tayyor taklifnoma havolasini yuborish uchun tayyor xabar. Fikr-taklif
+ *  endi bot ichida "Fikr qoldirish" tugmasi orqali olinadi (web havola emas). */
 export function invitationReadyMessage(link: string): string {
   return (
     `🎉 *Taklifnomangiz tayyor!*\n\n` +

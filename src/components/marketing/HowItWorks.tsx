@@ -5,8 +5,8 @@ const STEPS = [
   {
     num: "01",
     icon: "🎨",
-    title: "Template tanlang",
-    desc: "To'y, qiz bazmi yoki tug'ilgan kun uchun 6 ta chiroyli dizayndan birini tanlang. Preview orqali to'liq ko'rishingiz mumkin.",
+    title: "Shablon tanlang",
+    desc: "To'y, qiz bazmi yoki tug'ilgan kun uchun chiroyli dizaynlardan birini tanlang. Ko'rish orqali to'liq tanishishingiz mumkin.",
   },
   {
     num: "02",

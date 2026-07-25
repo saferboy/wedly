@@ -13,6 +13,7 @@ export interface ClassicStrings {
   familyLabel: string;
   letterEyebrow: string;
   letterText: string;
+  wishesEyebrow: string;
   dateEyebrow: string;
   cdDays: string;
   cdHours: string;
@@ -38,6 +39,7 @@ export const classicI18n: Record<Language, ClassicStrings> = {
     heroKicker: "Nikoh to'yi",
     familyLabel: "oilasi",
     letterEyebrow: "Hurmatli mehmon",
+    wishesEyebrow: "Bir necha so'z",
     letterText:
       "Sizni farzandlarimizning nikoh to'yi marosimiga chin dildan taklif etamiz. Ushbu quvonchli kunni Siz bilan birga nishonlash biz uchun katta sharaf. Kelib, yosh kelin-kuyovga oq yo'l tilab, dasturxonimizni bezashingizni so'rab qolamiz.",
     dateEyebrow: "Bazm sanasi",
@@ -63,6 +65,7 @@ export const classicI18n: Record<Language, ClassicStrings> = {
     heroKicker: "Свадьба",
     familyLabel: "семья",
     letterEyebrow: "Дорогой гость",
+    wishesEyebrow: "Несколько слов",
     letterText:
       "Мы от всего сердца приглашаем Вас на свадебное торжество наших детей. Разделить этот радостный день вместе с Вами — большая честь для нас. Будем искренне рады видеть Вас и разделить нашу радость.",
     dateEyebrow: "Дата торжества",

@@ -32,7 +32,7 @@ export default function TemplatesPage() {
             ✦ Dizaynlar ✦
           </span>
           <h1 className="mt-3 font-serif text-3xl text-[#2C1810] sm:text-4xl lg:text-5xl dark:text-white">
-            Templatelar
+            Shablonlar
           </h1>
           <p className="mx-auto mt-3 max-w-md text-sm text-gray-500 sm:text-base dark:text-gray-400">
             To&apos;y, qiz bazmi yoki tug&apos;ilgan kun uchun o&apos;zingizga mos

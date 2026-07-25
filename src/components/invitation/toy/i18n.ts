@@ -27,6 +27,9 @@ export interface ToyStrings {
   footTitle: string;
   footText: string;
   footSign: string;
+  giftTitle: string;
+  giftNote: string;
+  wishesTitle: string;
   monthShort: string;
   dows: string[];
 }
@@ -58,6 +61,10 @@ export const toyI18n: Record<Language, ToyStrings> = {
     footTitle: "Sizni kutib qolamiz!",
     footText: "Kelishingiz biz uchun eng katta baxt bo'ladi",
     footSign: "Hurmat bilan",
+    giftTitle: "To'yona",
+    giftNote:
+      "Kelolmasangiz yoki xohishingizga ko'ra, tabringizni quyidagi kartaga yo'llashingiz mumkin.",
+    wishesTitle: "Bir necha so'z",
     monthShort: "",
     dows: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"],
   },
@@ -87,6 +94,10 @@ export const toyI18n: Record<Language, ToyStrings> = {
     footTitle: "Мы ждём вас!",
     footText: "Ваше присутствие — величайшее счастье для нас",
     footSign: "С уважением",
+    giftTitle: "Свадебный подарок",
+    giftNote:
+      "Если вы не сможете прийти или по желанию, вы можете отправить поздравление на карту ниже.",
+    wishesTitle: "Несколько слов",
     monthShort: "",
     dows: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
   },

@@ -295,6 +295,18 @@
   font-size: clamp(28px, 7vw, 42px);
   margin: 8px 0 10px;
 }
+.venuePhoto {
+  width: min(88%, 400px);
+  margin: 18px auto 4px;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.16);
+}
+.venuePhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 .venueAddr {
   font-family: var(--sans);
   font-weight: 300;

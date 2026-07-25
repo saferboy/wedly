@@ -41,7 +41,7 @@ export default function HeroSection() {
             <Reveal delay={180}>
               <p className="mx-auto mt-5 max-w-md text-sm leading-relaxed text-gray-600 lg:mx-0 lg:text-[15px] dark:text-gray-400">
                 To&apos;y, qiz bazmi yoki tug&apos;ilgan kun uchun chiroyli raqamli
-                taklifnoma yarating. Template tanlang, ma&apos;lumot qoldiring — biz
+                taklifnoma yarating. Shablon tanlang, ma&apos;lumot qoldiring — biz
                 24 soat ichida tayyor qilamiz.
               </p>
             </Reveal>
@@ -57,7 +57,7 @@ export default function HeroSection() {
                   <MessageCircle size={15} /> Buyurtma berish
                 </Button>
                 <Button href="/templates" variant="goldOutline" size="md">
-                  <BookOpen size={15} /> Templatelarni ko&apos;rish
+                  <BookOpen size={15} /> Shablonlarni ko&apos;rish
                 </Button>
               </div>
             </Reveal>

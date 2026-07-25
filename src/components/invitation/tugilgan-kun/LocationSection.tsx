@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
 import SectionDecor from "./SectionDecor";
@@ -8,11 +9,12 @@ import type { TugilganKunStrings } from "./i18n";
 interface Props {
   strings: TugilganKunStrings;
   venue: string;
+  photoUrl?: string | null;
   googleMapUrl?: string | null;
   yandexMapUrl?: string | null;
 }
 
-export default function LocationSection({ strings, venue, googleMapUrl, yandexMapUrl }: Props) {
+export default function LocationSection({ strings, venue, photoUrl, googleMapUrl, yandexMapUrl }: Props) {
   const { ref: eyebrowRef, revealed: eyebrowIn } = useReveal<HTMLDivElement>();
   const { ref: titleRef, revealed: titleIn } = useReveal<HTMLHeadingElement>();
   const { ref: venueRef, revealed: venueIn } = useReveal<HTMLParagraphElement>();
@@ -42,6 +44,11 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
       <h2 ref={titleRef} className={`${styles.reveal} ${titleIn ? styles.inView : ""}`}>
         {strings.locTitle}
       </h2>
+      {photoUrl && (
+        <div className={styles.venuePhoto}>
+          <Image src={photoUrl} alt={venue} width={400} height={260} />
+        </div>
+      )}
       <p
         ref={venueRef}
         className={`${styles.venue} ${styles.reveal} ${venueIn ? styles.inView : ""}`}

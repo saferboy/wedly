@@ -69,7 +69,7 @@ export default async function OrdersPage() {
           <table className="w-full text-sm">
             <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-800">
               <tr>
-                {["Mijoz", "Tur", "Kelin / To'y", "Sana", "Template", "Holat", ""].map(
+                {["Mijoz", "Tur", "Kelin / To'y", "Sana", "Shablon", "Holat", ""].map(
                   (h) => (
                     <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                       {h}

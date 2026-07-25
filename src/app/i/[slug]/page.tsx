@@ -63,7 +63,9 @@ export default async function InvitationPage({ params, searchParams }: Props) {
     googleMapUrl: invitation.googleMapUrl,
     letterText: invitation.letterText,
     letterTextRu: invitation.letterTextRu,
+    notes: invitation.notes,
     photoUrl: invitation.photoUrl,
+    photoType: (invitation.photoType as "couple" | "venue" | null) ?? "couple",
     musicTrack: invitation.musicTrack
       ? {
           fileUrl: invitation.musicTrack.fileUrl,

@@ -9,6 +9,7 @@ export interface AuroraStrings {
   heroKicker: string;
   heroAnd: string;
   letterEyebrow: string;
+  wishesEyebrow: string;
   letterTitle: string;
   letterText: string;
   dateEyebrow: string;
@@ -36,6 +37,7 @@ export const auroraI18n: Record<Language, AuroraStrings> = {
     heroKicker: "Nikoh to'yi",
     heroAnd: "birga bir umr",
     letterEyebrow: "Aziz mehmon",
+    wishesEyebrow: "Bir necha so'z",
     letterTitle: "Bir necha so'z",
     letterText:
       "Ikki qalb bir bo'layotgan ushbu yorug' kunda sizni yonimizda ko'rish biz uchun katta baxt. Kelib, sevgimizga guvoh bo'lishingizni chin dildan so'raymiz.",
@@ -62,6 +64,7 @@ export const auroraI18n: Record<Language, AuroraStrings> = {
     heroKicker: "Свадьба",
     heroAnd: "вместе навсегда",
     letterEyebrow: "Дорогой гость",
+    wishesEyebrow: "Несколько слов",
     letterTitle: "Несколько слов",
     letterText:
       "В этот светлый день, когда два сердца становятся одним, видеть вас рядом — большое счастье для нас. Будем искренне рады, если вы придёте и станете свидетелями нашей любви.",

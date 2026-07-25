@@ -8,7 +8,7 @@ import Button from "@/components/ui/Button";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const LINKS = [
-  { href: "/templates", label: "Templatelar" },
+  { href: "/templates", label: "Shablonlar" },
   { href: "#how-it-works", label: "Qanday ishlaydi" },
   { href: "#pricing", label: "Narxlar" },
 ];

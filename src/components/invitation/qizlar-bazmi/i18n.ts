@@ -24,6 +24,9 @@ export interface QizlarBazmiStrings {
   footTitle: string;
   footText: string;
   footSign: string;
+  giftTitle: string;
+  giftNote: string;
+  wishesTitle: string;
   monthShort: string;
   dows: string[];
 }
@@ -55,6 +58,10 @@ export const qizlarBazmiI18n: Record<Language, QizlarBazmiStrings> = {
     footTitle: "Sizni kutib qolamiz!",
     footText: "Kelishingiz biz uchun eng katta sovg'a bo'ladi",
     footSign: "Hurmat bilan",
+    giftTitle: "Sovg'a",
+    giftNote:
+      "Xohishingizga ko'ra, tabringizni quyidagi kartaga yo'llashingiz mumkin.",
+    wishesTitle: "Bir necha so'z",
     monthShort: "",
     dows: ["Du", "Se", "Ch", "Pa", "Ju", "Sh", "Ya"],
   },
@@ -84,6 +91,10 @@ export const qizlarBazmiI18n: Record<Language, QizlarBazmiStrings> = {
     footTitle: "Мы ждём вас!",
     footText: "Ваше присутствие — лучший подарок для нас",
     footSign: "С уважением",
+    giftTitle: "Подарок",
+    giftNote:
+      "По желанию вы можете отправить поздравление на карту ниже.",
+    wishesTitle: "Несколько слов",
     monthShort: "",
     dows: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
   },

@@ -21,7 +21,11 @@ export interface InvitationData {
   googleMapUrl?: string | null;
   letterText: string;
   letterTextRu: string;
+  /** Mijozning qo'shimcha tilaklari — alohida bo'limда ko'rsatiladi. */
+  notes?: string | null;
   photoUrl?: string | null;
+  /** Rasm turi: "couple" — kelin-kuyov (hero), "venue" — to'yxona (manzil bo'limi). */
+  photoType?: "couple" | "venue" | null;
   musicTrack?: InvitationMusic | null;
   customMusicUrl?: string | null;
   cardNumber?: string | null;

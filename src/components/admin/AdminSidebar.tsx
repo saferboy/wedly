@@ -10,6 +10,7 @@ import {
   Globe,
   Music,
   Package,
+  MessageSquare,
   Plus,
   LogOut,
   Menu,
@@ -18,9 +19,10 @@ import {
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const NAV = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/dashboard", label: "Boshqaruv paneli", icon: LayoutDashboard },
   { href: "/admin/orders", label: "Buyurtmalar", icon: ShoppingBag },
   { href: "/admin/invitations", label: "Takliflar", icon: Globe },
+  { href: "/admin/feedback", label: "Fikrlar", icon: MessageSquare },
   { href: "/admin/create", label: "Yangi taklif", icon: Plus },
   { href: "/admin/music", label: "Musiqa", icon: Music },
   { href: "/admin/packages", label: "Paketlar", icon: Package },

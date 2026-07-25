@@ -25,7 +25,7 @@ export default function TemplatesPreview() {
             Chiroyli templatelar
           </h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-gray-500 sm:text-base dark:text-gray-400">
-            To&apos;y, qiz bazmi va tug&apos;ilgan kun uchun 6 ta noyob dizayn. Har
+            To&apos;y, qiz bazmi va tug&apos;ilgan kun uchun noyob dizaynlar. Har
             biri o&apos;z rang sxemasi va uslubi bilan.
           </p>
         </Reveal>
@@ -75,7 +75,7 @@ export default function TemplatesPreview() {
                   </p>
                 </div>
                 <span className="inline-block text-xs font-medium text-[#a9782a] transition-transform group-hover:translate-x-1 dark:text-gold">
-                  Preview →
+                  Ko&apos;rish →
                 </span>
               </div>
               </Link>

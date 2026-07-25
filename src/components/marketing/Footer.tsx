@@ -23,7 +23,7 @@ export default function Footer() {
             </p>
             <ul className="space-y-2">
               {[
-                { href: "/templates", label: "Templatelar" },
+                { href: "/templates", label: "Shablonlar" },
                 { href: "#how-it-works", label: "Qanday ishlaydi" },
                 { href: "#pricing", label: "Narxlar" },
               ].map(({ href, label }) => (

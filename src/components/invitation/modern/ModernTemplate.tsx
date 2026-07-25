@@ -53,7 +53,10 @@ export default function ModernTemplate({ data }: Props) {
   );
 
   const names = data.groomName ? `${data.groomName} & ${data.brideName}` : data.brideName;
-  const photoUrl = data.photoUrl || FALLBACK_PHOTO;
+  // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero (kelin-kuyov)da.
+  const isVenuePhoto = data.photoType === "venue";
+  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
+  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const monthName = MONTHS[lang][eventDate.getMonth()];
@@ -204,7 +207,7 @@ export default function ModernTemplate({ data }: Props) {
         {/* HERO — full-bleed frameless photo */}
         <section className={styles.hero}>
           <div className={styles.heroPhoto} aria-hidden="true">
-            <Image src={photoUrl} alt={names} fill sizes="100vw" priority />
+            <Image src={heroPhoto} alt={names} fill sizes="100vw" priority />
           </div>
           <div className={styles.heroInner}>
             <Reveal>
@@ -243,6 +246,21 @@ export default function ModernTemplate({ data }: Props) {
             <p className={styles.lead}>{letter}</p>
           </Reveal>
         </section>
+
+        {/* WISHES — mijozning qo'shimcha tilagi (faqat kiritilgan bo'lsa) */}
+        {data.notes?.trim() && (
+          <section className={styles.letter}>
+            <Reveal>
+              <div className={styles.eyebrow}>{s.wishesEyebrow}</div>
+            </Reveal>
+            <Reveal>
+              <div className={styles.rule} />
+            </Reveal>
+            <Reveal>
+              <p className={styles.lead}>{data.notes.trim()}</p>
+            </Reveal>
+          </section>
+        )}
 
         {/* DATE + COUNTDOWN */}
         <section>
@@ -286,6 +304,13 @@ export default function ModernTemplate({ data }: Props) {
           {venueAddr && (
             <Reveal>
               <p className={styles.venueAddr}>{venueAddr}</p>
+            </Reveal>
+          )}
+          {venuePhoto && (
+            <Reveal>
+              <div className={styles.venuePhoto}>
+                <Image src={venuePhoto} alt={data.venueName} width={400} height={260} />
+              </div>
             </Reveal>
           )}
           <Reveal>

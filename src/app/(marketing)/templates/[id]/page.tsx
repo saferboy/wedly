@@ -18,8 +18,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const template = getTemplate(id);
-  if (!template) return { title: "Template topilmadi" };
-  return { title: `${template.name} — Wedly Template Preview` };
+  if (!template) return { title: "Shablon topilmadi" };
+  return { title: `${template.name} — Wedly shablonini ko'rish` };
 }
 
 // Demo ma'lumotlar — preview uchun
@@ -63,7 +63,7 @@ export default async function TemplatePreviewPage({ params }: Props) {
       <div className="fixed top-0 left-0 right-0 z-[100] h-12 bg-black/80 backdrop-blur-sm text-white flex items-center justify-between gap-2 px-3 sm:px-4">
         <div className="flex items-center gap-2 min-w-0">
           <span className="shrink-0 text-[10px] sm:text-xs bg-yellow-500 text-black px-1.5 sm:px-2 py-0.5 rounded font-bold">
-            PREVIEW
+            KO&apos;RISH
           </span>
           <span className="text-xs sm:text-sm font-medium truncate">{template.name}</span>
         </div>

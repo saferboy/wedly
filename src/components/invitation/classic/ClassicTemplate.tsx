@@ -214,7 +214,10 @@ export default function ClassicTemplate({ data }: Props) {
     [data.eventDate, data.eventTime]
   );
 
-  const photoUrl = data.photoUrl || FALLBACK_PHOTO;
+  // Rasm turi: "venue" bo'lsa to'yxona sahnasida, aks holda hero (kelin-kuyov)da.
+  const isVenuePhoto = data.photoType === "venue";
+  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
+  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const monthName = MONTHS[lang][eventDate.getMonth()];
@@ -384,7 +387,7 @@ export default function ClassicTemplate({ data }: Props) {
               <Reveal className={styles.archWrap}>
                 <div className={styles.arch}>
                   <Crest />
-                  <Image src={photoUrl} alt={who} width={320} height={400} priority />
+                  <Image src={heroPhoto} alt={who} width={320} height={400} priority />
                 </div>
               </Reveal>
               <Reveal>
@@ -424,6 +427,26 @@ export default function ClassicTemplate({ data }: Props) {
               </Reveal>
             </div>
           </section>
+
+          {/* WISHES — mijozning qo'shimcha tilagi (faqat kiritilgan bo'lsa) */}
+          {data.notes?.trim() && (
+            <section className={styles.panel}>
+              <PageFrame />
+              <div className={styles.inner}>
+                <Reveal>
+                  <p className={styles.eyebrow}>{s.wishesEyebrow}</p>
+                </Reveal>
+                <Reveal>
+                  <Flourish />
+                </Reveal>
+                <Reveal>
+                  <div className={styles.letterCard}>
+                    <p>{data.notes.trim()}</p>
+                  </div>
+                </Reveal>
+              </div>
+            </section>
+          )}
 
           {/* DATE + COUNTDOWN */}
           <section className={styles.panel}>
@@ -480,7 +503,7 @@ export default function ClassicTemplate({ data }: Props) {
                   <div className={styles.venueAddr}>{venueAddr}</div>
                 </Reveal>
               )}
-              <VenueScene photoUrl={data.photoUrl} alt={data.venueName} />
+              <VenueScene photoUrl={venuePhoto} alt={data.venueName} />
               <Reveal>
                 <div className={styles.maps}>
                   <a href={yandex} target="_blank" rel="noopener noreferrer">

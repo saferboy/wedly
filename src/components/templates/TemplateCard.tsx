@@ -134,7 +134,7 @@ export default function TemplateCard({ template }: Props) {
             href={`/templates/${template.slug}`}
             className="flex-1 rounded-lg border border-gold/50 py-2 text-center text-sm font-medium text-[#a9782a] transition-colors hover:bg-gold/10 dark:text-gold"
           >
-            Preview
+            Ko&apos;rish
           </Link>
           <a
             href={`https://t.me/${TELEGRAM_BOT_USERNAME}?start=template_${template.slug}`}

@@ -622,6 +622,31 @@
   line-height: 1.65;
   color: var(--ink);
 }
+/* --- GIFT / SOVG'A --- */
+.giftBox {
+  margin-top: clamp(18px, 3vh, 28px);
+  padding: clamp(16px, 2.6vh, 24px) clamp(20px, 5vw, 34px);
+  border: 1px solid var(--blush);
+  border-radius: 16px;
+  background: var(--cream-deep);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.giftNum {
+  font-weight: 600;
+  color: var(--crimson);
+  font-size: clamp(22px, 6vw, 32px);
+  letter-spacing: 0.08em;
+}
+.giftHolder {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  color: var(--ink);
+  opacity: 0.72;
+}
 
 /* --- CALENDAR --- */
 .calendar {
@@ -751,6 +776,19 @@
   margin: clamp(10px, 2vh, 12px) 0 clamp(20px, 3vh, 32px);
   color: var(--ink);
   max-width: 620px;
+}
+.venuePhoto {
+  width: min(86%, 380px);
+  margin: clamp(14px, 2.5vh, 22px) auto 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.2);
+  border: 3px solid var(--gold, #d9a3b0);
+}
+.venuePhoto img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .mapLinks {
   display: flex;

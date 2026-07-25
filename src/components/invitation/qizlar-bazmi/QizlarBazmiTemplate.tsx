@@ -11,9 +11,11 @@ import MusicToggle from "./MusicToggle";
 import IntroScene from "./IntroScene";
 import HeroSection from "./HeroSection";
 import InviteCard from "./InviteCard";
+import WishesSection from "./WishesSection";
 import CalendarSection from "./CalendarSection";
 import CountdownSection from "./CountdownSection";
 import LocationSection from "./LocationSection";
+import GiftSection from "./GiftSection";
 import FooterSection from "./FooterSection";
 
 interface Props {
@@ -45,7 +47,10 @@ export default function QizlarBazmiTemplate({ data }: Props) {
   );
 
   const name = data.brideName;
-  const photoUrl = data.photoUrl || FALLBACK_PHOTO;
+  // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero qismida.
+  const isVenuePhoto = data.photoType === "venue";
+  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
+  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const dateLabel = `${eventDate.getDate()} ${MONTHS[lang][eventDate.getMonth()]} · ${eventDate.getFullYear()}`;
@@ -89,19 +94,30 @@ export default function QizlarBazmiTemplate({ data }: Props) {
             strings={strings}
             name={name}
             dateLabel={dateLabel}
-            photoUrl={photoUrl}
+            photoUrl={heroPhoto}
             animate={opened}
           />
           <InviteCard strings={strings} text={inviteText} />
+          {data.notes?.trim() && (
+            <WishesSection strings={strings} text={data.notes.trim()} />
+          )}
           <CalendarSection strings={strings} lang={lang} eventDate={eventDate} />
           <CountdownSection strings={strings} target={targetDateTime} />
           <div className={styles.finale}>
             <LocationSection
               strings={strings}
               venue={venue}
+              photoUrl={venuePhoto}
               googleMapUrl={data.googleMapUrl}
               yandexMapUrl={data.yandexMapUrl}
             />
+            {data.cardNumber && (
+              <GiftSection
+                strings={strings}
+                cardNumber={data.cardNumber}
+                cardHolder={data.cardHolder}
+              />
+            )}
             <FooterSection strings={strings} name={name} />
           </div>
         </main>

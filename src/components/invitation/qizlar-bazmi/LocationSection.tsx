@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import styles from "./styles.module.css";
 import useReveal from "./useReveal";
 import Ornaments, { Flourish } from "./Ornaments";
@@ -9,11 +10,12 @@ import type { QizlarBazmiStrings } from "./i18n";
 interface Props {
   strings: QizlarBazmiStrings;
   venue: string;
+  photoUrl?: string | null;
   googleMapUrl?: string | null;
   yandexMapUrl?: string | null;
 }
 
-export default function LocationSection({ strings, venue, googleMapUrl, yandexMapUrl }: Props) {
+export default function LocationSection({ strings, venue, photoUrl, googleMapUrl, yandexMapUrl }: Props) {
   const { ref: eyebrowRef, revealed: eyebrowIn } = useReveal<HTMLDivElement>();
   const { ref: titleRef, revealed: titleIn } = useReveal<HTMLHeadingElement>();
   const { ref: sketchRef, revealed: sketchIn } = useReveal<HTMLDivElement>();
@@ -45,9 +47,15 @@ export default function LocationSection({ strings, venue, googleMapUrl, yandexMa
         {strings.locTitle}
       </h2>
       <Flourish />
-      <div ref={sketchRef}>
-        <VenueSketch drawn={sketchIn} />
-      </div>
+      {photoUrl ? (
+        <div className={styles.venuePhoto}>
+          <Image src={photoUrl} alt={venue} width={400} height={260} />
+        </div>
+      ) : (
+        <div ref={sketchRef}>
+          <VenueSketch drawn={sketchIn} />
+        </div>
+      )}
       <p
         ref={venueRef}
         className={`${styles.venue} ${styles.reveal} ${venueIn ? styles.inView : ""}`}

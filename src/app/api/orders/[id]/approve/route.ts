@@ -4,6 +4,7 @@ import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { createInvitationFromOrder, invitationUrl } from "@/lib/invitation/generate";
 import { sendTelegramMessage, invitationReadyMessage } from "@/lib/telegram";
+import { KEYBOARDS } from "@/lib/bot/messages";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -37,7 +38,9 @@ export async function POST(_req: NextRequest, { params }: Props) {
     const link = invitationUrl(result.slug);
     let sent = false;
     if (order.telegramChatId) {
-      sent = await sendTelegramMessage(order.telegramChatId, invitationReadyMessage(link));
+      sent = await sendTelegramMessage(order.telegramChatId, invitationReadyMessage(link), {
+        replyMarkup: KEYBOARDS.feedback(order.id),
+      });
     }
 
     return NextResponse.json({
