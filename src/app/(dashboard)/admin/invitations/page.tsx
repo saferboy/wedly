@@ -4,6 +4,7 @@ import Link from "next/link";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { formatDate } from "@/lib/utils";
+import CopyLinkButton from "@/components/admin/CopyLinkButton";
 
 export default async function InvitationsPage() {
   const session = await getServerSession(authOptions);
@@ -50,9 +51,12 @@ export default async function InvitationsPage() {
               {invitations.map((inv) => (
                 <tr key={inv.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                   <td className="px-4 py-3">
-                    <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                      {inv.slug}
-                    </code>
+                    <div className="flex items-center gap-2">
+                      <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        {inv.slug}
+                      </code>
+                      <CopyLinkButton slug={inv.slug} />
+                    </div>
                   </td>
                   <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
                     {inv.groomName
