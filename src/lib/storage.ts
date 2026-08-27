@@ -61,6 +61,23 @@ export async function saveFile(
 }
 
 /**
+ * Brauzerdan to'g'ridan-to'g'ri (Vercel funksiyasini chetlab o'tib) Supabase
+ * Storage'ga yuklash uchun bir martalik imzolangan URL yaratadi. Vercel
+ * serverless funksiyalarida so'rov tanasi hajmi ~4.5MB bilan cheklangan —
+ * fayl avval serverga, keyin Storage'ga yuborilsa, haqiqiy musiqa/rasm
+ * fayllari (odatda 3-8MB) shu chegaraga urilib, xatolik beradi. Imzolangan
+ * URL bilan fayl to'g'ridan-to'g'ri Supabase'ga ketadi — bu chegara yo'q.
+ */
+export async function createSignedUploadUrl(bucket: string, objectPath: string) {
+  const safePath = objectPath.replace(/^\/+/, "");
+  const { data, error } = await supabaseAdmin()
+    .storage.from(bucket)
+    .createSignedUploadUrl(safePath, { upsert: true });
+  if (error) throw error;
+  return { path: data.path, token: data.token, publicUrl: getPublicUrl(bucket, safePath) };
+}
+
+/**
  * Saqlangan fayl uchun ochiq (brauzer) URL manzilini qaytaradi.
  */
 export function getPublicUrl(bucket: string, objectPath: string): string {

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Music, Trash2, Plus } from "lucide-react";
+import { uploadFile } from "@/lib/uploadClient";
 
 interface Track {
   id: string;
@@ -33,29 +34,28 @@ export default function MusicManager({ tracks }: Props) {
     setError("");
     setSaving(true);
 
-    const uploadForm = new FormData();
-    uploadForm.append("file", file);
-    uploadForm.append("type", "music");
-    uploadForm.append("name", form.title);
+    try {
+      const url = await uploadFile("music", form.title, file);
 
-    const uploadRes = await fetch("/api/upload", { method: "POST", body: uploadForm });
-    const uploadData = await uploadRes.json();
-    if (!uploadRes.ok) {
-      setError(uploadData.error ?? "Yuklash xatosi");
+      const res = await fetch("/api/music", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, fileUrl: url }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error ?? "Xatolik yuz berdi");
+      }
+
+      setForm({ title: "", artist: "" });
+      setFile(null);
+      setAdding(false);
+      router.refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Xatolik");
+    } finally {
       setSaving(false);
-      return;
     }
-
-    await fetch("/api/music", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...form, fileUrl: uploadData.url }),
-    });
-    setForm({ title: "", artist: "" });
-    setFile(null);
-    setAdding(false);
-    setSaving(false);
-    router.refresh();
   };
 
   const handleDelete = async (id: string) => {

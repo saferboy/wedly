@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { slugify } from "@/lib/utils";
+import { uploadFile } from "@/lib/uploadClient";
 import type { TemplateConfig } from "@/lib/templates";
 
 interface Order {
@@ -96,15 +97,8 @@ export default function CreateInvitationForm({ order, invitation, templates, mus
     setUploading(field);
     setError("");
     try {
-      const uploadForm = new FormData();
-      uploadForm.append("file", file);
-      uploadForm.append("type", "photo");
-      uploadForm.append("name", `${field}-${form.slug || "taklif"}`);
-
-      const res = await fetch("/api/upload", { method: "POST", body: uploadForm });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? "Yuklash xatosi");
-      set(field, data.url);
+      const url = await uploadFile("photo", `${field}-${form.slug || "taklif"}`, file);
+      set(field, url);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Yuklash xatosi");
     } finally {
