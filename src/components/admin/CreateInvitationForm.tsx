@@ -60,6 +60,7 @@ export default function CreateInvitationForm({ order, invitation, templates, mus
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [uploading, setUploading] = useState<"photoUrl" | "venuePhotoUrl" | null>(null);
   const isEdit = !!invitation;
 
   const [form, setForm] = useState({
@@ -90,6 +91,26 @@ export default function CreateInvitationForm({ order, invitation, templates, mus
   });
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  const uploadPhoto = async (field: "photoUrl" | "venuePhotoUrl", file: File) => {
+    setUploading(field);
+    setError("");
+    try {
+      const uploadForm = new FormData();
+      uploadForm.append("file", file);
+      uploadForm.append("type", "photo");
+      uploadForm.append("name", `${field}-${form.slug || "taklif"}`);
+
+      const res = await fetch("/api/upload", { method: "POST", body: uploadForm });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Yuklash xatosi");
+      set(field, data.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Yuklash xatosi");
+    } finally {
+      setUploading(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -237,14 +258,44 @@ export default function CreateInvitationForm({ order, invitation, templates, mus
           Tanlanmasa shablonning standart rasmi qoldiriladi.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className="label">Kelin-kuyov rasmi (URL)</label>
-            <input className="input" value={form.photoUrl} onChange={(e) => set("photoUrl", e.target.value)} placeholder="https://..." />
-          </div>
-          <div>
-            <label className="label">To'yxona rasmi (URL)</label>
-            <input className="input" value={form.venuePhotoUrl} onChange={(e) => set("venuePhotoUrl", e.target.value)} placeholder="https://..." />
-          </div>
+          {(
+            [
+              { field: "photoUrl" as const, label: "Kelin-kuyov rasmi" },
+              { field: "venuePhotoUrl" as const, label: "To'yxona rasmi" },
+            ]
+          ).map(({ field, label }) => (
+            <div key={field}>
+              <label className="label">{label}</label>
+              {form[field] ? (
+                <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={form[field]} alt={label} className="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-gray-700" />
+                  <button
+                    type="button"
+                    onClick={() => set(field, "")}
+                    className="text-xs text-gray-400 hover:text-red-500 underline"
+                  >
+                    Olib tashlash
+                  </button>
+                </div>
+              ) : (
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploading === field}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) uploadPhoto(field, file);
+                    e.target.value = "";
+                  }}
+                  className="w-full text-sm text-gray-600 dark:text-gray-300 file:mr-3 file:px-3 file:py-2 file:rounded-lg file:border-0 file:bg-[#8B1A1A]/10 file:text-[#8B1A1A] file:text-sm file:font-medium hover:file:bg-[#8B1A1A]/20 disabled:opacity-50"
+                />
+              )}
+              {uploading === field && (
+                <p className="text-xs text-gray-400 mt-1">Yuklanmoqda...</p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -296,7 +347,7 @@ export default function CreateInvitationForm({ order, invitation, templates, mus
 
       <button
         type="submit"
-        disabled={saving}
+        disabled={saving || uploading !== null}
         className="w-full py-3 bg-[#8B1A1A] text-white font-semibold rounded-xl hover:bg-[#6B0F0F] transition-colors disabled:opacity-50"
       >
         {saving ? "Saqlanmoqda..." : isEdit ? "Saqlash" : "Taklif yaratish va aktivlashtirish"}
