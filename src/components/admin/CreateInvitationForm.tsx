@@ -21,6 +21,28 @@ interface Order {
   templateId?: string | null;
 }
 
+interface Invitation {
+  id: string;
+  slug: string;
+  eventType: string;
+  groomName?: string | null;
+  brideName: string;
+  eventDate: Date | string;
+  eventTime: string;
+  venueName: string;
+  venueAddress: string;
+  yandexMapUrl?: string | null;
+  googleMapUrl?: string | null;
+  letterText: string;
+  letterTextRu: string;
+  cardNumber?: string | null;
+  cardHolder?: string | null;
+  photoUrl?: string | null;
+  venuePhotoUrl?: string | null;
+  musicTrackId?: string | null;
+  template: { slug: string };
+}
+
 interface MusicTrack {
   id: string;
   title: string;
@@ -29,36 +51,42 @@ interface MusicTrack {
 
 interface Props {
   order?: Order | null;
+  invitation?: Invitation | null;
   templates: TemplateConfig[];
   musicTracks: MusicTrack[];
 }
 
-export default function CreateInvitationForm({ order, templates, musicTracks }: Props) {
+export default function CreateInvitationForm({ order, invitation, templates, musicTracks }: Props) {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const isEdit = !!invitation;
 
   const [form, setForm] = useState({
-    eventType: order?.eventType ?? "WEDDING",
-    groomName: order?.groomName ?? "",
-    brideName: order?.brideName ?? "",
-    eventDate: order?.eventDate
-      ? new Date(order.eventDate).toISOString().split("T")[0]
-      : "",
-    eventTime: order?.eventTime ?? "14:00",
-    venueName: order?.venueName ?? "",
-    venueAddress: order?.venueAddress ?? "",
-    yandexMapUrl: order?.yandexLink ?? "",
-    googleMapUrl: order?.googleLink ?? "",
-    letterText: "",
-    letterTextRu: "",
-    cardNumber: order?.cardNumber ?? "",
-    cardHolder: order?.cardHolder ?? "",
-    templateSlug: order?.templateId ?? templates[0]?.slug ?? "",
-    musicTrackId: "",
-    slug: order
+    eventType: invitation?.eventType ?? order?.eventType ?? "WEDDING",
+    groomName: invitation?.groomName ?? order?.groomName ?? "",
+    brideName: invitation?.brideName ?? order?.brideName ?? "",
+    eventDate: invitation?.eventDate
+      ? new Date(invitation.eventDate).toISOString().split("T")[0]
+      : order?.eventDate
+        ? new Date(order.eventDate).toISOString().split("T")[0]
+        : "",
+    eventTime: invitation?.eventTime ?? order?.eventTime ?? "14:00",
+    venueName: invitation?.venueName ?? order?.venueName ?? "",
+    venueAddress: invitation?.venueAddress ?? order?.venueAddress ?? "",
+    yandexMapUrl: invitation?.yandexMapUrl ?? order?.yandexLink ?? "",
+    googleMapUrl: invitation?.googleMapUrl ?? order?.googleLink ?? "",
+    letterText: invitation?.letterText ?? "",
+    letterTextRu: invitation?.letterTextRu ?? "",
+    cardNumber: invitation?.cardNumber ?? order?.cardNumber ?? "",
+    cardHolder: invitation?.cardHolder ?? order?.cardHolder ?? "",
+    photoUrl: invitation?.photoUrl ?? "",
+    venuePhotoUrl: invitation?.venuePhotoUrl ?? "",
+    templateSlug: invitation?.template.slug ?? order?.templateId ?? templates[0]?.slug ?? "",
+    musicTrackId: invitation?.musicTrackId ?? "",
+    slug: invitation?.slug ?? (order
       ? slugify(`${order.groomName ?? ""}-${order.brideName}`)
-      : "",
+      : ""),
   });
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -69,18 +97,23 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
     setError("");
 
     try {
-      const res = await fetch("/api/invitations", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, orderId: order?.id }),
-      });
+      const res = await fetch(
+        isEdit ? `/api/invitations/${invitation!.slug}` : "/api/invitations",
+        {
+          method: isEdit ? "PATCH" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(
+            isEdit ? form : { ...form, orderId: order?.id }
+          ),
+        }
+      );
 
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.error ?? "Xatolik yuz berdi");
       }
 
-      const data = await res.json();
+      await res.json();
       router.push(`/admin/invitations`);
       router.refresh();
     } catch (err: unknown) {
@@ -110,7 +143,15 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
           </div>
           <div>
             <label className="label">URL slug</label>
-            <input className="input" value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="jasur-nilufar" required />
+            <input
+              className="input disabled:opacity-60 disabled:cursor-not-allowed"
+              value={form.slug}
+              onChange={(e) => set("slug", e.target.value)}
+              placeholder="jasur-nilufar"
+              required
+              disabled={isEdit}
+              title={isEdit ? "Havola mehmonlarga tarqatilgan bo'lishi mumkin — o'zgartirilmaydi" : undefined}
+            />
           </div>
         </div>
 
@@ -189,6 +230,24 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
         </div>
       </div>
 
+      {/* Rasmlar */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-gray-900 dark:text-white">Rasmlar (ixtiyoriy)</h2>
+        <p className="text-xs text-gray-400 dark:text-gray-500 -mt-2">
+          Tanlanmasa shablonning standart rasmi qoldiriladi.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="label">Kelin-kuyov rasmi (URL)</label>
+            <input className="input" value={form.photoUrl} onChange={(e) => set("photoUrl", e.target.value)} placeholder="https://..." />
+          </div>
+          <div>
+            <label className="label">To'yxona rasmi (URL)</label>
+            <input className="input" value={form.venuePhotoUrl} onChange={(e) => set("venuePhotoUrl", e.target.value)} placeholder="https://..." />
+          </div>
+        </div>
+      </div>
+
       {/* Template va musiqa */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
         <h2 className="font-semibold text-gray-900 dark:text-white">Template va musiqa</h2>
@@ -240,7 +299,7 @@ export default function CreateInvitationForm({ order, templates, musicTracks }: 
         disabled={saving}
         className="w-full py-3 bg-[#8B1A1A] text-white font-semibold rounded-xl hover:bg-[#6B0F0F] transition-colors disabled:opacity-50"
       >
-        {saving ? "Saqlanmoqda..." : "Taklif yaratish va aktivlashtirish"}
+        {saving ? "Saqlanmoqda..." : isEdit ? "Saqlash" : "Taklif yaratish va aktivlashtirish"}
       </button>
 
       <style jsx>{`

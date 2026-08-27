@@ -48,9 +48,8 @@ export default function QizlarBazmiTemplate({ data }: Props) {
 
   const name = data.brideName;
   // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero qismida.
-  const isVenuePhoto = data.photoType === "venue";
-  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
-  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
+  const heroPhoto = data.photoUrl || FALLBACK_PHOTO;
+  const venuePhoto = data.venuePhotoUrl || null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const dateLabel = `${eventDate.getDate()} ${MONTHS[lang][eventDate.getMonth()]} · ${eventDate.getFullYear()}`;

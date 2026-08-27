@@ -215,9 +215,8 @@ export default function ClassicTemplate({ data }: Props) {
   );
 
   // Rasm turi: "venue" bo'lsa to'yxona sahnasida, aks holda hero (kelin-kuyov)da.
-  const isVenuePhoto = data.photoType === "venue";
-  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
-  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
+  const heroPhoto = data.photoUrl || FALLBACK_PHOTO;
+  const venuePhoto = data.venuePhotoUrl || null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const monthName = MONTHS[lang][eventDate.getMonth()];

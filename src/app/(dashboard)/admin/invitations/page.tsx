@@ -79,13 +79,19 @@ export default async function InvitationsPage() {
                       {inv.isActive ? "Faol" : "Nofaol"}
                     </span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <Link
                       href={`/i/${inv.slug}`}
                       target="_blank"
                       className="text-[#8B1A1A] text-xs font-medium hover:underline mr-3"
                     >
                       Ko'rish →
+                    </Link>
+                    <Link
+                      href={`/admin/create?invitationId=${inv.id}`}
+                      className="text-gray-500 dark:text-gray-400 text-xs font-medium hover:underline"
+                    >
+                      Tahrirlash
                     </Link>
                   </td>
                 </tr>

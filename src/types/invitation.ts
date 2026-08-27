@@ -23,9 +23,10 @@ export interface InvitationData {
   letterTextRu: string;
   /** Mijozning qo'shimcha tilaklari — alohida bo'limда ko'rsatiladi. */
   notes?: string | null;
+  /** Kelin-kuyov rasmi (hero bo'lim). Bo'sh bo'lsa shablonning standart rasmi ishlatiladi. */
   photoUrl?: string | null;
-  /** Rasm turi: "couple" — kelin-kuyov (hero), "venue" — to'yxona (manzil bo'limi). */
-  photoType?: "couple" | "venue" | null;
+  /** To'yxona rasmi (manzil bo'limi). Bo'sh bo'lsa ko'rsatilmaydi. */
+  venuePhotoUrl?: string | null;
   musicTrack?: InvitationMusic | null;
   customMusicUrl?: string | null;
   cardNumber?: string | null;

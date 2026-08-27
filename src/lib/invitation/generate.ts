@@ -87,8 +87,8 @@ export async function createInvitationFromOrder(
       letterText: order.letterText ?? "",
       letterTextRu: order.letterTextRu ?? "",
       notes: order.notes,
-      photoUrl: order.photoUrl,
-      photoType: order.photoType ?? "couple",
+      photoUrl: order.photoType === "venue" ? null : order.photoUrl,
+      venuePhotoUrl: order.photoType === "venue" ? order.photoUrl : null,
       musicTrackId,
       customMusicUrl: order.customMusicUrl,
       cardNumber: order.cardNumber,
@@ -136,6 +136,16 @@ export async function updateInvitationFromOrder(orderId: string): Promise<void> 
 
   // Taklifnomadagi majburiy maydonlar null bo'lolmaydi — order'да yo'q bo'lsa
   // eskisini saqlaymiz.
+  // Rasm: order faqat bitta rasm+tur yuboradi — order'da rasm bo'lmasa yoki
+  // admin taklifnomada alohida rasm o'rnatgan bo'lsa, ikkinchi slot buzilmaydi.
+  const orderIsVenuePhoto = order.photoType === "venue";
+  const photoUrl = order.photoUrl && !orderIsVenuePhoto
+    ? order.photoUrl
+    : order.invitation.photoUrl;
+  const venuePhotoUrl = order.photoUrl && orderIsVenuePhoto
+    ? order.photoUrl
+    : order.invitation.venuePhotoUrl;
+
   await db.invitation.update({
     where: { id: order.invitation.id },
     data: {
@@ -149,8 +159,8 @@ export async function updateInvitationFromOrder(orderId: string): Promise<void> 
       yandexMapUrl,
       googleMapUrl,
       notes: order.notes,
-      photoUrl: order.photoUrl,
-      photoType: order.photoType ?? "couple",
+      photoUrl,
+      venuePhotoUrl,
       musicTrackId,
       customMusicUrl: order.customMusicUrl,
       cardNumber: order.cardNumber,

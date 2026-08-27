@@ -165,9 +165,9 @@ model Invitation {
   // Mijozning qo'shimcha tilaklari/izohi — alohida bo'lim sifatida ko'rsatiladi
   notes       String?
 
-  // Media
-  photoUrl    String?   // Mijoz yuklagan rasm
-  photoType   String?   @default("couple") // "couple" | "venue" — rasm qayerda ko'rsatiladi
+  // Media — ikkalasi ham ixtiyoriy, tanlanmasa shablonning standart rasmi ishlatiladi.
+  photoUrl    String?   // Kelin-kuyov rasmi (hero bo'lim)
+  venuePhotoUrl String? // To'yxona rasmi (manzil bo'limi)
   musicTrackId String?
   musicTrack  MusicTrack? @relation(fields: [musicTrackId], references: [id])
   customMusicUrl String? // Custom musiqa

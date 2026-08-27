@@ -65,7 +65,7 @@ export default async function InvitationPage({ params, searchParams }: Props) {
     letterTextRu: invitation.letterTextRu,
     notes: invitation.notes,
     photoUrl: invitation.photoUrl,
-    photoType: (invitation.photoType as "couple" | "venue" | null) ?? "couple",
+    venuePhotoUrl: invitation.venuePhotoUrl,
     musicTrack: invitation.musicTrack
       ? {
           fileUrl: invitation.musicTrack.fileUrl,

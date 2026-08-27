@@ -48,10 +48,8 @@ export default function ToyTemplate({ data }: Props) {
 
   // Wedding shows both names joined; groomName may be null → just the bride.
   const name = data.groomName ? `${data.groomName} & ${data.brideName}` : data.brideName;
-  // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero (kelin-kuyov)da.
-  const isVenuePhoto = data.photoType === "venue";
-  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
-  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
+  const heroPhoto = data.photoUrl || FALLBACK_PHOTO;
+  const venuePhoto = data.venuePhotoUrl || null;
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 
   const dateLabel = `${eventDate.getDate()} ${MONTHS[lang][eventDate.getMonth()]} · ${eventDate.getFullYear()}`;

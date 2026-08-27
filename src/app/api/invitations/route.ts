@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
       venueName, venueAddress, yandexMapUrl, googleMapUrl,
       letterText, letterTextRu, cardNumber, cardHolder,
       templateSlug, musicTrackId, slug, orderId,
+      photoUrl, venuePhotoUrl,
     } = body;
 
     // Validatsiya
@@ -61,6 +62,8 @@ export async function POST(req: NextRequest) {
         letterTextRu: letterTextRu || "",
         cardNumber: cardNumber || null,
         cardHolder: cardHolder || null,
+        photoUrl: photoUrl || null,
+        venuePhotoUrl: venuePhotoUrl || null,
         templateId: template.id,
         musicTrackId: musicTrackId || null,
         orderId: orderId || null,

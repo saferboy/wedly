@@ -50,9 +50,8 @@ export default function TugilganKunTemplate({ data }: Props) {
 
   const name = data.brideName;
   // Rasm turi: "venue" bo'lsa manzil bo'limida, aks holda hero qismida.
-  const isVenuePhoto = data.photoType === "venue";
-  const heroPhoto = data.photoUrl && !isVenuePhoto ? data.photoUrl : FALLBACK_PHOTO;
-  const venuePhoto = data.photoUrl && isVenuePhoto ? data.photoUrl : null;
+  const heroPhoto = data.photoUrl || FALLBACK_PHOTO;
+  const venuePhoto = data.venuePhotoUrl || null;
   // Mijoz tanlagan musiqa (yuklangan yoki kutubxonadan); bo'lmasa — standart.
   const musicUrl = data.customMusicUrl ?? data.musicTrack?.fileUrl ?? FALLBACK_MUSIC;
 

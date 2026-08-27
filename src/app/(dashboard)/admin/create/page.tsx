@@ -6,16 +6,23 @@ import { TEMPLATES } from "@/lib/templates";
 import CreateInvitationForm from "@/components/admin/CreateInvitationForm";
 
 interface Props {
-  searchParams: Promise<{ orderId?: string }>;
+  searchParams: Promise<{ orderId?: string; invitationId?: string }>;
 }
 
 export default async function CreatePage({ searchParams }: Props) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/admin");
 
-  const { orderId } = await searchParams;
+  const { orderId, invitationId } = await searchParams;
 
-  const order = orderId
+  const invitation = invitationId
+    ? await db.invitation.findUnique({
+        where: { id: invitationId },
+        include: { template: true },
+      })
+    : null;
+
+  const order = !invitation && orderId
     ? await db.order.findUnique({ where: { id: orderId } })
     : null;
 
@@ -27,11 +34,16 @@ export default async function CreatePage({ searchParams }: Props) {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        {order ? "Buyurtmaga taklif yaratish" : "Yangi taklif yaratish"}
+        {invitation
+          ? "Taklifni tahrirlash"
+          : order
+            ? "Buyurtmaga taklif yaratish"
+            : "Yangi taklif yaratish"}
       </h1>
 
       <CreateInvitationForm
         order={order}
+        invitation={invitation}
         templates={TEMPLATES}
         musicTracks={musicTracks}
       />

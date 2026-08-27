@@ -55,8 +55,8 @@ export async function buildPreviewData(
     letterText: order.letterText ?? "",
     letterTextRu: order.letterTextRu ?? "",
     notes: order.notes,
-    photoUrl: order.photoUrl,
-    photoType: (order.photoType as "couple" | "venue" | null) ?? "couple",
+    photoUrl: order.photoType === "venue" ? null : order.photoUrl,
+    venuePhotoUrl: order.photoType === "venue" ? order.photoUrl : null,
     musicTrack,
     customMusicUrl:
       order.musicChoice === "custom" ? order.customMusicUrl : null,
